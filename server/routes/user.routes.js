@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
+const UserInfoController = require("../controllers/userInfo.controller");
 
-router.get("/", (req, res) => {
-    res.send("Hello this is for Users");
-});
+router.get("/", UserInfoController.display);
+router.post("/register", UserInfoController.register);
 
 module.exports = router;
