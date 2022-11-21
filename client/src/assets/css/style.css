@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    /* box-sizing: border-box !important; */
+    /* outline: 1px solid lightblue; */
+}
+
+/* @layer base {
+    * {
+        @apply box-border;
+    }
+} */
