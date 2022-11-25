@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import EcomAPI from "../api/Ecomm.api";
 import NavBar from "./partials/navBar";
 import { MagnifyingGlass } from "phosphor-react";
+import ProductCard from "../components/productCard";
 
 function Index() {
     const [data, setData] = useState([]);
@@ -22,9 +23,9 @@ function Index() {
     return (
         <>
             <NavBar />
-            <div className="flex p-4 justify-around">
-                <div className="w-[315px] border shadow-lg rounded px-4 py-4">
-                    <div className="form-control pb-4 flex content-center ">
+            <div className="flex justify-around w-[1200px] mx-auto ">
+                <div className="w-[300px] border-gray-900 rounded px-4 py-4 bg-base-100 h-fit">
+                    <div className="form-control pb-4 flex content-center w-[200px]">
                         <div className="input-group">
                             <input
                                 type="text"
@@ -60,27 +61,39 @@ function Index() {
                         </ul>
                     </div>
                 </div>
-                <div className="shadow-lg w-[1350px] border rounded align-middle p-4">
-                    <div className="flex justify-between">
-                        <h2>Shoes (Page 4)</h2>
-                        <div className="btn-group">
-                            <button className="btn">«</button>
-                            <button className="btn">Page 22</button>
-                            <button className="btn">»</button>
+                <div className="w-[850px] h-fit">
+                    <div className="bg-base-100 p-4 rounded align-middle mb-4">
+                        <div className="flex justify-between">
+                            <h2 className="items-center flex text-xl">
+                                Shoes (Page 4)
+                            </h2>
+                            <div className="items-center flex ">
+                                <select
+                                    className="select select-bordered select-sm w-[250px] max-w-xs"
+                                    name="sort"
+                                >
+                                    <option disabled selected>
+                                        Sorted By
+                                    </option>
+                                    <option>Price: Low to Hight</option>
+                                    <option>Price: High to Low</option>
+                                    <option>Popularity</option>
+                                </select>
+                            </div>
+                            <div className="btn-group">
+                                <button className="btn">«</button>
+                                <button className="btn">Page 22</button>
+                                <button className="btn">»</button>
+                            </div>
                         </div>
                     </div>
-                    <div className="items-center flex justify-end py-4">
-                        <select
-                            className="select select-bordered select-sm w-[250px] max-w-xs"
-                            name="sort"
-                        >
-                            <option disabled selected>
-                                Sorted By
-                            </option>
-                            <option>Price: Low to Hight</option>
-                            <option>Price: High to Low</option>
-                            <option>Popularity</option>
-                        </select>
+
+                    <div className="flex gap-3 flex-wrap">
+                        <ProductCard />
+                        <ProductCard />
+                        <ProductCard />
+                        <ProductCard />
+                        <ProductCard />
                     </div>
                 </div>
             </div>

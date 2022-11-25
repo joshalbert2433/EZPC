@@ -2,13 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-    /* box-sizing: border-box !important; */
-    /* outline: 1px solid lightblue; */
-}
-
-/* @layer base {
-    * {
-        @apply box-border;
+@layer base {
+    body {
+        @apply bg-base-200 h-screen;
     }
-} */
+
+    border_style {
+        border: 2px solid @apply primary;
+    }
+}

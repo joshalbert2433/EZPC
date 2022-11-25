@@ -8,5 +8,11 @@ module.exports = {
         // darkTheme: "dark",
         themes: ["light", "dark"],
     },
+    variants: {
+        extend: {
+            // ...
+            borderStyle: ["hover"],
+        },
+    },
     plugins: [require("daisyui")],
 };
