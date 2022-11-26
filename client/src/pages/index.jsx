@@ -25,8 +25,8 @@ function Index() {
             <NavBar />
             <div className="flex justify-around w-[1200px] mx-auto ">
                 <div className="w-[300px] border-gray-900 rounded px-4 py-4 bg-base-100 h-fit">
-                    <div className="form-control pb-4 flex content-center w-[200px]">
-                        <div className="input-group">
+                    <div className="form-control pb-4 flex content-center">
+                        <div className="input-group flex justify-center">
                             <input
                                 type="text"
                                 placeholder="Search…"
@@ -69,7 +69,7 @@ function Index() {
                             </h2>
                             <div className="items-center flex ">
                                 <select
-                                    className="select select-bordered select-sm w-[250px] max-w-xs"
+                                    className="select select-bordered select-md w-[250px] max-w-xs"
                                     name="sort"
                                 >
                                     <option disabled selected>

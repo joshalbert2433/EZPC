@@ -60,7 +60,7 @@ function Products() {
                             </SwiperSlide>
                         </Swiper>
                     </div>
-                    <div className="w-[60%] px-4 py-2 space-y-3">
+                    <div className="w-[60%] px-4 py-2 space-y-3 pb-6">
                         <h1 className="text-xl font-semibold">
                             Coffee A Hug In A Mug Designed Solid Drop Shoulder T
                             Shirt (Unisex)

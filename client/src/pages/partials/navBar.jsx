@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { themeChange } from "theme-change";
 import { DarkModeSwitch } from "react-toggle-dark-mode";
+import { Link } from "react-router-dom";
 
 function NavBar() {
     const [isDarkMode, setDarkMode] = useState(false);
@@ -17,9 +18,12 @@ function NavBar() {
         <div className="bg-base-100 shadow-lg navbar mb-4">
             <div className="w-[1200px] mx-auto gap-4 flex [&>*]:items-center [&>*]:inline-flex ">
                 <div className="flex-1">
-                    <a className="btn btn-ghost normal-case text-4xl">
+                    <Link
+                        to={{ pathname: "/" }}
+                        className="btn btn-ghost normal-case text-4xl"
+                    >
                         <span className="text-primary">EZ</span>PC
-                    </a>
+                    </Link>
                 </div>
                 <div>
                     <label className="swap swap-rotate">
@@ -85,9 +89,12 @@ function NavBar() {
                                 </span>
                                 <span>Subtotal: $999</span>
                                 <div className="card-actions">
-                                    <button className="btn btn-primary btn-block">
+                                    <Link
+                                        to={{ pathname: "/cart" }}
+                                        className="btn btn-primary btn-block"
+                                    >
                                         View cart
-                                    </button>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
