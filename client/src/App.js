@@ -2,7 +2,9 @@ import React from "react";
 import Index from "./pages/index";
 import Products from "./pages/products";
 import Cart from "./pages/cart";
+import Login from "./pages/user/login";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import SignUp from "./pages/user/signUp";
 
 function App() {
     return (
@@ -11,6 +13,8 @@ function App() {
                 <Route exact path="/" element={<Index />}></Route>
                 <Route exact path="/product" element={<Products />}></Route>
                 <Route exact path="/cart" element={<Cart />}></Route>
+                <Route exact path="/login" element={<Login />}></Route>
+                <Route exact path="/sign-up" element={<SignUp />}></Route>
             </Routes>
         </Router>
     );

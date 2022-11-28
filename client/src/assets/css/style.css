@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+    /* outline: 1px solid lightblue; */
+}
+
 @layer base {
     body {
         @apply bg-base-300 min-h-screen;

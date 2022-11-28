@@ -1,8 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function ProductCard() {
     return (
-        <>
+        <Link to={{ pathname: "/product" }}>
             <div className="card rounded-none bg-base-100 w-[160px] hover:border-secondary border-transparent border-2">
                 <figure>
                     <img
@@ -18,7 +19,7 @@ function ProductCard() {
                     <p className="text-secondary">&#8369;200</p>
                 </div>
             </div>
-        </>
+        </Link>
     );
 }
 
