@@ -19,7 +19,7 @@ function SignUp() {
                         <input
                             type="text"
                             name="email"
-                            placeholder="Ex. YourMail@email.com"
+                            placeholder="Email Address"
                             className="input input-bordered w-full "
                         />
                     </div>
