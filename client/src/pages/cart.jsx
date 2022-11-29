@@ -62,7 +62,7 @@ function Cart() {
                         <label className="label">First Name</label>
                         <input
                             type="text"
-                            placeholder="Ex: Josh"
+                            placeholder="Josh"
                             className="input input-sm md:input-md input-bordered w-full "
                         />
                     </div>
@@ -70,7 +70,7 @@ function Cart() {
                         <label className="label">Last Name</label>
                         <input
                             type="text"
-                            placeholder="Ex: Alberts"
+                            placeholder="Alberts"
                             className="input input-sm md:input-md input-bordered w-full "
                         />
                     </div>
@@ -78,7 +78,7 @@ function Cart() {
                         <label className="label">Address</label>
                         <input
                             type="text"
-                            placeholder="Ex: Malayo, Malapit, Di makita Street"
+                            placeholder="Malayo, Malapit, Di makita Street"
                             className="input input-sm md:input-md input-bordered w-full "
                         />
                     </div>
@@ -86,7 +86,7 @@ function Cart() {
                         <label className="label">City</label>
                         <input
                             type="text"
-                            placeholder="Ex: Imus"
+                            placeholder="Imus"
                             className="input input-sm md:input-md input-bordered w-full "
                         />
                     </div>
@@ -94,7 +94,7 @@ function Cart() {
                         <label className="label">State</label>
                         <input
                             type="text"
-                            placeholder="Ex: Cavite"
+                            placeholder="Cavite"
                             className="input input-sm md:input-md input-bordered w-full "
                         />
                     </div>
@@ -102,7 +102,7 @@ function Cart() {
                         <label className="label">Zip Code</label>
                         <input
                             type="text"
-                            placeholder="Ex: 4103"
+                            placeholder="4103"
                             className="input input-sm md:input-md input-bordered w-full "
                         />
                     </div>
