@@ -1,6 +1,9 @@
 import React from "react";
 import NavBar from "../partials/navBar";
 import { Link } from "react-router-dom";
+import Modal from "../../components/modal";
+import { Edit, Menu, Trash2 } from "react-feather";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 function AdminProducts() {
     return (
@@ -33,7 +36,9 @@ function AdminProducts() {
                             </button>
                         </div>
                     </div>
-                    <button className="btn btn-primary">Add new product</button>
+                    <label htmlFor="my-modal" className="btn btn-primary">
+                        Add new product
+                    </label>
                 </div>
                 <div className="overflow-x-auto p-2 md:p-0 my-4">
                     <div className="overflow-x-auto">
@@ -152,6 +157,150 @@ function AdminProducts() {
                     </div>
                 </div>
             </div>
+
+            <Modal title="Add New Product">
+                <div>
+                    <label htmlFor="name" className="label">
+                        Name:
+                    </label>
+                    <input
+                        type="text"
+                        name="name"
+                        placeholder="Type name here"
+                        className="input input-bordered w-full "
+                    />
+                </div>
+                <div>
+                    <label htmlFor="description" className="label">
+                        Description:
+                    </label>
+                    <textarea
+                        className="textarea textarea-bordered w-full"
+                        placeholder="Type description here"
+                        name="description"
+                    ></textarea>
+                </div>
+                <p className="label">Category:</p>
+
+                <div className="h-[200px] w-full border-opacity-10 p-4 grid grid-cols-2 gap-2 overflow-y-auto [&>*]:h-fit">
+                    <div className="form-control  bg-base-200 rounded-md px-2">
+                        <label className="label cursor-pointer">
+                            <input type="checkbox" className="checkbox" />
+                            <span>Monitor</span>
+                        </label>
+                    </div>
+
+                    <div className="form-control  bg-base-200 rounded-md px-2">
+                        <label className="label cursor-pointer">
+                            <input type="checkbox" className="checkbox" />
+                            <span>Monitor</span>
+                        </label>
+                    </div>
+
+                    <div className="form-control  bg-base-200 rounded-md px-2">
+                        <label className="label cursor-pointer">
+                            <input type="checkbox" className="checkbox" />
+                            <span>Monitor</span>
+                        </label>
+                    </div>
+
+                    <div className="form-control  bg-base-200 rounded-md px-2">
+                        <label className="label cursor-pointer">
+                            <input type="checkbox" className="checkbox" />
+                            <span>Monitor</span>
+                        </label>
+                    </div>
+
+                    <div className="form-control  bg-base-200 rounded-md px-2">
+                        <label className="label cursor-pointer">
+                            <input type="checkbox" className="checkbox" />
+                            <span>Monitor</span>
+                        </label>
+                    </div>
+
+                    <div className="form-control  bg-base-200 rounded-md px-2">
+                        <label className="label cursor-pointer">
+                            <input type="checkbox" className="checkbox" />
+                            <span>Monitor</span>
+                        </label>
+                    </div>
+
+                    <div className="form-control  bg-base-200 rounded-md px-2">
+                        <label className="label cursor-pointer">
+                            <input type="checkbox" className="checkbox" />
+                            <span>Monitor</span>
+                        </label>
+                    </div>
+
+                    <div className="form-control  bg-base-200 rounded-md px-2">
+                        <label className="label cursor-pointer">
+                            <input type="checkbox" className="checkbox" />
+                            <span>Monitor</span>
+                        </label>
+                    </div>
+
+                    <div className="form-control  bg-base-200 rounded-md px-2">
+                        <label className="label cursor-pointer">
+                            <input type="checkbox" className="checkbox" />
+                            <span>Monitor</span>
+                        </label>
+                    </div>
+
+                    <div className="form-control  bg-base-200 rounded-md px-2">
+                        <label className="label cursor-pointer">
+                            <input type="checkbox" className="checkbox" />
+                            <span>Monitor</span>
+                        </label>
+                    </div>
+                    <div className="form-control  bg-base-200 rounded-md px-2">
+                        <label className="label cursor-pointer">
+                            <input type="checkbox" className="checkbox" />
+                            <span>Monitor</span>
+                        </label>
+                    </div>
+
+                    <div className="form-control  bg-base-200 rounded-md px-2">
+                        <label className="label cursor-pointer">
+                            <input type="checkbox" className="checkbox" />
+                            <span>Monitor</span>
+                        </label>
+                    </div>
+                </div>
+                <form action="/" method="POST" className="my-4">
+                    <input
+                        type="file"
+                        className="file-input file-input-bordered w-full max-w-xs hidden"
+                    />
+                    <input
+                        type="submit"
+                        className="btn btn-primary"
+                        value="Upload"
+                    />
+                </form>
+
+                <div className="w-full bg-base-300 h-[300px]">
+                    <ul className="p-3">
+                        <li className="flex items-center justify-around bg-base-100 p-2">
+                            <Menu />
+                            <img
+                                className="object-fit w-[80px] h-[60px]"
+                                src="https://media.istockphoto.com/id/1190641416/photo/streaming-live-esport-event-on-computer-at-home.jpg?b=1&s=170667a&w=0&k=20&c=zsbJz2Ua_QZeMI0Zuw4OLegmdjIWwy8j5ZDczBjEVFw="
+                                alt="pic"
+                            />
+                            <Trash2 />
+                            <div className="form-control rounded-md py-1 px-3">
+                                <label className="label cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        className="checkbox"
+                                    />
+                                    <p className="ml-2">Main</p>
+                                </label>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </Modal>
         </>
     );
 }
