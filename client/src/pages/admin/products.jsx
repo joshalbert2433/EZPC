@@ -2,7 +2,7 @@ import React from "react";
 import NavBar from "../partials/navBar";
 import { Link } from "react-router-dom";
 import Modal from "../../components/modal";
-import { Edit, Menu, Trash2 } from "react-feather";
+import { Edit, Menu, Trash2, XCircle } from "react-feather";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 function AdminProducts() {
@@ -36,7 +36,10 @@ function AdminProducts() {
                             </button>
                         </div>
                     </div>
-                    <label htmlFor="my-modal" className="btn btn-primary">
+                    <label
+                        htmlFor="AddProductModal"
+                        className="btn btn-primary"
+                    >
                         Add new product
                     </label>
                 </div>
@@ -55,91 +58,31 @@ function AdminProducts() {
                             </thead>
                             <tbody>
                                 <tr>
-                                    <th>
+                                    <td>
                                         <img
                                             className="object-fit w-[80px] h-[60px]"
                                             src="https://media.istockphoto.com/id/1190641416/photo/streaming-live-esport-event-on-computer-at-home.jpg?b=1&s=170667a&w=0&k=20&c=zsbJz2Ua_QZeMI0Zuw4OLegmdjIWwy8j5ZDczBjEVFw="
                                             alt="pic"
                                         />
-                                    </th>
-                                    <td>Cy Ganderton</td>
-                                    <td>Quality Control Specialist</td>
-                                    <td>Blue</td>
-                                    <td>Blue</td>
-                                    <td>
-                                        <div className="flex gap-4">
-                                            <Link
-                                                to={{ pathname: "/" }}
-                                                className="link link-info inline-block"
-                                            >
-                                                Edit
-                                            </Link>
-                                            <Link
-                                                to={{ pathname: "/" }}
-                                                className="link link-error inline-block"
-                                            >
-                                                Delete
-                                            </Link>
-                                        </div>
                                     </td>
-                                </tr>
-
-                                <tr>
-                                    <th>
-                                        <img
-                                            className="object-fit w-[80px] h-[60px]"
-                                            src="https://media.istockphoto.com/id/1190641416/photo/streaming-live-esport-event-on-computer-at-home.jpg?b=1&s=170667a&w=0&k=20&c=zsbJz2Ua_QZeMI0Zuw4OLegmdjIWwy8j5ZDczBjEVFw="
-                                            alt="pic"
-                                        />
-                                    </th>
                                     <td>Cy Ganderton</td>
                                     <td>Quality Control Specialist</td>
                                     <td>Blue</td>
                                     <td>Blue</td>
                                     <td>
                                         <div className="flex gap-4">
-                                            <Link
-                                                to={{ pathname: "/" }}
-                                                className="link link-info inline-block"
+                                            <label
+                                                htmlFor="EditProductModal"
+                                                className="link link-info"
                                             >
                                                 Edit
-                                            </Link>
-                                            <Link
-                                                to={{ pathname: "/" }}
-                                                className="link link-error inline-block"
+                                            </label>
+                                            <label
+                                                htmlFor="DeleteProductModal"
+                                                className="link link-error"
                                             >
                                                 Delete
-                                            </Link>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <th>
-                                        <img
-                                            className="object-fit w-[80px] h-[60px]"
-                                            src="https://media.istockphoto.com/id/1190641416/photo/streaming-live-esport-event-on-computer-at-home.jpg?b=1&s=170667a&w=0&k=20&c=zsbJz2Ua_QZeMI0Zuw4OLegmdjIWwy8j5ZDczBjEVFw="
-                                            alt="pic"
-                                        />
-                                    </th>
-                                    <td>Cy Ganderton</td>
-                                    <td>Quality Control Specialist</td>
-                                    <td>Blue</td>
-                                    <td>Blue</td>
-                                    <td>
-                                        <div className="flex gap-4">
-                                            <Link
-                                                to={{ pathname: "/" }}
-                                                className="link link-info inline-block"
-                                            >
-                                                Edit
-                                            </Link>
-                                            <Link
-                                                to={{ pathname: "/" }}
-                                                className="link link-error inline-block"
-                                            >
-                                                Delete
-                                            </Link>
+                                            </label>
                                         </div>
                                     </td>
                                 </tr>
@@ -158,147 +101,328 @@ function AdminProducts() {
                 </div>
             </div>
 
-            <Modal title="Add New Product">
-                <div>
-                    <label htmlFor="name" className="label">
-                        Name:
+            <Modal title="Add New Product" id="AddProductModal">
+                <div className="p4">
+                    <div>
+                        <label htmlFor="name" className="label">
+                            Name:
+                        </label>
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="Type name here"
+                            className="input input-bordered w-full "
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="description" className="label">
+                            Description:
+                        </label>
+                        <textarea
+                            className="textarea textarea-bordered w-full"
+                            placeholder="Type description here"
+                            name="description"
+                        ></textarea>
+                    </div>
+                    <p className="label">Category:</p>
+
+                    <div className="h-[200px] w-full border-opacity-10 p-4 grid grid-cols-2 gap-2 overflow-y-auto [&>*]:h-fit">
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+                    </div>
+                    <form action="/" method="POST" className="my-4">
+                        <input
+                            type="file"
+                            className="file-input file-input-bordered w-full max-w-xs hidden"
+                        />
+                        <input
+                            type="submit"
+                            className="btn btn-primary"
+                            value="Upload"
+                        />
+                    </form>
+
+                    <div className="w-full bg-base-300 h-[300px]">
+                        <ul className="p-3">
+                            <li className="flex items-center justify-around bg-base-100 p-2">
+                                <Menu />
+                                <img
+                                    className="object-fit w-[80px] h-[60px]"
+                                    src="https://media.istockphoto.com/id/1190641416/photo/streaming-live-esport-event-on-computer-at-home.jpg?b=1&s=170667a&w=0&k=20&c=zsbJz2Ua_QZeMI0Zuw4OLegmdjIWwy8j5ZDczBjEVFw="
+                                    alt="pic"
+                                />
+                                <Trash2 />
+                                <div className="form-control rounded-md py-1 px-3">
+                                    <label className="label cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            className="checkbox"
+                                        />
+                                        <p className="ml-2">Main</p>
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div className="modal-action">
+                    <label htmlFor="AddProductModal" className="btn">
+                        Cancel
                     </label>
-                    <input
-                        type="text"
-                        name="name"
-                        placeholder="Type name here"
-                        className="input input-bordered w-full "
-                    />
+                    <button className="btn btn-secondary">Preview</button>
+                    <button className="btn btn-primary">Update</button>
                 </div>
-                <div>
-                    <label htmlFor="description" className="label">
-                        Description:
+            </Modal>
+
+            <Modal title="Edit Product" id="EditProductModal">
+                <div className="p4">
+                    <div>
+                        <label htmlFor="name" className="label">
+                            Name:
+                        </label>
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="Type name here"
+                            className="input input-bordered w-full "
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor="description" className="label">
+                            Description:
+                        </label>
+                        <textarea
+                            className="textarea textarea-bordered w-full"
+                            placeholder="Type description here"
+                            name="description"
+                        ></textarea>
+                    </div>
+                    <p className="label">Category:</p>
+
+                    <div className="h-[200px] w-full border-opacity-10 p-4 grid grid-cols-2 gap-2 overflow-y-auto [&>*]:h-fit">
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <span>Monitor</span>
+                            </label>
+                        </div>
+                    </div>
+                    <form action="/" method="POST" className="my-4">
+                        <input
+                            type="file"
+                            className="file-input file-input-bordered w-full max-w-xs hidden"
+                        />
+                        <input
+                            type="submit"
+                            className="btn btn-primary"
+                            value="Upload"
+                        />
+                    </form>
+
+                    <div className="w-full bg-base-300 h-[300px]">
+                        <ul className="p-3">
+                            <li className="flex items-center justify-around bg-base-100 p-2">
+                                <Menu />
+                                <img
+                                    className="object-fit w-[80px] h-[60px]"
+                                    src="https://media.istockphoto.com/id/1190641416/photo/streaming-live-esport-event-on-computer-at-home.jpg?b=1&s=170667a&w=0&k=20&c=zsbJz2Ua_QZeMI0Zuw4OLegmdjIWwy8j5ZDczBjEVFw="
+                                    alt="pic"
+                                />
+                                <Trash2 />
+                                <div className="form-control rounded-md py-1 px-3">
+                                    <label className="label cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            className="checkbox"
+                                        />
+                                        <p className="ml-2">Main</p>
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div className="modal-action">
+                    <label htmlFor="EditProductModal" className="btn">
+                        Cancel
                     </label>
-                    <textarea
-                        className="textarea textarea-bordered w-full"
-                        placeholder="Type description here"
-                        name="description"
-                    ></textarea>
+                    <button className="btn btn-secondary">Preview</button>
+                    <button className="btn btn-primary">Update</button>
                 </div>
-                <p className="label">Category:</p>
+            </Modal>
 
-                <div className="h-[200px] w-full border-opacity-10 p-4 grid grid-cols-2 gap-2 overflow-y-auto [&>*]:h-fit">
-                    <div className="form-control  bg-base-200 rounded-md px-2">
-                        <label className="label cursor-pointer">
-                            <input type="checkbox" className="checkbox" />
-                            <span>Monitor</span>
-                        </label>
+            <Modal id="DeleteProductModal">
+                <div className="">
+                    <div className="w-fit mx-auto flex flex-col justify-center items-center text-center space-y-4">
+                        <XCircle color="red" size={60} />
+                        <p className="text-3xl">Are You Sure?</p>
+                        <p className="text-xl text-gray-500">
+                            Do you really want to delete this records? This
+                            process cannot be undone
+                        </p>
                     </div>
-
-                    <div className="form-control  bg-base-200 rounded-md px-2">
-                        <label className="label cursor-pointer">
-                            <input type="checkbox" className="checkbox" />
-                            <span>Monitor</span>
+                    <div className="modal-action">
+                        <label htmlFor="DeleteProductModal" className="btn">
+                            Cancel
                         </label>
+                        <button className="btn btn-error">Delete</button>
                     </div>
-
-                    <div className="form-control  bg-base-200 rounded-md px-2">
-                        <label className="label cursor-pointer">
-                            <input type="checkbox" className="checkbox" />
-                            <span>Monitor</span>
-                        </label>
-                    </div>
-
-                    <div className="form-control  bg-base-200 rounded-md px-2">
-                        <label className="label cursor-pointer">
-                            <input type="checkbox" className="checkbox" />
-                            <span>Monitor</span>
-                        </label>
-                    </div>
-
-                    <div className="form-control  bg-base-200 rounded-md px-2">
-                        <label className="label cursor-pointer">
-                            <input type="checkbox" className="checkbox" />
-                            <span>Monitor</span>
-                        </label>
-                    </div>
-
-                    <div className="form-control  bg-base-200 rounded-md px-2">
-                        <label className="label cursor-pointer">
-                            <input type="checkbox" className="checkbox" />
-                            <span>Monitor</span>
-                        </label>
-                    </div>
-
-                    <div className="form-control  bg-base-200 rounded-md px-2">
-                        <label className="label cursor-pointer">
-                            <input type="checkbox" className="checkbox" />
-                            <span>Monitor</span>
-                        </label>
-                    </div>
-
-                    <div className="form-control  bg-base-200 rounded-md px-2">
-                        <label className="label cursor-pointer">
-                            <input type="checkbox" className="checkbox" />
-                            <span>Monitor</span>
-                        </label>
-                    </div>
-
-                    <div className="form-control  bg-base-200 rounded-md px-2">
-                        <label className="label cursor-pointer">
-                            <input type="checkbox" className="checkbox" />
-                            <span>Monitor</span>
-                        </label>
-                    </div>
-
-                    <div className="form-control  bg-base-200 rounded-md px-2">
-                        <label className="label cursor-pointer">
-                            <input type="checkbox" className="checkbox" />
-                            <span>Monitor</span>
-                        </label>
-                    </div>
-                    <div className="form-control  bg-base-200 rounded-md px-2">
-                        <label className="label cursor-pointer">
-                            <input type="checkbox" className="checkbox" />
-                            <span>Monitor</span>
-                        </label>
-                    </div>
-
-                    <div className="form-control  bg-base-200 rounded-md px-2">
-                        <label className="label cursor-pointer">
-                            <input type="checkbox" className="checkbox" />
-                            <span>Monitor</span>
-                        </label>
-                    </div>
-                </div>
-                <form action="/" method="POST" className="my-4">
-                    <input
-                        type="file"
-                        className="file-input file-input-bordered w-full max-w-xs hidden"
-                    />
-                    <input
-                        type="submit"
-                        className="btn btn-primary"
-                        value="Upload"
-                    />
-                </form>
-
-                <div className="w-full bg-base-300 h-[300px]">
-                    <ul className="p-3">
-                        <li className="flex items-center justify-around bg-base-100 p-2">
-                            <Menu />
-                            <img
-                                className="object-fit w-[80px] h-[60px]"
-                                src="https://media.istockphoto.com/id/1190641416/photo/streaming-live-esport-event-on-computer-at-home.jpg?b=1&s=170667a&w=0&k=20&c=zsbJz2Ua_QZeMI0Zuw4OLegmdjIWwy8j5ZDczBjEVFw="
-                                alt="pic"
-                            />
-                            <Trash2 />
-                            <div className="form-control rounded-md py-1 px-3">
-                                <label className="label cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox"
-                                    />
-                                    <p className="ml-2">Main</p>
-                                </label>
-                            </div>
-                        </li>
-                    </ul>
                 </div>
             </Modal>
         </>

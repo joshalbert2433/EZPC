@@ -8,6 +8,8 @@ import SignUp from "./pages/user/signUp";
 import Orders from "./pages/admin/orders";
 import OrderShow from "./pages/admin/orderShow";
 import AdminProducts from "./pages/admin/products";
+import AdminLogin from "./pages/admin/login";
+import Address from "./pages/addresss";
 
 function App() {
     return (
@@ -18,6 +20,7 @@ function App() {
                 <Route exact path="/cart" element={<Cart />}></Route>
                 <Route exact path="/login" element={<Login />}></Route>
                 <Route exact path="/sign-up" element={<SignUp />}></Route>
+                <Route exact path="/address" element={<Address />}></Route>
                 <Route
                     exact
                     path="/dashboard/orders"
@@ -32,6 +35,11 @@ function App() {
                     exact
                     path="/dashboard/products"
                     element={<AdminProducts />}
+                ></Route>
+                <Route
+                    exact
+                    path="admin/login"
+                    element={<AdminLogin />}
                 ></Route>
             </Routes>
         </Router>

@@ -131,7 +131,9 @@ function Products() {
                             </p>
                         </div>
                         <div className="flex gap-3">
-                            <button className="btn btn-primary">Buy</button>
+                            <button className="btn btn-primary">
+                                Add to cart
+                            </button>
                             <select className="select select-bordered w-[200px] text-center select-xl">
                                 <option disabled selected>
                                     Select Quantity

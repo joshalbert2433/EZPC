@@ -54,57 +54,100 @@ function Cart() {
                         Continue Shopping
                     </button>
                 </div>
-                <div className="xl:w-[40%] xl:mx-0 md:w-[70%] md:mx-auto p-4 md:p-0 mt-4">
-                    <h2 className="text-2xl font-semibold">
-                        Shipping Information
-                    </h2>
-                    <div className="form-control w-full">
-                        <label className="label">First Name</label>
-                        <input
-                            type="text"
-                            placeholder="Josh"
-                            className="input input-sm md:input-md input-bordered w-full "
-                        />
+                <div className="flex justify-between">
+                    <div className="xl:w-[40%] xl:mx-0 md:w-[70%] md:mx-auto mt-4 bg-base-100 p-4 rounded-md">
+                        <h2 className="text-2xl font-semibold">
+                            Billing Information
+                        </h2>
+                        <div className="form-control rounded-md py-1 px-3 w-fit">
+                            <label className="label cursor-pointer">
+                                <input type="checkbox" className="checkbox" />
+                                <p className="ml-2">Same as shipping address</p>
+                            </label>
+                        </div>
+                        <div className="form-control w-full">
+                            <label className="label">First Name</label>
+                            <input
+                                type="text"
+                                placeholder="Josh"
+                                className="input input-sm md:input-md input-bordered w-full "
+                            />
+                        </div>
+                        <div className="form-control w-full">
+                            <label className="label">Last Name</label>
+                            <input
+                                type="text"
+                                placeholder="Alberts"
+                                className="input input-sm md:input-md input-bordered w-full "
+                            />
+                        </div>
+                        <div className="form-control w-full">
+                            <label className="label">Address</label>
+                            <input
+                                type="text"
+                                placeholder="Malayo, Malapit, Di makita Street"
+                                className="input input-sm md:input-md input-bordered w-full "
+                            />
+                        </div>
+                        <div className="form-control w-full">
+                            <label className="label">City</label>
+                            <input
+                                type="text"
+                                placeholder="Imus"
+                                className="input input-sm md:input-md input-bordered w-full "
+                            />
+                        </div>
+                        <div className="form-control w-full">
+                            <label className="label">State</label>
+                            <input
+                                type="text"
+                                placeholder="Cavite"
+                                className="input input-sm md:input-md input-bordered w-full "
+                            />
+                        </div>
+                        <div className="form-control w-full">
+                            <label className="label">Zip Code</label>
+                            <input
+                                type="text"
+                                placeholder="4103"
+                                className="input input-sm md:input-md input-bordered w-full "
+                            />
+                        </div>
                     </div>
-                    <div className="form-control w-full">
-                        <label className="label">Last Name</label>
-                        <input
-                            type="text"
-                            placeholder="Alberts"
-                            className="input input-sm md:input-md input-bordered w-full "
-                        />
-                    </div>
-                    <div className="form-control w-full">
-                        <label className="label">Address</label>
-                        <input
-                            type="text"
-                            placeholder="Malayo, Malapit, Di makita Street"
-                            className="input input-sm md:input-md input-bordered w-full "
-                        />
-                    </div>
-                    <div className="form-control w-full">
-                        <label className="label">City</label>
-                        <input
-                            type="text"
-                            placeholder="Imus"
-                            className="input input-sm md:input-md input-bordered w-full "
-                        />
-                    </div>
-                    <div className="form-control w-full">
-                        <label className="label">State</label>
-                        <input
-                            type="text"
-                            placeholder="Cavite"
-                            className="input input-sm md:input-md input-bordered w-full "
-                        />
-                    </div>
-                    <div className="form-control w-full">
-                        <label className="label">Zip Code</label>
-                        <input
-                            type="text"
-                            placeholder="4103"
-                            className="input input-sm md:input-md input-bordered w-full "
-                        />
+                    <div className="xl:w-[40%] xl:mx-0 md:w-[70%] md:mx-auto mt-4 bg-base-100 p-4 rounded-md h-fit">
+                        <div className="form-control w-full">
+                            <label className="label">Card: </label>
+                            <input
+                                type="text"
+                                placeholder="Josh"
+                                className="input input-sm md:input-md input-bordered w-full "
+                            />
+                        </div>
+                        <div className="form-control w-full">
+                            <label className="label">Security Code: </label>
+                            <input
+                                type="text"
+                                placeholder="Josh"
+                                className="input input-sm md:input-md input-bordered w-full "
+                            />
+                        </div>
+                        <div className="form-control w-full">
+                            <label className="label">Expiration: </label>
+                            <div className="flex place-items-center">
+                                <input
+                                    type="text"
+                                    placeholder="mm"
+                                    className="input input-sm md:input-md input-bordered w-full "
+                                />
+                                <p className="mx-4">/</p>
+                                <input
+                                    type="text"
+                                    placeholder="year"
+                                    className="input input-sm md:input-md input-bordered w-full "
+                                />
+                            </div>
+                        </div>
+                        <button className="btn btn-secondary mt-4">Pay</button>
                     </div>
                 </div>
             </div>

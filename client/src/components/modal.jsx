@@ -1,21 +1,21 @@
 import React from "react";
+import { X } from "react-feather";
 
 function Modal(props) {
-    const { title, children } = props;
+    const { title, children, id } = props;
     return (
         <>
-            <input type="checkbox" id="my-modal" className="modal-toggle" />
+            <input type="checkbox" id={id} className="modal-toggle" />
             <div className="modal block pt-10">
-                <div className="modal-box mx-auto">
-                    <h3 className="font-bold text-lg">{title}</h3>
-                    <p className="py-4">{children}</p>
-                    <div className="modal-action">
-                        <label htmlFor="my-modal" className="btn">
-                            Cancel
-                        </label>
-                        <button className="btn btn-secondary">Preview</button>
-                        <button className="btn btn-primary">Update</button>
-                    </div>
+                <div className="modal-box mx-auto relative">
+                    <h2 className="text-2xl font-semibold">{title}</h2>
+                    <label
+                        htmlFor={id}
+                        className="absolute right-6 top-6 cursor-pointer font-semibold"
+                    >
+                        <X />
+                    </label>
+                    {children}
                 </div>
             </div>
         </>
