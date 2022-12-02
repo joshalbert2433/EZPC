@@ -33,6 +33,7 @@ const register = async (req, res, next) => {
     } catch (error) {
         res.json({
             message: "An error occurred",
+            error,
         });
     }
 };

@@ -9,7 +9,7 @@ import Orders from "./pages/admin/orders";
 import OrderShow from "./pages/admin/orderShow";
 import AdminProducts from "./pages/admin/products";
 import AdminLogin from "./pages/admin/login";
-import Address from "./pages/addresss";
+import Address from "./pages/address";
 
 function App() {
     return (

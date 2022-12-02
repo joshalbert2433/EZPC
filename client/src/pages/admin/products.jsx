@@ -1,11 +1,70 @@
-import React from "react";
+import React, { useReducer, useState, useEffect } from "react";
 import NavBar from "../partials/navBar";
-import { Link } from "react-router-dom";
 import Modal from "../../components/modal";
-import { Edit, Menu, Trash2, XCircle } from "react-feather";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { Menu, Trash2, XCircle } from "react-feather";
+import EcomAPI from "../../api/Ecomm.api";
+
+import {
+    addProductsFormReducer,
+    INITIAL_STATE,
+} from "../../reducer/productsFormReducer";
+
+const categories = [
+    "Processor",
+    "Graphics Card",
+    "Motherboard",
+    "Monitor",
+    "Memory",
+    "Storage",
+    "Power Supply",
+];
 
 function AdminProducts() {
+    const [state, dispatch] = useReducer(addProductsFormReducer, INITIAL_STATE);
+
+    const handleOnChange = (e) => {
+        const { value, name } = e.target;
+
+        dispatch({
+            type: "CHANGE_INPUT",
+            payload: { name: name, value: value },
+        });
+    };
+
+    const handlerCategory = (e) => {
+        const { value, checked } = e.target;
+
+        if (checked) {
+            dispatch({
+                type: "ADD_CATEGORY",
+                payload: value,
+            });
+        } else {
+            dispatch({
+                type: "REMOVE_CATEGORY",
+                payload: value,
+            });
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await EcomAPI.post("products/register", {
+                name: state.name,
+                description: state.description,
+                category: state.category,
+            });
+        } catch (error) {
+            console.error(error);
+        }
+        console.log("hello");
+    };
+
+    useEffect(() => {
+        console.log(state);
+    }, [state]);
+
     return (
         <>
             <NavBar />
@@ -102,7 +161,7 @@ function AdminProducts() {
             </div>
 
             <Modal title="Add New Product" id="AddProductModal">
-                <div className="p4">
+                <form onSubmit={handleSubmit} className="p4">
                     <div>
                         <label htmlFor="name" className="label">
                             Name:
@@ -111,7 +170,8 @@ function AdminProducts() {
                             type="text"
                             name="name"
                             placeholder="Type name here"
-                            className="input input-bordered w-full "
+                            className="input input-bordered w-full"
+                            onChange={handleOnChange}
                         />
                     </div>
                     <div>
@@ -122,95 +182,33 @@ function AdminProducts() {
                             className="textarea textarea-bordered w-full"
                             placeholder="Type description here"
                             name="description"
+                            onChange={handleOnChange}
                         ></textarea>
                     </div>
                     <p className="label">Category:</p>
 
                     <div className="h-[200px] w-full border-opacity-10 p-4 grid grid-cols-2 gap-2 overflow-y-auto [&>*]:h-fit">
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
-                            </label>
-                        </div>
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
-                            </label>
-                        </div>
+                        {categories.map((category, index) => {
+                            return (
+                                <div
+                                    className="form-control  bg-base-200 rounded-md px-2"
+                                    key={index}
+                                >
+                                    <label className="label cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            className="checkbox"
+                                            name="category"
+                                            value={category}
+                                            onChange={handlerCategory}
+                                        />
+                                        <span>{category}</span>
+                                    </label>
+                                </div>
+                            );
+                        })}
                     </div>
-                    <form action="/" method="POST" className="my-4">
+                    <div className="my-4">
                         <input
                             type="file"
                             className="file-input file-input-bordered w-full max-w-xs hidden"
@@ -220,7 +218,7 @@ function AdminProducts() {
                             className="btn btn-primary"
                             value="Upload"
                         />
-                    </form>
+                    </div>
 
                     <div className="w-full bg-base-300 h-[300px]">
                         <ul className="p-3">
@@ -244,14 +242,15 @@ function AdminProducts() {
                             </li>
                         </ul>
                     </div>
-                </div>
-                <div className="modal-action">
-                    <label htmlFor="AddProductModal" className="btn">
-                        Cancel
-                    </label>
-                    <button className="btn btn-secondary">Preview</button>
-                    <button className="btn btn-primary">Update</button>
-                </div>
+                    <div className="modal-action">
+                        <label htmlFor="AddProductModal" className="btn">
+                            Cancel
+                        </label>
+                        <button type="submit" className="btn btn-primary">
+                            add
+                        </button>
+                    </div>
+                </form>
             </Modal>
 
             <Modal title="Edit Product" id="EditProductModal">
@@ -282,8 +281,32 @@ function AdminProducts() {
                     <div className="h-[200px] w-full border-opacity-10 p-4 grid grid-cols-2 gap-2 overflow-y-auto [&>*]:h-fit">
                         <div className="form-control  bg-base-200 rounded-md px-2">
                             <label className="label cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    className="checkbox"
+                                    name="category"
+                                    value="processor"
+                                />
+                                <span>Processor</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    className="checkbox"
+                                    name="category"
+                                    value="graphics card"
+                                />
+                                <span>Graphics Card</span>
+                            </label>
+                        </div>
+
+                        <div className="form-control  bg-base-200 rounded-md px-2">
+                            <label className="label cursor-pointer">
                                 <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
+                                <span>Motherboard</span>
                             </label>
                         </div>
 
@@ -297,69 +320,21 @@ function AdminProducts() {
                         <div className="form-control  bg-base-200 rounded-md px-2">
                             <label className="label cursor-pointer">
                                 <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
+                                <span>Memory</span>
                             </label>
                         </div>
 
                         <div className="form-control  bg-base-200 rounded-md px-2">
                             <label className="label cursor-pointer">
                                 <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
+                                <span>Storage</span>
                             </label>
                         </div>
 
                         <div className="form-control  bg-base-200 rounded-md px-2">
                             <label className="label cursor-pointer">
                                 <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
-                            </label>
-                        </div>
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
+                                <span>Power Supply</span>
                             </label>
                         </div>
                     </div>
