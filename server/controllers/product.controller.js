@@ -20,18 +20,20 @@ const register = async (req, res, next) => {
     let product = new Product({
         name: req.body.name,
         description: req.body.description,
+        image: req.body.image,
         price: req.body.price,
         category: req.body.category,
         stock: req.body.stock,
     });
 
     try {
-        await product.save();
+        const response = await product.save();
         res.json({
             message: "Product Saved",
+            response,
         });
     } catch (error) {
-        res.json({
+        res.status(400).json({
             message: "An error occurred",
             error,
         });

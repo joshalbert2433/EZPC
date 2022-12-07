@@ -1,13 +1,24 @@
-import React, { useReducer, useState, useEffect } from "react";
+import React, { useReducer, useState, useEffect, useRef } from "react";
 import NavBar from "../partials/navBar";
 import Modal from "../../components/modal";
 import { Menu, Trash2, XCircle } from "react-feather";
 import EcomAPI from "../../api/Ecomm.api";
+import ImageUploading from "react-images-uploading";
+import {
+    ToasterContainer,
+    toastInfo,
+    toastError,
+    toastWarning,
+    toastSuccess,
+} from "../../components/toaster";
+import "react-toastify/dist/ReactToastify.css";
 
 import {
     addProductsFormReducer,
     INITIAL_STATE,
 } from "../../reducer/productsFormReducer";
+import { toast } from "react-toastify";
+import DiscardModal from "../../components/discardModal";
 
 const categories = [
     "Processor",
@@ -21,6 +32,8 @@ const categories = [
 
 function AdminProducts() {
     const [state, dispatch] = useReducer(addProductsFormReducer, INITIAL_STATE);
+    const addProductForm = useRef();
+    const maxNumber = 10;
 
     const handleOnChange = (e) => {
         const { value, name } = e.target;
@@ -47,18 +60,114 @@ function AdminProducts() {
         }
     };
 
+    const handlerImage = (imageList, addUpdateIndex) => {
+        // DATA FOR SUBMIT
+        console.log(imageList, addUpdateIndex);
+
+        dispatch({
+            type: "IMAGE_INPUT",
+            payload: imageList,
+        });
+    };
+
+    const handlerImageMain = (event, index) => {
+        console.log(index);
+
+        const { checked } = event.target;
+
+        if (checked) {
+            dispatch({
+                type: "SET_IMAGE_MAIN",
+                payload: index,
+            });
+        } else {
+            dispatch({
+                type: "SET_IMAGE_MAIN",
+                payload: "",
+            });
+        }
+    };
+
+    const handlerReset = () => {
+        addProductForm.current.reset();
+
+        dispatch({
+            type: "RESET",
+        });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        let form_errors = [];
+
+        // if (state.name.length === 0) {
+        //     return toastError("Name Is required");
+        // }
+        // if (state.description.length === 0) {
+        //     return toastError("Description Is required");
+        // }
+        // if (state.category.length === 0) {
+        //     return toastError("Must select category");
+        // }
+
+        // if (state.image.length === 0) {
+        //     return toastError("Must select at least one image");
+        // }
+
+        // if (state.image_main.length === 0) {
+        //     return toastError("Must select main image for product");
+        // }
+
+        if (state.name.length === 0) {
+            // return toastError("Name Is required");
+            form_errors.push("Name Is required");
+        }
+        if (state.description.length === 0) {
+            // return toastError("Description Is required");
+            form_errors.push("Description Is required");
+        }
+        if (state.category.length === 0) {
+            // return toastError("Must select category");
+            form_errors.push("Must select category");
+        }
+
+        if (state.image.length === 0) {
+            form_errors.push("Must select at least one image");
+        } else if (state.image.length !== 0 && state.image_main.length === 0) {
+            form_errors.push("Must select main image for product");
+        }
+
+        if (form_errors.length > 0) {
+            form_errors.map((error) => {
+                return toastError(error);
+            });
+            // form_errors = [];
+            return;
+        }
+
+        //CONVERT DATA URL OBJECT INTO ARRAY
+        const imageDataUrl = state.image.map((element) => {
+            return element.data_url;
+        });
+
         try {
             await EcomAPI.post("products/register", {
                 name: state.name,
                 description: state.description,
+                image: imageDataUrl,
                 category: state.category,
+                image_main: state.image_main,
             });
         } catch (error) {
-            console.error(error);
+            console.log(error);
         }
-        console.log("hello");
+        toastSuccess("Product Successfully Added");
+        handlerReset();
+    };
+
+    const handlerImageError = (error) => {
+        toastError(`Image upload limit is ${maxNumber}`);
     };
 
     useEffect(() => {
@@ -160,8 +269,17 @@ function AdminProducts() {
                 </div>
             </div>
 
-            <Modal title="Add New Product" id="AddProductModal">
-                <form onSubmit={handleSubmit} className="p4">
+            <Modal
+                title="Add New Product"
+                id="AddProductModal"
+                handleModalOnClick={handlerReset}
+            >
+                <form
+                    onSubmit={handleSubmit}
+                    // encType="multipart/form-data"
+                    className="p4"
+                    ref={addProductForm}
+                >
                     <div>
                         <label htmlFor="name" className="label">
                             Name:
@@ -169,6 +287,7 @@ function AdminProducts() {
                         <input
                             type="text"
                             name="name"
+                            value={state.name}
                             placeholder="Type name here"
                             className="input input-bordered w-full"
                             onChange={handleOnChange}
@@ -182,6 +301,7 @@ function AdminProducts() {
                             className="textarea textarea-bordered w-full"
                             placeholder="Type description here"
                             name="description"
+                            value={state.description}
                             onChange={handleOnChange}
                         ></textarea>
                     </div>
@@ -200,7 +320,15 @@ function AdminProducts() {
                                             className="checkbox"
                                             name="category"
                                             value={category}
-                                            onChange={handlerCategory}
+                                            // REMOVE DISABLED FOR MULTIPLE CATEGORY
+                                            disabled={
+                                                state.category[0] !==
+                                                    category &&
+                                                state.category.length !== 0
+                                                    ? true
+                                                    : false
+                                            }
+                                            onClick={handlerCategory}
                                         />
                                         <span>{category}</span>
                                     </label>
@@ -208,7 +336,7 @@ function AdminProducts() {
                             );
                         })}
                     </div>
-                    <div className="my-4">
+                    {/* <div className="my-4">
                         <input
                             type="file"
                             className="file-input file-input-bordered w-full max-w-xs hidden"
@@ -218,9 +346,125 @@ function AdminProducts() {
                             className="btn btn-primary"
                             value="Upload"
                         />
-                    </div>
+                    </div> */}
 
-                    <div className="w-full bg-base-300 h-[300px]">
+                    <ImageUploading
+                        multiple
+                        value={state.image}
+                        onChange={handlerImage}
+                        maxNumber={maxNumber}
+                        dataURLKey="data_url"
+                        onError={handlerImageError}
+                    >
+                        {({
+                            imageList,
+                            onImageUpload,
+                            onImageRemoveAll,
+                            onImageUpdate,
+                            onImageRemove,
+                            isDragging,
+                            dragProps,
+                        }) => (
+                            // BUILDING UI
+                            <div className="my-4">
+                                <button
+                                    type="button"
+                                    style={
+                                        isDragging
+                                            ? { color: "red" }
+                                            : undefined
+                                    }
+                                    className="btn btn-primary mr-4"
+                                    onClick={onImageUpload}
+                                    {...dragProps}
+                                >
+                                    Upload Image
+                                </button>
+
+                                {/* <button
+                                    type="button"
+                                    onClick={onImageRemoveAll}
+                                    className="btn"
+                                >
+                                    Remove all images
+                                </button> */}
+                                <div className="w-full bg-base-300 h-[300px] overflow-y-auto mt-4">
+                                    <ul className="p-3 space-y-2">
+                                        {imageList.map((image, index) => {
+                                            return (
+                                                <li
+                                                    className="flex items-center justify-around bg-base-100 p-2"
+                                                    key={index}
+                                                >
+                                                    <Menu />
+                                                    <img
+                                                        className="object-fit w-[80px] h-[60px]"
+                                                        src={image["data_url"]}
+                                                        alt="pic"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        className={
+                                                            state.image_main !==
+                                                            ""
+                                                                ? "cursor-not-allowed"
+                                                                : "cursor-pointer"
+                                                        }
+                                                        onClick={() =>
+                                                            state.image_main !==
+                                                            ""
+                                                                ? toastError(
+                                                                      "Can't delete image if main is checked"
+                                                                  )
+                                                                : onImageRemove(
+                                                                      index
+                                                                  )
+                                                        }
+                                                        // disabled={
+                                                        //     state.image_main !==
+                                                        //     ""
+                                                        // }
+                                                    >
+                                                        <Trash2 />
+                                                    </button>
+                                                    <div className="form-control rounded-md py-1 px-3">
+                                                        <label className="label cursor-pointer">
+                                                            <input
+                                                                type="checkbox"
+                                                                className="checkbox"
+                                                                name="image_main"
+                                                                disabled={
+                                                                    state.image_main !==
+                                                                        index &&
+                                                                    state.image_main !==
+                                                                        ""
+                                                                        ? true
+                                                                        : false
+                                                                }
+                                                                onClick={(
+                                                                    event
+                                                                ) => {
+                                                                    handlerImageMain(
+                                                                        event,
+                                                                        index
+                                                                    );
+                                                                }}
+                                                            />
+                                                            <p className="ml-2">
+                                                                Main
+                                                            </p>
+                                                        </label>
+                                                    </div>
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
+                                </div>
+                            </div>
+                        )}
+                    </ImageUploading>
+
+                    {/* <div className="w-full bg-base-300 h-[300px]">
                         <ul className="p-3">
                             <li className="flex items-center justify-around bg-base-100 p-2">
                                 <Menu />
@@ -241,11 +485,30 @@ function AdminProducts() {
                                 </div>
                             </li>
                         </ul>
-                    </div>
+                    </div> */}
+
                     <div className="modal-action">
-                        <label htmlFor="AddProductModal" className="btn">
+                        <label
+                            htmlFor="AddProductModal"
+                            className="btn"
+                            onClick={handlerReset}
+                        >
                             Cancel
                         </label>
+
+                        <button
+                            type="reset"
+                            className="btn btn-neutral"
+                            onClick={() => {
+                                toastInfo("Form has been reset");
+                                handlerReset();
+                            }}
+                        >
+                            Reset
+                        </button>
+                        <button type="button" className="btn btn-accent">
+                            Preview
+                        </button>
                         <button type="submit" className="btn btn-primary">
                             add
                         </button>
@@ -382,24 +645,9 @@ function AdminProducts() {
                 </div>
             </Modal>
 
-            <Modal id="DeleteProductModal">
-                <div className="">
-                    <div className="w-fit mx-auto flex flex-col justify-center items-center text-center space-y-4">
-                        <XCircle color="red" size={60} />
-                        <p className="text-3xl">Are You Sure?</p>
-                        <p className="text-xl text-gray-500">
-                            Do you really want to delete this records? This
-                            process cannot be undone
-                        </p>
-                    </div>
-                    <div className="modal-action">
-                        <label htmlFor="DeleteProductModal" className="btn">
-                            Cancel
-                        </label>
-                        <button className="btn btn-error">Delete</button>
-                    </div>
-                </div>
-            </Modal>
+            <DiscardModal id="DeleteProductModal" />
+
+            <ToasterContainer />
         </>
     );
 }
