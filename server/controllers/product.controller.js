@@ -12,7 +12,7 @@ const getAllProducts = async () => {
 
 const display = async (req, res, next) => {
     let data = await getAllProducts();
-    console.log(data);
+    // console.log(data);
     res.json({ data });
 };
 
@@ -22,6 +22,7 @@ const register = async (req, res, next) => {
         description: req.body.description,
         image: req.body.image,
         price: req.body.price,
+        image_main: req.body.image_main,
         category: req.body.category,
         stock: req.body.stock,
     });

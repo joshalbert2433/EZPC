@@ -1,9 +1,11 @@
 import React, { useReducer, useState, useEffect, useRef } from "react";
 import NavBar from "../partials/navBar";
 import Modal from "../../components/modal";
+import EcommAPI from "../../api/Ecomm.api";
 import { Menu, Trash2, XCircle } from "react-feather";
 import EcomAPI from "../../api/Ecomm.api";
 import ImageUploading from "react-images-uploading";
+import Skeleton from "../../components/skeleton";
 import {
     ToasterContainer,
     toastInfo,
@@ -32,8 +34,28 @@ const categories = [
 
 function AdminProducts() {
     const [state, dispatch] = useReducer(addProductsFormReducer, INITIAL_STATE);
+    const [productData, setProductData] = useState();
     const addProductForm = useRef();
     const maxNumber = 10;
+
+    const getAllProducts = async () => {
+        try {
+            const response = await EcommAPI.get("products");
+            setProductData(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        getAllProducts();
+        // console.log(productData);
+    }, []);
+
+    useEffect(() => {
+        // console.log(state);
+        console.log(productData);
+    }, [productData]);
 
     const handleOnChange = (e) => {
         const { value, name } = e.target;
@@ -101,34 +123,13 @@ function AdminProducts() {
 
         let form_errors = [];
 
-        // if (state.name.length === 0) {
-        //     return toastError("Name Is required");
-        // }
-        // if (state.description.length === 0) {
-        //     return toastError("Description Is required");
-        // }
-        // if (state.category.length === 0) {
-        //     return toastError("Must select category");
-        // }
-
-        // if (state.image.length === 0) {
-        //     return toastError("Must select at least one image");
-        // }
-
-        // if (state.image_main.length === 0) {
-        //     return toastError("Must select main image for product");
-        // }
-
         if (state.name.length === 0) {
-            // return toastError("Name Is required");
             form_errors.push("Name Is required");
         }
         if (state.description.length === 0) {
-            // return toastError("Description Is required");
             form_errors.push("Description Is required");
         }
         if (state.category.length === 0) {
-            // return toastError("Must select category");
             form_errors.push("Must select category");
         }
 
@@ -142,7 +143,6 @@ function AdminProducts() {
             form_errors.map((error) => {
                 return toastError(error);
             });
-            // form_errors = [];
             return;
         }
 
@@ -169,10 +169,6 @@ function AdminProducts() {
     const handlerImageError = (error) => {
         toastError(`Image upload limit is ${maxNumber}`);
     };
-
-    useEffect(() => {
-        console.log(state);
-    }, [state]);
 
     return (
         <>
@@ -211,53 +207,66 @@ function AdminProducts() {
                         Add new product
                     </label>
                 </div>
-                <div className="overflow-x-auto p-2 md:p-0 my-4">
-                    <div className="overflow-x-auto">
-                        <table className="table w-full ">
-                            <thead>
-                                <tr className="text-gray-200 [&>*]:bg-neutral ">
-                                    <th>Picture</th>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Inventory Count</th>
-                                    <th>Quantity Sold</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <img
-                                            className="object-fit w-[80px] h-[60px]"
-                                            src="https://media.istockphoto.com/id/1190641416/photo/streaming-live-esport-event-on-computer-at-home.jpg?b=1&s=170667a&w=0&k=20&c=zsbJz2Ua_QZeMI0Zuw4OLegmdjIWwy8j5ZDczBjEVFw="
-                                            alt="pic"
-                                        />
-                                    </td>
-                                    <td>Cy Ganderton</td>
-                                    <td>Quality Control Specialist</td>
-                                    <td>Blue</td>
-                                    <td>Blue</td>
-                                    <td>
-                                        <div className="flex gap-4">
-                                            <label
-                                                htmlFor="EditProductModal"
-                                                className="link link-info"
-                                            >
-                                                Edit
-                                            </label>
-                                            <label
-                                                htmlFor="DeleteProductModal"
-                                                className="link link-error"
-                                            >
-                                                Delete
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                {productData ? (
+                    <div className="overflow-x-auto p-2 md:p-0 my-4">
+                        <div className="overflow-x-auto">
+                            <table className="table w-full ">
+                                <thead>
+                                    <tr className="text-gray-200 [&>*]:bg-neutral ">
+                                        <th>Picture</th>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Inventory Count</th>
+                                        <th>Quantity Sold</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {productData.data.map((data) => {
+                                        return (
+                                            <tr key={data._id}>
+                                                <td>
+                                                    <img
+                                                        className="object-fit w-[80px] h-[60px]"
+                                                        src={
+                                                            data.image[
+                                                                data.image_main
+                                                            ]
+                                                        }
+                                                        alt="pic"
+                                                    />
+                                                </td>
+                                                <td>{data._id}</td>
+                                                <td>{data.name}</td>
+                                                <td>{data.stock}</td>
+                                                <td>Blue</td>
+                                                <td>
+                                                    <div className="flex gap-4">
+                                                        <label
+                                                            htmlFor="EditProductModal"
+                                                            className="link link-info"
+                                                        >
+                                                            Edit
+                                                        </label>
+                                                        <label
+                                                            htmlFor="DeleteProductModal"
+                                                            className="link link-error"
+                                                        >
+                                                            Delete
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
+                ) : (
+                    <Skeleton />
+                )}
+
                 <div className="flex justify-center py-5">
                     <div className="btn-group">
                         <button className="btn">1</button>
