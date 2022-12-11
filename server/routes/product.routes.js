@@ -6,6 +6,8 @@ const multipleUpload = require("../middleware/multiUpload");
 
 router.get("/", ProductController.display);
 router.post("/register", ProductController.register);
+router.get("/:id", ProductController.getByID);
+router.patch("/:id", ProductController.update);
 // router.post("/register", multipleUpload);
 
 module.exports = router;

@@ -41,7 +41,35 @@ const register = async (req, res, next) => {
     }
 };
 
+const getByID = async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        res.json(product);
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({
+            error: "User Not Found",
+        });
+    }
+};
+
+const update = async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        Object.assign(product, req.body);
+        product.save();
+        res.json(product);
+    } catch (error) {
+        // console.log(error);
+        res.status(404).json({
+            error: "User Not Found",
+        });
+    }
+};
+
 module.exports = {
     display,
     register,
+    getByID,
+    update,
 };

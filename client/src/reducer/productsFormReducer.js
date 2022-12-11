@@ -5,6 +5,7 @@ const ACTION_TYPES = {
     IMAGE_INPUT: "IMAGE_INPUT",
     SET_IMAGE_MAIN: "SET_IMAGE_MAIN",
     RESET: "RESET",
+    ASSIGN_DATA: "ASSIGN_DATA",
 };
 
 export const INITIAL_STATE = {
@@ -46,6 +47,8 @@ export const addProductsFormReducer = (state, action) => {
             };
         case ACTION_TYPES.RESET:
             return INITIAL_STATE;
+        case ACTION_TYPES.ASSIGN_DATA:
+            return action.payload.data;
         default:
             return state;
     }

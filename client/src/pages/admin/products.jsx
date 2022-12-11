@@ -2,8 +2,7 @@ import React, { useReducer, useState, useEffect, useRef } from "react";
 import NavBar from "../partials/navBar";
 import Modal from "../../components/modal";
 import EcommAPI from "../../api/Ecomm.api";
-import { Menu, Trash2, XCircle } from "react-feather";
-import EcomAPI from "../../api/Ecomm.api";
+import { Menu, Trash2 } from "react-feather";
 import ImageUploading from "react-images-uploading";
 import Skeleton from "../../components/skeleton";
 import {
@@ -19,8 +18,9 @@ import {
     addProductsFormReducer,
     INITIAL_STATE,
 } from "../../reducer/productsFormReducer";
-import { toast } from "react-toastify";
 import DiscardModal from "../../components/discardModal";
+import LoadingOverlay from "../../components/loadingOverlay";
+import EditModal from "../../components/productPage/editModal";
 
 const categories = [
     "Processor",
@@ -35,7 +35,9 @@ const categories = [
 function AdminProducts() {
     const [state, dispatch] = useReducer(addProductsFormReducer, INITIAL_STATE);
     const [productData, setProductData] = useState();
+    const [editProductData, setEditProductData] = useState();
     const addProductForm = useRef();
+    const editProductForm = useRef();
     const maxNumber = 10;
 
     const getAllProducts = async () => {
@@ -43,7 +45,30 @@ function AdminProducts() {
             const response = await EcommAPI.get("products");
             setProductData(response.data);
         } catch (error) {
-            console.error(error);
+            console.log(error);
+        }
+    };
+
+    const getProductById = async (id) => {
+        try {
+            const response = await EcommAPI.get(`products/${id}`);
+            setEditProductData(response.data);
+            // console.log(response.data);
+            // const [name, description, category, image, image_main] =
+            //     response.data;
+            // await assignState(INITIAL_STATE, {
+            //     name: response.data.name,
+            //     description: response.data.description,
+            //     category: response.data.category,
+            //     image: response.data.image,
+            //     image_main: response.data.image_main,
+            // });
+            dispatch({ type: "ASSIGN_DATA", payload: { data: response.data } });
+            // dispatch({ type: "ASSIGN_DATA", payload: response.data });
+            // console.log(sample);
+            // Object.assign(INITIAL_STATE, editProductData);
+        } catch (error) {
+            console.log(error);
         }
     };
 
@@ -54,8 +79,10 @@ function AdminProducts() {
 
     useEffect(() => {
         // console.log(state);
-        console.log(productData);
-    }, [productData]);
+        // console.log(productData);
+        // console.log(editProductData);
+        // console.log(productData);
+    }, [editProductData]);
 
     const handleOnChange = (e) => {
         const { value, name } = e.target;
@@ -68,7 +95,7 @@ function AdminProducts() {
 
     const handlerCategory = (e) => {
         const { value, checked } = e.target;
-
+        console.log(value, checked);
         if (checked) {
             dispatch({
                 type: "ADD_CATEGORY",
@@ -85,7 +112,8 @@ function AdminProducts() {
     const handlerImage = (imageList, addUpdateIndex) => {
         // DATA FOR SUBMIT
         console.log(imageList, addUpdateIndex);
-
+        imageList = imageList.map((image) => image.data_url ?? image);
+        // console.log(imageSample);
         dispatch({
             type: "IMAGE_INPUT",
             payload: imageList,
@@ -112,15 +140,14 @@ function AdminProducts() {
 
     const handlerReset = () => {
         addProductForm.current.reset();
-
+        editProductForm.current.reset();
+        // setEditProductData("");
         dispatch({
             type: "RESET",
         });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
+    const formValidation = () => {
         let form_errors = [];
 
         if (state.name.length === 0) {
@@ -141,21 +168,25 @@ function AdminProducts() {
 
         if (form_errors.length > 0) {
             form_errors.map((error) => {
-                return toastError(error);
+                toastError(error);
+                return false;
             });
-            return;
+            return true;
         }
+    };
 
-        //CONVERT DATA URL OBJECT INTO ARRAY
-        const imageDataUrl = state.image.map((element) => {
-            return element.data_url;
-        });
+    const handlerAddProduct = async (e) => {
+        e.preventDefault();
+
+        const isValidated = formValidation();
+
+        if (isValidated) return;
 
         try {
-            await EcomAPI.post("products/register", {
+            await EcommAPI.post("products/register", {
                 name: state.name,
                 description: state.description,
-                image: imageDataUrl,
+                image: state.image,
                 category: state.category,
                 image_main: state.image_main,
             });
@@ -166,10 +197,36 @@ function AdminProducts() {
         handlerReset();
     };
 
+    const handlerEditProduct = async (e) => {
+        e.preventDefault();
+        console.log("update");
+        const isValidated = formValidation();
+
+        if (isValidated) return;
+
+        try {
+            await EcommAPI.patch(`products/${state._id}`, {
+                name: state.name,
+                description: state.description,
+                image: state.image,
+                category: state.category,
+                image_main: state.image_main,
+            });
+        } catch (error) {
+            console.log(error);
+        }
+        toastSuccess("Product Successfully Updated");
+        getProductById(state._id);
+        // handlerReset();
+    };
+
     const handlerImageError = (error) => {
         toastError(`Image upload limit is ${maxNumber}`);
     };
 
+    // const handlerEditCategory = () => {
+
+    // }
     return (
         <>
             <NavBar />
@@ -245,6 +302,11 @@ function AdminProducts() {
                                                         <label
                                                             htmlFor="EditProductModal"
                                                             className="link link-info"
+                                                            onClick={() => {
+                                                                getProductById(
+                                                                    data._id
+                                                                );
+                                                            }}
                                                         >
                                                             Edit
                                                         </label>
@@ -278,14 +340,14 @@ function AdminProducts() {
                 </div>
             </div>
 
+            {/* ADD PRODUCT MODAL */}
             <Modal
                 title="Add New Product"
                 id="AddProductModal"
                 handleModalOnClick={handlerReset}
             >
                 <form
-                    onSubmit={handleSubmit}
-                    // encType="multipart/form-data"
+                    onSubmit={handlerAddProduct}
                     className="p4"
                     ref={addProductForm}
                 >
@@ -408,7 +470,7 @@ function AdminProducts() {
                                                     <Menu />
                                                     <img
                                                         className="object-fit w-[80px] h-[60px]"
-                                                        src={image["data_url"]}
+                                                        src={image}
                                                         alt="pic"
                                                     />
                                                     <button
@@ -525,133 +587,274 @@ function AdminProducts() {
                 </form>
             </Modal>
 
-            <Modal title="Edit Product" id="EditProductModal">
-                <div className="p4">
-                    <div>
-                        <label htmlFor="name" className="label">
-                            Name:
-                        </label>
-                        <input
-                            type="text"
-                            name="name"
-                            placeholder="Type name here"
-                            className="input input-bordered w-full "
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="description" className="label">
-                            Description:
-                        </label>
-                        <textarea
-                            className="textarea textarea-bordered w-full"
-                            placeholder="Type description here"
-                            name="description"
-                        ></textarea>
-                    </div>
-                    <p className="label">Category:</p>
-
-                    <div className="h-[200px] w-full border-opacity-10 p-4 grid grid-cols-2 gap-2 overflow-y-auto [&>*]:h-fit">
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    className="checkbox"
-                                    name="category"
-                                    value="processor"
-                                />
-                                <span>Processor</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    className="checkbox"
-                                    name="category"
-                                    value="graphics card"
-                                />
-                                <span>Graphics Card</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Motherboard</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Monitor</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Memory</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Storage</span>
-                            </label>
-                        </div>
-
-                        <div className="form-control  bg-base-200 rounded-md px-2">
-                            <label className="label cursor-pointer">
-                                <input type="checkbox" className="checkbox" />
-                                <span>Power Supply</span>
-                            </label>
-                        </div>
-                    </div>
-                    <form action="/" method="POST" className="my-4">
-                        <input
-                            type="file"
-                            className="file-input file-input-bordered w-full max-w-xs hidden"
-                        />
-                        <input
-                            type="submit"
-                            className="btn btn-primary"
-                            value="Upload"
-                        />
-                    </form>
-
-                    <div className="w-full bg-base-300 h-[300px]">
-                        <ul className="p-3">
-                            <li className="flex items-center justify-around bg-base-100 p-2">
-                                <Menu />
-                                <img
-                                    className="object-fit w-[80px] h-[60px]"
-                                    src="https://media.istockphoto.com/id/1190641416/photo/streaming-live-esport-event-on-computer-at-home.jpg?b=1&s=170667a&w=0&k=20&c=zsbJz2Ua_QZeMI0Zuw4OLegmdjIWwy8j5ZDczBjEVFw="
-                                    alt="pic"
-                                />
-                                <Trash2 />
-                                <div className="form-control rounded-md py-1 px-3">
-                                    <label className="label cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            className="checkbox"
-                                        />
-                                        <p className="ml-2">Main</p>
+            {/* EDIT PRODUCT MODAL */}
+            {/* <EditModal
+                title="Edit Product"
+                id="EditProductModal"
+                data={editProductData}
+                categories={categories}
+            /> */}
+            <Modal
+                title="Edit Product"
+                id="EditProductModal"
+                handleModalOnClick={handlerReset}
+            >
+                {
+                    editProductData ? (
+                        <>
+                            <form
+                                onSubmit={handlerEditProduct}
+                                className="p4"
+                                ref={editProductForm}
+                            >
+                                <div>
+                                    <label htmlFor="name" className="label">
+                                        Name:
                                     </label>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        placeholder="Type name here"
+                                        className="input input-bordered w-full"
+                                        defaultValue={state.name}
+                                        onChange={handleOnChange}
+                                    />
                                 </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div className="modal-action">
-                    <label htmlFor="EditProductModal" className="btn">
-                        Cancel
-                    </label>
-                    <button className="btn btn-secondary">Preview</button>
-                    <button className="btn btn-primary">Update</button>
-                </div>
+                                <div>
+                                    <label
+                                        htmlFor="description"
+                                        className="label"
+                                    >
+                                        Description:
+                                    </label>
+                                    <textarea
+                                        className="textarea textarea-bordered w-full"
+                                        placeholder="Type description here"
+                                        name="description"
+                                        value={state.description}
+                                        onChange={handleOnChange}
+                                    ></textarea>
+                                </div>
+                                <p className="label">Category:</p>
+
+                                <div className="h-[200px] w-full border-opacity-10 p-4 grid grid-cols-2 gap-2 overflow-y-auto [&>*]:h-fit">
+                                    {categories.map((category, index) => {
+                                        return (
+                                            <div
+                                                className="form-control  bg-base-200 rounded-md px-2"
+                                                key={index}
+                                            >
+                                                <label className="label cursor-pointer">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="checkbox"
+                                                        name="category"
+                                                        value={category}
+                                                        defaultChecked={
+                                                            state
+                                                                .category[0] ===
+                                                            category
+                                                        }
+                                                        disabled={
+                                                            state.category[0] &&
+                                                            state
+                                                                .category[0] !==
+                                                                category &&
+                                                            state.category[0]
+                                                                .length !== 0
+                                                                ? true
+                                                                : false
+                                                        }
+                                                        onClick={
+                                                            // handlerCategory
+                                                            handlerCategory
+                                                        }
+                                                    />
+                                                    <span>{category}</span>
+                                                </label>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                                <ImageUploading
+                                    multiple
+                                    value={state.image}
+                                    onChange={handlerImage}
+                                    maxNumber={maxNumber}
+                                    dataURLKey="data_url"
+                                    onError={handlerImageError}
+                                >
+                                    {({
+                                        imageList,
+                                        onImageUpload,
+                                        onImageRemoveAll,
+                                        onImageUpdate,
+                                        onImageRemove,
+                                        isDragging,
+                                        dragProps,
+                                    }) => (
+                                        // BUILDING UI
+                                        <div className="my-4">
+                                            <button
+                                                type="button"
+                                                style={
+                                                    isDragging
+                                                        ? { color: "red" }
+                                                        : undefined
+                                                }
+                                                className="btn btn-primary mr-4"
+                                                onClick={onImageUpload}
+                                                {...dragProps}
+                                            >
+                                                Upload Image
+                                            </button>
+
+                                            {/* <button
+                                    type="button"
+                                    onClick={onImageRemoveAll}
+                                    className="btn"
+                                >
+                                    Remove all images
+                                </button> */}
+                                            <div className="w-full bg-base-300 h-[300px] overflow-y-auto mt-4">
+                                                <ul className="p-3 space-y-2">
+                                                    {imageList.map(
+                                                        (image, index) => {
+                                                            return (
+                                                                <li
+                                                                    className="flex items-center justify-around bg-base-100 p-2"
+                                                                    key={index}
+                                                                >
+                                                                    <Menu />
+                                                                    <img
+                                                                        className="object-fit w-[80px] h-[60px]"
+                                                                        src={
+                                                                            image
+                                                                        }
+                                                                        // onError={(
+                                                                        //     event
+                                                                        // ) => {
+                                                                        //     event.target.src =
+                                                                        //         image[
+                                                                        //             "data_url"
+                                                                        //         ];
+                                                                        // }}
+                                                                        alt="pic"
+                                                                    />
+                                                                    <button
+                                                                        type="button"
+                                                                        className={
+                                                                            state.image_main !==
+                                                                            ""
+                                                                                ? "cursor-not-allowed"
+                                                                                : "cursor-pointer"
+                                                                        }
+                                                                        onClick={() =>
+                                                                            state.image_main !==
+                                                                            ""
+                                                                                ? toastError(
+                                                                                      "Can't delete image if main is checked"
+                                                                                  )
+                                                                                : onImageRemove(
+                                                                                      index
+                                                                                  )
+                                                                        }
+                                                                        // disabled={
+                                                                        //     state.image_main !==
+                                                                        //     ""
+                                                                        // }
+                                                                    >
+                                                                        <Trash2 />
+                                                                    </button>
+                                                                    <div className="form-control rounded-md py-1 px-3">
+                                                                        <label className="label cursor-pointer">
+                                                                            <input
+                                                                                type="checkbox"
+                                                                                className="checkbox"
+                                                                                name="image_main"
+                                                                                defaultChecked={
+                                                                                    state.image_main ===
+                                                                                    index
+                                                                                }
+                                                                                disabled={
+                                                                                    state.image_main !==
+                                                                                        index &&
+                                                                                    state.image_main !==
+                                                                                        ""
+                                                                                        ? true
+                                                                                        : false
+                                                                                }
+                                                                                onClick={(
+                                                                                    event
+                                                                                ) => {
+                                                                                    handlerImageMain(
+                                                                                        event,
+                                                                                        index
+                                                                                    );
+                                                                                }}
+                                                                            />
+                                                                            <p className="ml-2">
+                                                                                Main
+                                                                            </p>
+                                                                        </label>
+                                                                    </div>
+                                                                </li>
+                                                            );
+                                                        }
+                                                    )}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    )}
+                                </ImageUploading>
+                                <div className="modal-action">
+                                    <label
+                                        htmlFor="EditProductModal"
+                                        className="btn"
+                                        onClick={handlerReset}
+                                    >
+                                        Cancel
+                                    </label>
+
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            dispatch({ type: "RESET" });
+                                        }}
+                                    >
+                                        test
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary"
+                                    >
+                                        Update
+                                    </button>
+                                </div>
+                            </form>
+                            {/* <div className="modal-action">
+                                <label
+                                    htmlFor="EditProductModal"
+                                    className="btn"
+                                >
+                                    Cancel
+                                </label>
+                                <button className="btn btn-secondary">
+                                    Preview
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary"
+                                >
+                                    Update
+                                </button>
+                            </div> */}
+                        </>
+                    ) : null
+                    // <LoadingOverlay />
+                }
             </Modal>
 
             <DiscardModal id="DeleteProductModal" />
