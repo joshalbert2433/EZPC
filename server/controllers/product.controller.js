@@ -53,7 +53,7 @@ const getByID = async (req, res) => {
     }
 };
 
-const update = async (req, res) => {
+const updateProduct = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
         Object.assign(product, req.body);
@@ -67,9 +67,22 @@ const update = async (req, res) => {
     }
 };
 
+const deleteProduct = async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        await product.remove();
+        res.json({ message: "Product successfully deleted" });
+    } catch (error) {
+        res.status(404).json({
+            error: "User Not Found",
+        });
+    }
+};
+
 module.exports = {
     display,
     register,
     getByID,
-    update,
+    updateProduct,
+    deleteProduct,
 };

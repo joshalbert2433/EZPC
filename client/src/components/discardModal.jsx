@@ -3,11 +3,11 @@ import Modal from "./modal";
 import { X, XCircle } from "react-feather";
 
 function DiscardModal(props) {
-    const { id } = props;
+    const { id, handlerDelete } = props;
     return (
         <>
             <input type="checkbox" id={id} className="modal-toggle" />
-            <div className="modal block pt-10">
+            <form className="modal block pt-10" onSubmit={handlerDelete}>
                 <div className="modal-box mx-auto relative">
                     {/* <h2 className="text-2xl font-semibold"></h2> */}
                     <label
@@ -29,11 +29,15 @@ function DiscardModal(props) {
                             <label htmlFor="DeleteProductModal" className="btn">
                                 Cancel
                             </label>
-                            <button className="btn btn-error">Delete</button>
+                            <button type="submit" className="btn btn-error">
+                                <label htmlFor="DeleteProductModal">
+                                    Delete
+                                </label>
+                            </button>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </>
     );
 }

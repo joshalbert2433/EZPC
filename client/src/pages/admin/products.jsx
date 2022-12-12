@@ -9,7 +9,6 @@ import {
     ToasterContainer,
     toastInfo,
     toastError,
-    toastWarning,
     toastSuccess,
 } from "../../components/toaster";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,8 +18,6 @@ import {
     INITIAL_STATE,
 } from "../../reducer/productsFormReducer";
 import DiscardModal from "../../components/discardModal";
-import LoadingOverlay from "../../components/loadingOverlay";
-import EditModal from "../../components/productPage/editModal";
 
 const categories = [
     "Processor",
@@ -53,20 +50,18 @@ function AdminProducts() {
         try {
             const response = await EcommAPI.get(`products/${id}`);
             setEditProductData(response.data);
-            // console.log(response.data);
-            // const [name, description, category, image, image_main] =
-            //     response.data;
-            // await assignState(INITIAL_STATE, {
-            //     name: response.data.name,
-            //     description: response.data.description,
-            //     category: response.data.category,
-            //     image: response.data.image,
-            //     image_main: response.data.image_main,
-            // });
+
             dispatch({ type: "ASSIGN_DATA", payload: { data: response.data } });
-            // dispatch({ type: "ASSIGN_DATA", payload: response.data });
-            // console.log(sample);
-            // Object.assign(INITIAL_STATE, editProductData);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const deleteProductByID = async (id) => {
+        try {
+            await EcommAPI.delete(`products/delete/${id}`);
+            // setEditProductData(response.data);
+            toastSuccess("Product Successfully Deleted");
         } catch (error) {
             console.log(error);
         }
@@ -78,11 +73,8 @@ function AdminProducts() {
     }, []);
 
     useEffect(() => {
-        // console.log(state);
-        // console.log(productData);
-        // console.log(editProductData);
-        // console.log(productData);
-    }, [editProductData]);
+        getAllProducts();
+    }, [state]);
 
     const handleOnChange = (e) => {
         const { value, name } = e.target;
@@ -141,10 +133,16 @@ function AdminProducts() {
     const handlerReset = () => {
         addProductForm.current.reset();
         editProductForm.current.reset();
-        // setEditProductData("");
+
         dispatch({
             type: "RESET",
         });
+    };
+
+    const handlerDelete = (e) => {
+        e.preventDefault();
+        deleteProductByID(state._id);
+        handlerReset();
     };
 
     const formValidation = () => {
@@ -224,9 +222,6 @@ function AdminProducts() {
         toastError(`Image upload limit is ${maxNumber}`);
     };
 
-    // const handlerEditCategory = () => {
-
-    // }
     return (
         <>
             <NavBar />
@@ -236,7 +231,7 @@ function AdminProducts() {
                         <div className="input-group">
                             <input
                                 type="text"
-                                placeholder="Search…"
+                                placeholder="Search By Name Here…"
                                 className="input input-bordered"
                             />
                             <button className="btn btn-square">
@@ -313,6 +308,11 @@ function AdminProducts() {
                                                         <label
                                                             htmlFor="DeleteProductModal"
                                                             className="link link-error"
+                                                            onClick={() => {
+                                                                getProductById(
+                                                                    data._id
+                                                                );
+                                                            }}
                                                         >
                                                             Delete
                                                         </label>
@@ -407,17 +407,6 @@ function AdminProducts() {
                             );
                         })}
                     </div>
-                    {/* <div className="my-4">
-                        <input
-                            type="file"
-                            className="file-input file-input-bordered w-full max-w-xs hidden"
-                        />
-                        <input
-                            type="submit"
-                            className="btn btn-primary"
-                            value="Upload"
-                        />
-                    </div> */}
 
                     <ImageUploading
                         multiple
@@ -534,29 +523,6 @@ function AdminProducts() {
                             </div>
                         )}
                     </ImageUploading>
-
-                    {/* <div className="w-full bg-base-300 h-[300px]">
-                        <ul className="p-3">
-                            <li className="flex items-center justify-around bg-base-100 p-2">
-                                <Menu />
-                                <img
-                                    className="object-fit w-[80px] h-[60px]"
-                                    src="https://media.istockphoto.com/id/1190641416/photo/streaming-live-esport-event-on-computer-at-home.jpg?b=1&s=170667a&w=0&k=20&c=zsbJz2Ua_QZeMI0Zuw4OLegmdjIWwy8j5ZDczBjEVFw="
-                                    alt="pic"
-                                />
-                                <Trash2 />
-                                <div className="form-control rounded-md py-1 px-3">
-                                    <label className="label cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            className="checkbox"
-                                        />
-                                        <p className="ml-2">Main</p>
-                                    </label>
-                                </div>
-                            </li>
-                        </ul>
-                    </div> */}
 
                     <div className="modal-action">
                         <label
@@ -709,13 +675,6 @@ function AdminProducts() {
                                                 Upload Image
                                             </button>
 
-                                            {/* <button
-                                    type="button"
-                                    onClick={onImageRemoveAll}
-                                    className="btn"
-                                >
-                                    Remove all images
-                                </button> */}
                                             <div className="w-full bg-base-300 h-[300px] overflow-y-auto mt-4">
                                                 <ul className="p-3 space-y-2">
                                                     {imageList.map(
@@ -817,16 +776,6 @@ function AdminProducts() {
                                     </label>
 
                                     <button
-                                        type="button"
-                                        className="btn btn-primary"
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            dispatch({ type: "RESET" });
-                                        }}
-                                    >
-                                        test
-                                    </button>
-                                    <button
                                         type="submit"
                                         className="btn btn-primary"
                                     >
@@ -834,30 +783,16 @@ function AdminProducts() {
                                     </button>
                                 </div>
                             </form>
-                            {/* <div className="modal-action">
-                                <label
-                                    htmlFor="EditProductModal"
-                                    className="btn"
-                                >
-                                    Cancel
-                                </label>
-                                <button className="btn btn-secondary">
-                                    Preview
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="btn btn-primary"
-                                >
-                                    Update
-                                </button>
-                            </div> */}
                         </>
                     ) : null
                     // <LoadingOverlay />
                 }
             </Modal>
 
-            <DiscardModal id="DeleteProductModal" />
+            <DiscardModal
+                id="DeleteProductModal"
+                handlerDelete={handlerDelete}
+            />
 
             <ToasterContainer />
         </>
