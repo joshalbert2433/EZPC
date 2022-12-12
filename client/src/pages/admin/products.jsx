@@ -18,6 +18,7 @@ import {
     INITIAL_STATE,
 } from "../../reducer/productsFormReducer";
 import DiscardModal from "../../components/discardModal";
+import Pagination from "../../components/pagination";
 
 const categories = [
     "Processor",
@@ -37,9 +38,19 @@ function AdminProducts() {
     const editProductForm = useRef();
     const maxNumber = 10;
 
+    const [sort, setSort] = useState({ sort: "rating", order: "desc" });
+    const [filterCategory, setFilterCategory] = useState([]);
+    const [page, setPage] = useState(1);
+    const [search, setSearch] = useState("");
+
     const getAllProducts = async () => {
         try {
-            const response = await EcommAPI.get("products");
+            const url = `products?page=${page}&sort=${sort.sort},${
+                sort.order
+            }&genre=${filterCategory.toString()}&search=${search}`;
+
+            const response = await EcommAPI.get(url);
+
             setProductData(response.data);
         } catch (error) {
             console.log(error);
@@ -60,7 +71,7 @@ function AdminProducts() {
     const deleteProductByID = async (id) => {
         try {
             await EcommAPI.delete(`products/delete/${id}`);
-            // setEditProductData(response.data);
+
             toastSuccess("Product Successfully Deleted");
         } catch (error) {
             console.log(error);
@@ -69,12 +80,19 @@ function AdminProducts() {
 
     useEffect(() => {
         getAllProducts();
-        // console.log(productData);
+        // eslint-disable-next-line
     }, []);
 
     useEffect(() => {
         getAllProducts();
-    }, [state]);
+
+        // eslint-disable-next-line
+    }, [state, sort, filterCategory, page, search]);
+
+    const handlerSearch = (e) => {
+        const { value } = e.target;
+        setSearch(value);
+    };
 
     const handleOnChange = (e) => {
         const { value, name } = e.target;
@@ -105,7 +123,7 @@ function AdminProducts() {
         // DATA FOR SUBMIT
         console.log(imageList, addUpdateIndex);
         imageList = imageList.map((image) => image.data_url ?? image);
-        // console.log(imageSample);
+
         dispatch({
             type: "IMAGE_INPUT",
             payload: imageList,
@@ -215,7 +233,6 @@ function AdminProducts() {
         }
         toastSuccess("Product Successfully Updated");
         getProductById(state._id);
-        // handlerReset();
     };
 
     const handlerImageError = (error) => {
@@ -233,6 +250,8 @@ function AdminProducts() {
                                 type="text"
                                 placeholder="Search By Name Here…"
                                 className="input input-bordered"
+                                onChange={handlerSearch}
+                                value={search}
                             />
                             <button className="btn btn-square">
                                 <svg
@@ -262,12 +281,15 @@ function AdminProducts() {
                 {productData ? (
                     <div className="overflow-x-auto p-2 md:p-0 my-4">
                         <div className="overflow-x-auto">
-                            <table className="table w-full ">
-                                <thead>
+                            <table className="table table-fixed  w-full ">
+                                <thead className="w-[100px] overflow-x-hidden">
                                     <tr className="text-gray-200 [&>*]:bg-neutral ">
-                                        <th>Picture</th>
-                                        <th>ID</th>
-                                        <th>Name</th>
+                                        <th className="w-[120px]">Picture</th>
+                                        <th className=" max-w-[30%]">Name</th>
+                                        <th className=" w-[20%]">
+                                            Description
+                                        </th>
+
                                         <th>Inventory Count</th>
                                         <th>Quantity Sold</th>
                                         <th>Action</th>
@@ -279,7 +301,7 @@ function AdminProducts() {
                                             <tr key={data._id}>
                                                 <td>
                                                     <img
-                                                        className="object-fit w-[80px] h-[60px]"
+                                                        className="object-fill w-[80px] h-[60px]"
                                                         src={
                                                             data.image[
                                                                 data.image_main
@@ -288,8 +310,13 @@ function AdminProducts() {
                                                         alt="pic"
                                                     />
                                                 </td>
-                                                <td>{data._id}</td>
-                                                <td>{data.name}</td>
+
+                                                <td className="truncate">
+                                                    {data.name}
+                                                </td>
+                                                <td className="truncate">
+                                                    {data.description}
+                                                </td>
                                                 <td>{data.stock}</td>
                                                 <td>Blue</td>
                                                 <td>
@@ -329,15 +356,16 @@ function AdminProducts() {
                     <Skeleton />
                 )}
 
-                <div className="flex justify-center py-5">
-                    <div className="btn-group">
-                        <button className="btn">1</button>
-                        <button className="btn btn-active">2</button>
-                        <button className="btn">3</button>
-                        <button className="btn">4</button>
-                        <button className="btn">5</button>
+                {productData ? (
+                    <div className="flex justify-center py-5">
+                        <Pagination
+                            page={page}
+                            limit={productData.limit ? productData.limit : 0}
+                            total={productData.total ? productData.total : 0}
+                            setPage={(page) => setPage(page)}
+                        />
                     </div>
-                </div>
+                ) : null}
             </div>
 
             {/* ADD PRODUCT MODAL */}
