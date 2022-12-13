@@ -52,7 +52,7 @@ function AdminProducts() {
             }&genre=${filterCategory.toString()}&search=${search}`;
 
             const response = await EcommAPI.get(url);
-
+            // if (response.data.total )
             setProductData(response.data);
         } catch (error) {
             console.log(error);
@@ -93,6 +93,10 @@ function AdminProducts() {
 
     const handlerSearch = (e) => {
         const { value } = e.target;
+        // MIGHT HAVE ERROR HERE
+        if (productData.total <= productData.limit) {
+            setPage(1);
+        }
         setSearch(value);
     };
 
@@ -151,8 +155,8 @@ function AdminProducts() {
     };
 
     const handlerReset = () => {
-        addProductForm.current.reset();
-        // editProductForm.current.reset();
+        if (addProductForm.current) addProductForm.current.reset();
+        if (editProductForm.current) editProductForm.current.reset();
 
         dispatch({
             type: "RESET",
@@ -573,6 +577,8 @@ function AdminProducts() {
                             type="reset"
                             className="btn btn-neutral"
                             onClick={() => {
+                                toast.dismiss();
+
                                 toastInfo("Form has been reset");
                                 handlerReset();
                             }}

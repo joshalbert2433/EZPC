@@ -1,24 +1,62 @@
 import React, { useEffect, useState } from "react";
-import EcomAPI from "../api/Ecomm.api";
+import EcommAPI from "../api/Ecomm.api";
 import NavBar from "./partials/navBar";
 import { MagnifyingGlass } from "phosphor-react";
 import ProductCard from "../components/productCard";
+import { handler } from "daisyui";
+import Pagination from "../components/pagination";
 
 function Index() {
-    const [data, setData] = useState([]);
+    const [productData, setProductData] = useState();
 
-    const getUser = async () => {
+    const [sort, setSort] = useState({ sort: "rating", order: "desc" });
+    const [filterCategory, setFilterCategory] = useState([]);
+    const [page, setPage] = useState(1);
+    const [search, setSearch] = useState("");
+
+    const getAllProducts = async () => {
         try {
-            const response = await EcomAPI.get("/user");
-            setData(response.data);
+            const url = `products?page=${page}&sort=${sort.sort},${
+                sort.order
+            }&genre=${filterCategory.toString()}&search=${search}&limit=20`;
+
+            const response = await EcommAPI.get(url);
+            // if (response.data.total )
+            setProductData(response.data);
         } catch (error) {
             console.log(error);
         }
     };
 
     useEffect(() => {
-        getUser();
+        getAllProducts();
+        // console.log(productData);
     }, []);
+
+    useEffect(() => {
+        getAllProducts();
+        //eslint-disable-next-line
+    }, [sort, filterCategory, page, search]);
+
+    const handlerPageIncrement = (e) => {
+        e.preventDefault();
+        const totalPages = Math.ceil(productData.total / productData.limit);
+        console.log(page, productData.page + 1);
+        if (page < totalPages) setPage((prev) => prev + 1);
+    };
+
+    const handlerPageDecrement = (e) => {
+        e.preventDefault();
+        if (page > 1) setPage((prev) => prev - 1);
+    };
+
+    const handlerSearch = (e) => {
+        const { value } = e.target;
+        if (productData.total <= productData.limit) {
+            setPage(1);
+        }
+        setSearch(value);
+    };
 
     return (
         <>
@@ -31,6 +69,8 @@ function Index() {
                                 type="text"
                                 placeholder="Search…"
                                 className="input input-bordered"
+                                onChange={handlerSearch}
+                                value={search}
                             />
                             <button className="btn btn-square">
                                 <svg
@@ -65,36 +105,61 @@ function Index() {
                     <div className="bg-base-100 p-4 rounded align-middle mb-4">
                         <div className="flex justify-between">
                             <h2 className="items-center flex text-xl">
-                                Shoes (Page 4)
+                                ALL (Page {page})
                             </h2>
                             <div className="items-center flex ">
                                 <select
                                     className="select select-bordered select-md w-[250px] max-w-xs"
                                     name="sort"
                                 >
-                                    <option disabled selected>
-                                        Sorted By
-                                    </option>
+                                    <option disabled>Sorted By</option>
                                     <option>Price: Low to Hight</option>
                                     <option>Price: High to Low</option>
                                     <option>Popularity</option>
                                 </select>
                             </div>
                             <div className="btn-group">
-                                <button className="btn">«</button>
-                                <button className="btn">Page 22</button>
-                                <button className="btn">»</button>
+                                <button
+                                    className="btn"
+                                    onClick={handlerPageDecrement}
+                                >
+                                    «
+                                </button>
+                                <button className="btn">Page {page}</button>
+                                <button
+                                    className="btn"
+                                    onClick={handlerPageIncrement}
+                                >
+                                    »
+                                </button>
                             </div>
                         </div>
                     </div>
 
                     <div className="flex gap-3 flex-wrap">
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
-                        <ProductCard />
+                        {productData
+                            ? productData.data.map((data) => {
+                                  return (
+                                      <ProductCard data={data} key={data._id} />
+                                  );
+                              })
+                            : null}
                     </div>
+
+                    {productData && productData.total > productData.limit ? (
+                        <div className="flex justify-center py-5">
+                            <Pagination
+                                page={page}
+                                limit={
+                                    productData.limit ? productData.limit : 0
+                                }
+                                total={
+                                    productData.total ? productData.total : 0
+                                }
+                                setPage={(page) => setPage(page)}
+                            />
+                        </div>
+                    ) : null}
                 </div>
             </div>
         </>
