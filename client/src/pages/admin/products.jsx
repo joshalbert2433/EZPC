@@ -19,6 +19,7 @@ import {
 } from "../../reducer/productsFormReducer";
 import DiscardModal from "../../components/discardModal";
 import Pagination from "../../components/pagination";
+import { toast } from "react-toastify";
 
 const categories = [
     "Processor",
@@ -36,6 +37,7 @@ function AdminProducts() {
     const [editProductData, setEditProductData] = useState();
     const addProductForm = useRef();
     const editProductForm = useRef();
+    const addProductButton = useRef();
     const maxNumber = 10;
 
     const [sort, setSort] = useState({ sort: "rating", order: "desc" });
@@ -87,7 +89,7 @@ function AdminProducts() {
         getAllProducts();
 
         // eslint-disable-next-line
-    }, [state, sort, filterCategory, page, search]);
+    }, [sort, filterCategory, page, search]);
 
     const handlerSearch = (e) => {
         const { value } = e.target;
@@ -150,7 +152,7 @@ function AdminProducts() {
 
     const handlerReset = () => {
         addProductForm.current.reset();
-        editProductForm.current.reset();
+        // editProductForm.current.reset();
 
         dispatch({
             type: "RESET",
@@ -159,11 +161,13 @@ function AdminProducts() {
 
     const handlerDelete = (e) => {
         e.preventDefault();
+        getAllProducts();
         deleteProductByID(state._id);
         handlerReset();
     };
 
     const formValidation = () => {
+        toast.dismiss();
         let form_errors = [];
 
         if (state.name.length === 0) {
@@ -199,6 +203,7 @@ function AdminProducts() {
         if (isValidated) return;
 
         try {
+            addProductButton.current.setAttribute("disabled", "disabled");
             await EcommAPI.post("products/register", {
                 name: state.name,
                 description: state.description,
@@ -210,6 +215,8 @@ function AdminProducts() {
             console.log(error);
         }
         toastSuccess("Product Successfully Added");
+        addProductButton.current.removeAttribute("disabled");
+        getAllProducts();
         handlerReset();
     };
 
@@ -233,6 +240,7 @@ function AdminProducts() {
         }
         toastSuccess("Product Successfully Updated");
         getProductById(state._id);
+        getAllProducts();
     };
 
     const handlerImageError = (error) => {
@@ -281,7 +289,7 @@ function AdminProducts() {
                 {productData ? (
                     <div className="overflow-x-auto p-2 md:p-0 my-4">
                         <div className="overflow-x-auto">
-                            <table className="table table-fixed  w-full ">
+                            <table className="table table-fixed w-full ">
                                 <thead className="w-[100px] overflow-x-hidden">
                                     <tr className="text-gray-200 [&>*]:bg-neutral ">
                                         <th className="w-[120px]">Picture</th>
@@ -574,7 +582,12 @@ function AdminProducts() {
                         <button type="button" className="btn btn-accent">
                             Preview
                         </button>
-                        <button type="submit" className="btn btn-primary">
+                        <button
+                            type="submit"
+                            className="btn btn-primary"
+                            disabled={addProductForm.isSubmitting}
+                            ref={addProductButton}
+                        >
                             add
                         </button>
                     </div>

@@ -26,7 +26,7 @@ const productSchema = new Schema(
         stock: {
             type: Number,
             required: true,
-            default: 0,
+            default: 100,
         },
         category: {
             type: Array,

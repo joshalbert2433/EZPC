@@ -1,9 +1,11 @@
 import React from "react";
 import Modal from "./modal";
 import { X, XCircle } from "react-feather";
+import { useRef } from "react";
 
 function DiscardModal(props) {
     const { id, handlerDelete } = props;
+    const modalClose = useRef();
     return (
         <>
             <input type="checkbox" id={id} className="modal-toggle" />
@@ -29,8 +31,14 @@ function DiscardModal(props) {
                             <label htmlFor="DeleteProductModal" className="btn">
                                 Cancel
                             </label>
-                            <button type="submit" className="btn btn-error">
-                                <label htmlFor="DeleteProductModal">
+                            <button
+                                type="submit"
+                                className="btn btn-error"
+                                onClick={() => {
+                                    modalClose.current.click();
+                                }}
+                            >
+                                <label htmlFor={id} ref={modalClose}>
                                     Delete
                                 </label>
                             </button>
