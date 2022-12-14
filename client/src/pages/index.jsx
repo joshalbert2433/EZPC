@@ -6,9 +6,18 @@ import ProductCard from "../components/productCard";
 import { handler } from "daisyui";
 import Pagination from "../components/pagination";
 
+const categoryOptions = [
+    "Processor",
+    "Graphics Card",
+    "Motherboard",
+    "Monitor",
+    "Memory",
+    "Storage",
+    "Power Supply",
+];
+
 function Index() {
     const [productData, setProductData] = useState();
-
     const [sort, setSort] = useState({ sort: "rating", order: "desc" });
     const [filterCategory, setFilterCategory] = useState([]);
     const [page, setPage] = useState(1);
@@ -18,8 +27,8 @@ function Index() {
         try {
             const url = `products?page=${page}&sort=${sort.sort},${
                 sort.order
-            }&genre=${filterCategory.toString()}&search=${search}&limit=20`;
-
+            }&category=${filterCategory.toString()}&search=${search}&limit=20`;
+            console.log(url);
             const response = await EcommAPI.get(url);
             // if (response.data.total )
             setProductData(response.data);
@@ -35,8 +44,9 @@ function Index() {
 
     useEffect(() => {
         getAllProducts();
+        console.log(filterCategory.toString());
         //eslint-disable-next-line
-    }, [sort, filterCategory, page, search]);
+    }, [sort, filterCategory, page, search, filterCategory]);
 
     const handlerPageIncrement = (e) => {
         e.preventDefault();
@@ -56,6 +66,18 @@ function Index() {
             setPage(1);
         }
         setSearch(value);
+    };
+
+    const handlerCategory = (e) => {
+        const { checked, value } = e.target;
+
+        if (checked) {
+            setFilterCategory((prevState) => [...prevState, value]);
+        } else {
+            setFilterCategory((prevState) => [
+                ...prevState.filter((val) => val !== value),
+            ]);
+        }
     };
 
     return (
@@ -92,21 +114,38 @@ function Index() {
                     </div>
                     <div>
                         <h2 className="text-xl font-bold">Category</h2>
-                        <ul className="ml-4">
-                            <li>Monitor(30)</li>
-                            <li>Graphics Card(30)</li>
-                            <li>CPU(20)</li>
-                            <li>PSU(10)</li>
-                            <li>Motherboard(10)</li>
+                        <ul className="ml-4 space-y-4 mt-4">
+                            {productData
+                                ? productData.category.map(
+                                      (category, index) => {
+                                          return (
+                                              <li key={index}>
+                                                  <div className="form-control">
+                                                      <label className="label cursor-pointer justify-start gap-4">
+                                                          <input
+                                                              type="checkbox"
+                                                              className="checkbox"
+                                                              value={category}
+                                                              onClick={
+                                                                  handlerCategory
+                                                              }
+                                                          />
+                                                          <span className="text-base">
+                                                              {category} (20)
+                                                          </span>
+                                                      </label>
+                                                  </div>
+                                              </li>
+                                          );
+                                      }
+                                  )
+                                : null}
                         </ul>
                     </div>
                 </div>
                 <div className="w-[850px] h-fit">
                     <div className="bg-base-100 p-4 rounded align-middle mb-4">
                         <div className="flex justify-between">
-                            <h2 className="items-center flex text-xl">
-                                ALL (Page {page})
-                            </h2>
                             <div className="items-center flex ">
                                 <select
                                     className="select select-bordered select-md w-[250px] max-w-xs"
