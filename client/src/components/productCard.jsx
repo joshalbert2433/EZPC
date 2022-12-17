@@ -2,10 +2,18 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 function ProductCard(props) {
-    const { data } = props;
+    const { data, onClick } = props;
+    // console.log(data.name);
+
     return (
-        <Link to={{ pathname: `/products/${data._id}` }}>
-            <div className="card rounded-none bg-base-100 w-[160px] hover:border-secondary border-transparent border-2 max-h-[255px]">
+        <Link
+            to={`/product?name=${data.name}&&id=${data._id}&&category=${data.category[0]}`}
+            onClick={onClick}
+        >
+            <div
+                className="card rounded-none bg-base-100 w-[160px] hover:border-secondary border-transparent border-2 max-h-[255px]"
+                onClick={onClick}
+            >
                 <figure>
                     <img
                         className="object-fill w-full h-40"

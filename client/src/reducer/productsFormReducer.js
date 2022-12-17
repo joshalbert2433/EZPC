@@ -14,6 +14,8 @@ export const INITIAL_STATE = {
     category: [],
     image: [],
     image_main: "",
+    price: "",
+    stock: "",
 };
 
 export const addProductsFormReducer = (state, action) => {

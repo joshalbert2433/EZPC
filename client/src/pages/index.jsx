@@ -5,6 +5,8 @@ import { MagnifyingGlass } from "phosphor-react";
 import ProductCard from "../components/productCard";
 import { handler } from "daisyui";
 import Pagination from "../components/pagination";
+import { useNavigate, Link } from "react-router-dom";
+import useDebounce from "../hooks/useDebounce";
 
 const categoryOptions = [
     "Processor",
@@ -23,11 +25,15 @@ function Index() {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
 
+    const navigate = useNavigate();
+
+    const debouncedSearch = useDebounce(search, 200);
+
     const getAllProducts = async () => {
         try {
             const url = `products?page=${page}&sort=${sort.sort},${
                 sort.order
-            }&category=${filterCategory.toString()}&search=${search}&limit=20`;
+            }&category=${filterCategory.toString()}&search=${debouncedSearch}&limit=20`;
             console.log(url);
             const response = await EcommAPI.get(url);
             // if (response.data.total )
@@ -40,13 +46,14 @@ function Index() {
     useEffect(() => {
         getAllProducts();
         // console.log(productData);
+        //eslint-disable-next-line
     }, []);
 
     useEffect(() => {
         getAllProducts();
         console.log(filterCategory.toString());
         //eslint-disable-next-line
-    }, [sort, filterCategory, page, search, filterCategory]);
+    }, [sort, filterCategory, page, debouncedSearch, filterCategory]);
 
     const handlerPageIncrement = (e) => {
         e.preventDefault();
@@ -70,6 +77,7 @@ function Index() {
 
     const handlerCategory = (e) => {
         const { checked, value } = e.target;
+        if (productData.total <= productData.limit) setPage(1);
 
         if (checked) {
             setFilterCategory((prevState) => [...prevState, value]);
@@ -175,11 +183,21 @@ function Index() {
                         </div>
                     </div>
 
+                    {/* DISPLAY PRODUCTS */}
                     <div className="flex gap-3 flex-wrap">
                         {productData
                             ? productData.data.map((data) => {
                                   return (
-                                      <ProductCard data={data} key={data._id} />
+                                      <ProductCard
+                                          data={data}
+                                          key={data._id}
+                                          //   Link={Link}
+                                          //   onClick={() => {
+                                          //       navigate(
+                                          //           `product?name=${data.name}&&id=${data._id}`
+                                          //       );
+                                          //   }}
+                                      />
                                   );
                               })
                             : null}

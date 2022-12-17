@@ -214,6 +214,8 @@ function AdminProducts() {
                 image: state.image,
                 category: state.category,
                 image_main: state.image_main,
+                stock: state.stock,
+                price: state.price,
             });
         } catch (error) {
             console.log(error);
@@ -238,6 +240,8 @@ function AdminProducts() {
                 image: state.image,
                 category: state.category,
                 image_main: state.image_main,
+                stock: state.stock,
+                price: state.price,
             });
         } catch (error) {
             console.log(error);
@@ -416,36 +420,64 @@ function AdminProducts() {
                             onChange={handleOnChange}
                         ></textarea>
                     </div>
-                    <p className="label">Category:</p>
 
-                    <div className="h-[200px] w-full border-opacity-10 p-4 grid grid-cols-2 gap-2 overflow-y-auto [&>*]:h-fit">
-                        {categories.map((category, index) => {
-                            return (
-                                <div
-                                    className="form-control  bg-base-200 rounded-md px-2"
-                                    key={index}
-                                >
-                                    <label className="label cursor-pointer">
-                                        <input
-                                            type="checkbox"
-                                            className="checkbox"
-                                            name="category"
-                                            value={category}
-                                            // REMOVE DISABLED FOR MULTIPLE CATEGORY
-                                            disabled={
-                                                state.category[0] !==
-                                                    category &&
-                                                state.category.length !== 0
-                                                    ? true
-                                                    : false
-                                            }
-                                            onClick={handlerCategory}
-                                        />
-                                        <span>{category}</span>
-                                    </label>
-                                </div>
-                            );
-                        })}
+                    <div className="flex gap-4">
+                        <div>
+                            <p className="label">Price:</p>
+                            <input
+                                type="text"
+                                name="price"
+                                className="input input-bordered w-full"
+                                onChange={handleOnChange}
+                                value={state.price}
+
+                                // pattern="^-?[0-9]\d*\.?\d*$"
+                            />
+                        </div>
+                        <div>
+                            <p className="label">Stocks:</p>
+                            <input
+                                type="text"
+                                name="stock"
+                                className="input input-bordered w-full"
+                                onChange={handleOnChange}
+                                value={state.stock}
+                            />
+                        </div>
+                    </div>
+
+                    <div>
+                        <p className="label">Category:</p>
+
+                        <div className="h-[200px] w-full border-opacity-10 p-4 grid grid-cols-2 gap-2 overflow-y-auto [&>*]:h-fit">
+                            {categories.map((category, index) => {
+                                return (
+                                    <div
+                                        className="form-control  bg-base-200 rounded-md px-2"
+                                        key={index}
+                                    >
+                                        <label className="label cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                className="checkbox"
+                                                name="category"
+                                                value={category}
+                                                // REMOVE DISABLED FOR MULTIPLE CATEGORY
+                                                disabled={
+                                                    state.category[0] !==
+                                                        category &&
+                                                    state.category.length !== 0
+                                                        ? true
+                                                        : false
+                                                }
+                                                onClick={handlerCategory}
+                                            />
+                                            <span>{category}</span>
+                                        </label>
+                                    </div>
+                                );
+                            })}
+                        </div>
                     </div>
 
                     <ImageUploading
@@ -648,47 +680,79 @@ function AdminProducts() {
                                         onChange={handleOnChange}
                                     ></textarea>
                                 </div>
-                                <p className="label">Category:</p>
 
-                                <div className="h-[200px] w-full border-opacity-10 p-4 grid grid-cols-2 gap-2 overflow-y-auto [&>*]:h-fit">
-                                    {categories.map((category, index) => {
-                                        return (
-                                            <div
-                                                className="form-control  bg-base-200 rounded-md px-2"
-                                                key={index}
-                                            >
-                                                <label className="label cursor-pointer">
-                                                    <input
-                                                        type="checkbox"
-                                                        className="checkbox"
-                                                        name="category"
-                                                        value={category}
-                                                        defaultChecked={
-                                                            state
-                                                                .category[0] ===
-                                                            category
-                                                        }
-                                                        disabled={
-                                                            state.category[0] &&
-                                                            state
-                                                                .category[0] !==
-                                                                category &&
-                                                            state.category[0]
-                                                                .length !== 0
-                                                                ? true
-                                                                : false
-                                                        }
-                                                        onClick={
-                                                            // handlerCategory
-                                                            handlerCategory
-                                                        }
-                                                    />
-                                                    <span>{category}</span>
-                                                </label>
-                                            </div>
-                                        );
-                                    })}
+                                <div className="flex gap-4">
+                                    <div>
+                                        <p className="label">Price:</p>
+                                        <input
+                                            type="text"
+                                            name="price"
+                                            className="input input-bordered w-full"
+                                            value={state.price}
+                                            onChange={handleOnChange}
+
+                                            // pattern="^-?[0-9]\d*\.?\d*$"
+                                        />
+                                    </div>
+                                    <div>
+                                        <p className="label">Stocks:</p>
+                                        <input
+                                            type="text"
+                                            name="stock"
+                                            className="input input-bordered w-full"
+                                            value={state.stock}
+                                            onChange={handleOnChange}
+                                        />
+                                    </div>
                                 </div>
+
+                                <div>
+                                    <p className="label">Category:</p>
+
+                                    <div className="h-[200px] w-full border-opacity-10 p-4 grid grid-cols-2 gap-2 overflow-y-auto [&>*]:h-fit">
+                                        {categories.map((category, index) => {
+                                            return (
+                                                <div
+                                                    className="form-control  bg-base-200 rounded-md px-2"
+                                                    key={index}
+                                                >
+                                                    <label className="label cursor-pointer">
+                                                        <input
+                                                            type="checkbox"
+                                                            className="checkbox"
+                                                            name="category"
+                                                            value={category}
+                                                            defaultChecked={
+                                                                state
+                                                                    .category[0] ===
+                                                                category
+                                                            }
+                                                            disabled={
+                                                                state
+                                                                    .category[0] &&
+                                                                state
+                                                                    .category[0] !==
+                                                                    category &&
+                                                                state
+                                                                    .category[0]
+                                                                    .length !==
+                                                                    0
+                                                                    ? true
+                                                                    : false
+                                                            }
+                                                            onClick={
+                                                                // handlerCategory
+                                                                handlerCategory
+                                                            }
+                                                        />
+                                                        <span>{category}</span>
+                                                    </label>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+
                                 <ImageUploading
                                     multiple
                                     value={state.image}
