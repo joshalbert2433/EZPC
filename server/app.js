@@ -27,6 +27,11 @@ app.use("/api/user", UserRoutes);
 app.use("/api/auth", AuthRoutes);
 app.use("/api/products", ProductRoutes);
 
+//ERROR HANDLER
+app.use((err, req, res, next) => {
+    res.status(500).send({ message: err.message });
+});
+
 //TEST
 // app.post("/upload", upload.single("image"), (req, res) => {
 //     console.log(req.file);

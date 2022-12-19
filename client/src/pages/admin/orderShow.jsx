@@ -1,10 +1,8 @@
 import React from "react";
-import NavBar from "../partials/navBar";
 
 function OrderShow() {
     return (
         <>
-            <NavBar />
             <div className="w-[1200px] mx-auto flex gap-12">
                 <div className="w-[30%] bg-base-100 py-8 px-12 rounded-lg shadow-lg">
                     <h2 className="font-bold">Order ID: 1</h2>

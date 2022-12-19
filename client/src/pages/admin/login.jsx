@@ -4,7 +4,6 @@ import NavBar from "../partials/navBar";
 function AdminLogin() {
     return (
         <>
-            <NavBar />
             <div className="">
                 <div className="w-[400px] mx-auto flex flex-col items-center justify-center bg-base-100 rounded-lg pb-8">
                     <h1 className="text-3xl font-semibold py-8">

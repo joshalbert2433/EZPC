@@ -1,10 +1,8 @@
 import React from "react";
-import NavBar from "./partials/navBar";
 
 function Cart() {
     return (
         <>
-            <NavBar />
             <div className="xl:w-[1200px] mx-auto">
                 <div className="overflow-x-auto p-2 md:p-0">
                     <div className="overflow-x-auto">

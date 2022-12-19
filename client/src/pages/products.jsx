@@ -73,7 +73,6 @@ function Products() {
     console.log(similarProductData);
     return (
         <>
-            <NavBar />
             <div className="w-[1200px] mx-auto">
                 {productData ? (
                     <div className="bg-base-100  flex">
@@ -173,7 +172,7 @@ function Products() {
                                 &#8369;200
                             </h2>
                             <div>
-                                <h2 className="text-lg font-semibold p-4 bg-base-200">
+                                <h2 className="text-lg font-semibold p-4 bg-base-200 mb-4">
                                     Product Description
                                 </h2>
                                 <p className="p-2 h-[300px] whitespace-pre-line overflow-auto">
@@ -199,32 +198,27 @@ function Products() {
                     </div>
                 ) : null}
 
-                <div className="mt-5">
-                    <p className="text-xl font-semibold mb-3">Similar</p>
-                    <div className=" flex gap-y-4 flex-wrap justify-between">
-                        {similarProductData
-                            ? similarProductData.data.map((data) => {
-                                  return (
-                                      <ProductCard
-                                          key={data._id}
-                                          data={data}
-                                          //   Link={Link}
-                                          //   link={`product?name=${data.name}&&id=${data._id}`}
-                                          //   onClick={() => {
-                                          //       navigate(
-                                          //           `product?name=${data.name}&&id=${data._id}`
-                                          //       );
-                                          //   }}
-                                          onClick={() => {
-                                              setActiveThumb(null);
-                                              getProductById(data._id);
-                                          }}
-                                      />
-                                  );
-                              })
-                            : null}
+                {productData ? (
+                    <div className="mt-5">
+                        <p className="text-xl font-semibold mb-3">Similar</p>
+                        <div className=" flex gap-y-4 flex-wrap justify-between">
+                            {similarProductData
+                                ? similarProductData.data.map((data) => {
+                                      return (
+                                          <ProductCard
+                                              key={data._id}
+                                              data={data}
+                                              onClick={() => {
+                                                  setActiveThumb(null);
+                                                  getProductById(data._id);
+                                              }}
+                                          />
+                                      );
+                                  })
+                                : null}
+                        </div>
                     </div>
-                </div>
+                ) : null}
             </div>
         </>
     );

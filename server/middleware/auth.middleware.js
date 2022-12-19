@@ -1,7 +1,11 @@
-const User = require("../models/user.model");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const isEmailUnique = (error, req, res, next) => {
+    console.log("hello");
 
-const register = (req, res, next) => {
-    const hashedPassword = bcrypt.hash();
+    if (error.code === 11000) {
+        next(new Error("Email is already registered"));
+    } else {
+        next(error);
+    }
 };
+
+module.exports = isEmailUnique;

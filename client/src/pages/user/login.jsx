@@ -1,12 +1,46 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import NavBar from "../partials/navBar";
 import LoginBG from "../../assets/images/login_bg.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { User } from "../../reducer/userInfo";
+import Ecomm from "../../api/Ecomm.api";
+import useLocalStorage from "../../hooks/useLocalStorage";
+import "react-toastify/dist/ReactToastify.css";
+
+import {
+    ToasterContainer,
+    toastError,
+    toastInfo,
+    toastSuccess,
+} from "../../components/toaster";
+import { getError } from "../../utils/getError";
 
 function Login() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [userLocal, setUserLocal] = useLocalStorage("userInfo", "");
+    const { state, dispatch: ctxDispatch } = useContext(User);
+
+    const navigate = useNavigate();
+    const userInfo = state;
+
+    const handlerSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await Ecomm.post("auth/sign-in", {
+                email,
+                password,
+            });
+            ctxDispatch({ type: "USER_SIGNIN", payload: response.data });
+            setUserLocal(response.data);
+            navigate("/");
+        } catch (error) {
+            toastError(getError(error));
+        }
+    };
+
     return (
         <>
-            <NavBar />
             <div className="w-[900px] mx-auto flex bg-base-100 rounded overflow-hidden">
                 <div className=" w-1/2 min-h-[400px]">
                     <img
@@ -15,6 +49,7 @@ function Login() {
                         alt="background"
                     />
                 </div>
+
                 <div className="w-1/2 flex flex-col items-center justify-center">
                     <h1 className="text-3xl font-semibold py-8">Login Page</h1>
 
@@ -22,6 +57,7 @@ function Login() {
                         action="#"
                         method="POST"
                         className="space-y-6 w-[80%]"
+                        onSubmit={handlerSubmit}
                     >
                         <div>
                             <label htmlFor="email" className="label">
@@ -32,6 +68,7 @@ function Login() {
                                 name="email"
                                 placeholder="Email Address"
                                 className="input input-bordered w-full "
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
                         <div>
@@ -43,6 +80,7 @@ function Login() {
                                 name="password"
                                 placeholder="Password"
                                 className="input input-bordered w-full "
+                                onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
 
@@ -69,6 +107,8 @@ function Login() {
                     </div>
                 </div>
             </div>
+
+            <ToasterContainer />
         </>
     );
 }

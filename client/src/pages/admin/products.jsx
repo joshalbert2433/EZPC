@@ -257,7 +257,6 @@ function AdminProducts() {
 
     return (
         <>
-            <NavBar />
             <div className="w-[1200px] mx-auto">
                 <div className="flex justify-between">
                     <div className="form-control">

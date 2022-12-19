@@ -90,7 +90,6 @@ function Index() {
 
     return (
         <>
-            <NavBar />
             <div className="flex justify-around w-[1200px] mx-auto ">
                 <div className="w-[300px] border-gray-900 rounded px-4 py-4 bg-base-100 h-fit">
                     <div className="form-control pb-4 flex content-center">
@@ -160,7 +159,7 @@ function Index() {
                                     name="sort"
                                 >
                                     <option disabled>Sorted By</option>
-                                    <option>Price: Low to Hight</option>
+                                    <option>Price: Low to High</option>
                                     <option>Price: High to Low</option>
                                     <option>Popularity</option>
                                 </select>
