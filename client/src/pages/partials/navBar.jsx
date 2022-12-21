@@ -126,7 +126,7 @@ function NavBar() {
                                 className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
                             >
                                 <li>
-                                    <p>Settings</p>
+                                    <Link to="address">Address</Link>
                                 </li>
                                 <li onClick={handlerSignout}>
                                     <p>Logout</p>

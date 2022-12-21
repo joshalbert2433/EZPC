@@ -7,7 +7,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 //ROUTES IMPORT
-const UserRoutes = require("./routes/user.routes");
+const UserDetailsRoutes = require("./routes/userDetails.routes");
 const AuthRoutes = require("./routes/auth.routes");
 const ProductRoutes = require("./routes/product.routes");
 const { upload } = require("./middleware/multer.middleware");
@@ -23,7 +23,7 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 //ROUTES
-app.use("/api/user", UserRoutes);
+app.use("/api/user", UserDetailsRoutes);
 app.use("/api/auth", AuthRoutes);
 app.use("/api/products", ProductRoutes);
 

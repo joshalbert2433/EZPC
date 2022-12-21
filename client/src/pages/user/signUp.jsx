@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 function SignUp() {
     return (
         <>
-            <NavBar />
             <div className="w-[400px] mx-auto bg-base-100 py-5 px-12 rounded">
                 <form action="#" method="POST" className="space-y-4">
                     <h1 className="text-3xl font-semibold py-4 w-fit mx-auto">

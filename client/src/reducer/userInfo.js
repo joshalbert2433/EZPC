@@ -5,12 +5,21 @@ export const User = createContext();
 const ACTION_TYPES = {
     USER_SIGNIN: "USER_SIGNIN",
     USER_SIGNOUT: "USER_SIGNOUT",
+    SAVE_ADDRESS: "SAVE_ADDRESS",
 };
 
 const INITIAL_STATE = {
     userInfo: localStorage.getItem("userInfo")
         ? JSON.parse(localStorage.getItem("userInfo"))
         : null,
+    cart: {
+        shippingAddress: localStorage.getItem("shippingAddress")
+            ? JSON.parse(localStorage.getItem("shippingAddress"))
+            : {},
+        cartItems: localStorage.getItem("cartItems")
+            ? JSON.parse(localStorage.getItem("cartItems"))
+            : [],
+    },
 };
 
 const reducer = (state, action) => {
@@ -22,6 +31,9 @@ const reducer = (state, action) => {
                 ...state,
                 userInfo: null,
             };
+        case ACTION_TYPES.SAVE_ADDRESS: {
+            return { ...state, shippingAddress: action.payload };
+        }
         default:
             return state;
     }
