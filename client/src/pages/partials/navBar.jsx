@@ -104,7 +104,7 @@ function NavBar() {
                                     <div className="card-actions">
                                         <Link
                                             to={{ pathname: "/cart" }}
-                                            className="btn btn-primary btn-block"
+                                            className="btn btn-secondary btn-block"
                                         >
                                             View cart
                                         </Link>

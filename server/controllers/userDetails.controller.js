@@ -1,32 +1,56 @@
 const UserDetails = require("../models/userDetails.model");
 
-const getAllDetails = async () => {
-    try {
-        let data = await UserDetails.find().populate("user", "email");
-        return data;
-    } catch (error) {
-        console.error(error);
-    }
-};
-
 const display = async (req, res, next) => {
-    let data = await getAllDetails();
-    // console.log(data);
-    res.json({ data });
-};
-
-const getByID = async (req, res, next) => {
-    console.log(req.params.id);
     try {
-        const userDetails = await UserDetails.find()
-            // .populate({path: "user", model: "User", })
-            .where("user")
-            .equals(req.params.id)
-            .populate("user", "email");
+        let userDetails = await UserDetails.find().populate("user", "email");
 
         res.status(200).json(userDetails);
     } catch (error) {
         res.status(404).json({ message: error.message, error });
+    }
+};
+
+const getByUserID = async (req, res, next) => {
+    try {
+        const page = parseInt(req.query.page) - 1 || 0;
+        const limit = parseInt(req.query.limit) || 5;
+
+        const userDetails = await UserDetails.find()
+            // .populate({path: "user", model: "User", })
+            .where("user")
+            .equals(req.params.userId)
+            .populate("user", "email")
+            .sort({ isMain: -1 })
+            .skip(page * limit)
+            .limit(limit);
+
+        const total = await UserDetails.countDocuments({})
+            .where("user")
+            .equals(req.params.userId);
+
+        const response = {
+            error: false,
+            total,
+            page: page + 1,
+            limit,
+            data: userDetails,
+        };
+
+        res.status(200).json(response);
+    } catch (error) {
+        res.status(404).json({ message: error.message, error });
+    }
+};
+
+const getByID = async (req, res) => {
+    try {
+        const userDetails = await UserDetails.findById(req.params.id);
+        res.json(userDetails);
+    } catch (error) {
+        console.log(error);
+        res.status(404).json({
+            message: "Product Not Found",
+        });
     }
 };
 
@@ -44,6 +68,14 @@ const register = async (req, res, next) => {
 
     try {
         await userDetails.save();
+
+        if (req.body.isMain === true) {
+            await UserDetails.updateMany({}, { $set: { isMain: false } });
+            await UserDetails.findOneAndUpdate(
+                { _id: req.params.user },
+                { $set: { isMain: true } }
+            );
+        }
         res.status(200).json({
             message: "User Details Saved",
         });
@@ -55,8 +87,52 @@ const register = async (req, res, next) => {
     }
 };
 
+const updateUserDetails = async (req, res, next) => {
+    try {
+        const userDetails = await UserDetails.findById(req.params.userId);
+
+        Object.assign(userDetails, req.body);
+        userDetails.save();
+
+        if (req.body.isMain === true) {
+            await UserDetails.updateMany({}, { $set: { isMain: false } });
+            await UserDetails.findOneAndUpdate(
+                { _id: req.params.userId },
+                { $set: { isMain: true } }
+            );
+        }
+
+        res.status(200).json({ message: "Successfully Updated", userDetails });
+    } catch (error) {
+        // console.log(error);
+        res.status(404).json({
+            message: "Product Not Found",
+            error,
+        });
+    }
+};
+
+const setDefaultAddress = async (req, res, next) => {
+    try {
+        await UserDetails.updateMany({}, { $set: { isMain: false } });
+        await UserDetails.findOneAndUpdate(
+            { _id: req.params.userId },
+            { $set: { isMain: true } }
+        );
+        res.status(200).json({ message: "Default address set" });
+    } catch (error) {
+        res.status(400).json({
+            message: error.message,
+            error,
+        });
+    }
+};
+
 module.exports = {
     display,
     register,
+    getByUserID,
     getByID,
+    updateUserDetails,
+    setDefaultAddress,
 };
