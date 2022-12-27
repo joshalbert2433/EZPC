@@ -2,7 +2,7 @@ import React, { useReducer, useState, useEffect, useRef } from "react";
 import NavBar from "../partials/navBar";
 import Modal from "../../components/modal";
 import EcommAPI from "../../api/Ecomm.api";
-import { Menu, Trash2 } from "react-feather";
+import { Menu, Trash2, XCircle } from "react-feather";
 import ImageUploading from "react-images-uploading";
 import Skeleton from "../../components/skeleton";
 import {
@@ -38,6 +38,7 @@ function AdminProducts() {
     const addProductForm = useRef();
     const editProductForm = useRef();
     const addProductButton = useRef();
+    const modalDiscardClose = useRef();
     const maxNumber = 10;
 
     const [sort, setSort] = useState({ sort: "rating", order: "desc" });
@@ -75,6 +76,7 @@ function AdminProducts() {
             await EcommAPI.delete(`products/delete/${id}`);
 
             toastSuccess("Product Successfully Deleted");
+            getAllProducts();
         } catch (error) {
             console.log(error);
         }
@@ -289,6 +291,7 @@ function AdminProducts() {
                     <label
                         htmlFor="AddProductModal"
                         className="btn btn-primary"
+                        onClick={handlerReset}
                     >
                         Add new product
                     </label>
@@ -301,13 +304,17 @@ function AdminProducts() {
                                     <tr className="text-gray-200 [&>*]:bg-neutral ">
                                         <th className="w-[120px]">Picture</th>
                                         <th className=" max-w-[30%]">Name</th>
-                                        <th className=" w-[20%]">
+                                        <th className=" w-[30%]">
                                             Description
                                         </th>
 
-                                        <th>Inventory Count</th>
-                                        <th>Quantity Sold</th>
-                                        <th>Action</th>
+                                        <th className="w-[10%]">
+                                            Inventory Count
+                                        </th>
+                                        <th className="w-[10%]">
+                                            Quantity Sold
+                                        </th>
+                                        <th className="w-[10%]">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -740,7 +747,6 @@ function AdminProducts() {
                                                                     : false
                                                             }
                                                             onClick={
-                                                                // handlerCategory
                                                                 handlerCategory
                                                             }
                                                         />
@@ -763,8 +769,6 @@ function AdminProducts() {
                                     {({
                                         imageList,
                                         onImageUpload,
-                                        onImageRemoveAll,
-                                        onImageUpdate,
                                         onImageRemove,
                                         isDragging,
                                         dragProps,
@@ -800,14 +804,6 @@ function AdminProducts() {
                                                                         src={
                                                                             image
                                                                         }
-                                                                        // onError={(
-                                                                        //     event
-                                                                        // ) => {
-                                                                        //     event.target.src =
-                                                                        //         image[
-                                                                        //             "data_url"
-                                                                        //         ];
-                                                                        // }}
                                                                         alt="pic"
                                                                     />
                                                                     <button
@@ -899,10 +895,39 @@ function AdminProducts() {
                 }
             </Modal>
 
-            <DiscardModal
-                id="DeleteProductModal"
-                handlerDelete={handlerDelete}
-            />
+            <Modal id="DeleteProductModal">
+                <div className="">
+                    <div className="w-fit mx-auto flex flex-col justify-center items-center text-center space-y-4">
+                        <XCircle color="red" size={60} />
+                        <p className="text-3xl">Are You Sure?</p>
+                        <p className="text-xl text-gray-500">
+                            Do you really want to delete this records? This
+                            process cannot be undone
+                        </p>
+                    </div>
+                    <div className="modal-action">
+                        <label htmlFor="DeleteProductModal" className="btn">
+                            Cancel
+                        </label>
+                        <button
+                            className="btn btn-error"
+                            onClick={() => {
+                                modalDiscardClose.current.click();
+                            }}
+                        >
+                            <label
+                                htmlFor="DeleteProductModal"
+                                ref={modalDiscardClose}
+                                onClick={() => {
+                                    deleteProductByID(state._id);
+                                }}
+                            >
+                                Delete
+                            </label>
+                        </button>
+                    </div>
+                </div>
+            </Modal>
 
             <ToasterContainer />
         </>

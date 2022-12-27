@@ -22,6 +22,9 @@ import {
     ToasterContainer,
 } from "../components/toaster";
 import Pagination from "../components/pagination";
+import DiscardModal from "../components/discardModal";
+
+let tempID = "";
 
 function Address() {
     const { state: ctxState } = useContext(User);
@@ -33,6 +36,8 @@ function Address() {
 
     const addAddressForm = useRef();
     const editAddressForm = useRef();
+    const editCancelModal = useRef();
+    const modalDiscardClose = useRef();
 
     const getAddressByID = async () => {
         try {
@@ -59,6 +64,18 @@ function Address() {
         }
     };
 
+    const deleteAddressById = async (id) => {
+        try {
+            const url = `user/details/delete/${id}`;
+            await Ecomm.delete(url);
+            toastSuccess("Data has been deleted");
+            getAddressByID();
+        } catch (error) {
+            toastError(getError(error));
+            console.log(error);
+        }
+    };
+
     useEffect(() => {
         getAddressByID();
         // console.log(addressData);
@@ -75,6 +92,11 @@ function Address() {
         setDefaultAddress(id);
     };
 
+    const handlerDelete = (e) => {
+        e.preventDefault();
+        deleteAddressById(tempID);
+    };
+
     const saveAddressHandler = async (values, actions) => {
         console.log(formActive);
         if (formActive === "POST") {
@@ -84,7 +106,7 @@ function Address() {
                     user: userInfo._id,
                 });
 
-                toastSuccess("Product Successfully Added");
+                toastSuccess("Address Successfully Added");
                 actions.resetForm();
                 getAddressByID();
             } catch (error) {
@@ -97,18 +119,25 @@ function Address() {
                     user: userInfo._id,
                 });
 
-                toastSuccess("Product Successfully Updated");
+                toastSuccess("Address Successfully Updated");
                 getAddressByID();
-                // getAddressByID();
+                editCancelModal.current.click();
             } catch (error) {
                 toastError(getError(error));
+                console.log(error);
             }
         }
     };
 
     const schema = yup.object().shape({
-        first_name: yup.string().required("Required"),
-        last_name: yup.string().required("Required"),
+        first_name: yup
+            .string()
+            .max(30, "Your first name is too long")
+            .required("Required"),
+        last_name: yup
+            .string()
+            .max(30, "Your last name is too long")
+            .required("Required"),
         address: yup.string().required("Required"),
         city: yup.string().required("Required"),
         state: yup.string().required("Required"),
@@ -158,13 +187,15 @@ function Address() {
                 {addressData && addressData.data ? (
                     <div className="overflow-x-auto p-2 md:p-0 my-4">
                         <div className="overflow-x-auto">
-                            <table className="table w-full ">
+                            <table className="table table-fixed w-full ">
                                 <thead>
                                     <tr className="text-gray-200 [&>*]:bg-neutral ">
-                                        <th className="w-4"></th>
-                                        <th>Full Name</th>
-                                        <th>Complete Address</th>
-                                        <th className="w-12">Action</th>
+                                        <th className="w-[8%]"></th>
+                                        <th className="w-[20%]">Full Name</th>
+                                        <th className="w-[50%]">
+                                            Complete Address
+                                        </th>
+                                        <th className="w-fit">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -173,16 +204,16 @@ function Address() {
                                             <tr key={data._id}>
                                                 <td>
                                                     {data.isMain ? (
-                                                        <p className="text-sm border border-gray-400 p-1 cursor-not-allowed">
+                                                        <p className="text-sm border border-gray-400 p-1 cursor-not-allowed text-center">
                                                             Default
                                                         </p>
                                                     ) : null}
                                                 </td>
-                                                <td>
+                                                <td className="truncate">
                                                     {data.first_name}{" "}
                                                     {data.last_name}
                                                 </td>
-                                                <td>
+                                                <td className="truncate">
                                                     {data.address}, {data.city},{" "}
                                                     {data.state},{" "}
                                                     {data.zip_code}
@@ -203,12 +234,33 @@ function Address() {
                                                         >
                                                             Edit
                                                         </label>
-                                                        <label
-                                                            htmlFor="DeleteAddressModal"
-                                                            className="link link-error"
+                                                        <div
+                                                            className={`${
+                                                                data.isMain &&
+                                                                "tooltip tooltip-left"
+                                                            } `}
+                                                            data-tip="Default address cannot be deleted"
                                                         >
-                                                            Delete
-                                                        </label>
+                                                            <label
+                                                                htmlFor={
+                                                                    !data.isMain &&
+                                                                    "DeleteAddressModal"
+                                                                }
+                                                                className={`link link-error ${
+                                                                    data.isMain &&
+                                                                    "cursor-not-allowed"
+                                                                }`}
+                                                                onClick={() => {
+                                                                    if (
+                                                                        data.isMain
+                                                                    )
+                                                                        tempID =
+                                                                            data._id;
+                                                                }}
+                                                            >
+                                                                Delete
+                                                            </label>
+                                                        </div>
                                                         {data.isMain ===
                                                         false ? (
                                                             <label
@@ -296,11 +348,11 @@ function Address() {
                     )}
                     <div className="form-control w-full">
                         <label className="label">Address</label>
-                        <input
+                        <textarea
                             type="text"
                             name="address"
                             placeholder="Type address here..."
-                            className={`input input-sm md:input-md input-bordered w-full ${
+                            className={`textarea textarea-bordered w-full ${
                                 errors.address && touched.address
                                     ? "input-error"
                                     : ""
@@ -435,11 +487,11 @@ function Address() {
                     )}
                     <div className="form-control w-full">
                         <label className="label">Address</label>
-                        <input
+                        <textarea
                             type="text"
                             name="address"
                             placeholder="Type address here..."
-                            className={`input input-sm md:input-md input-bordered w-full ${
+                            className={`textarea textarea-bordered w-full ${
                                 errors.address && touched.address
                                     ? "input-error"
                                     : ""
@@ -524,10 +576,10 @@ function Address() {
                         <label
                             htmlFor="EditAddressModal"
                             className="btn"
-
-                            // onClick={() => {
-                            //     dispatch({ type: "RESET" });
-                            // }}
+                            onClick={() => {
+                                resetForm();
+                            }}
+                            ref={editCancelModal}
                         >
                             Cancel
                         </label>
@@ -536,7 +588,9 @@ function Address() {
                             disabled={isSubmitting}
                             type="submit"
                             className="btn btn-primary"
-                            onClick={() => setFormActive("PUT")}
+                            onClick={() => {
+                                setFormActive("PUT");
+                            }}
                         >
                             Save
                         </button>
@@ -558,7 +612,20 @@ function Address() {
                         <label htmlFor="DeleteAddressModal" className="btn">
                             Cancel
                         </label>
-                        <button className="btn btn-error">Delete</button>
+                        <button
+                            className="btn btn-error"
+                            onClick={() => {
+                                modalDiscardClose.current.click();
+                            }}
+                        >
+                            <label
+                                htmlFor="DeleteAddressModal"
+                                ref={modalDiscardClose}
+                                onClick={() => deleteAddressById(tempID)}
+                            >
+                                Delete
+                            </label>
+                        </button>
                     </div>
                 </div>
             </Modal>

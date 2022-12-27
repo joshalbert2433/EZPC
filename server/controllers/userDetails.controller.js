@@ -128,6 +128,19 @@ const setDefaultAddress = async (req, res, next) => {
     }
 };
 
+const deleteUserDetails = async (req, res) => {
+    try {
+        const userDetails = await UserDetails.findById(req.params.id);
+        await userDetails.remove();
+        res.status(200).json({ message: "User Details successfully deleted" });
+    } catch (error) {
+        res.status(404).json({
+            message: error.message,
+            error,
+        });
+    }
+};
+
 module.exports = {
     display,
     register,
@@ -135,4 +148,5 @@ module.exports = {
     getByID,
     updateUserDetails,
     setDefaultAddress,
+    deleteUserDetails,
 };

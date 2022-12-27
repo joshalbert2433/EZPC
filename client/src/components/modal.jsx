@@ -2,7 +2,7 @@ import React from "react";
 import { X } from "react-feather";
 
 function Modal(props) {
-    const { title, children, id, handleModalOnClick } = props;
+    const { title, children, id } = props;
     return (
         <>
             <input type="checkbox" id={id} className="modal-toggle" />
@@ -13,7 +13,7 @@ function Modal(props) {
                         htmlFor={id}
                         className="absolute right-6 top-6 cursor-pointer font-semibold"
                     >
-                        <X onClick={handleModalOnClick} />
+                        <X />
                     </label>
                     {children}
                 </div>

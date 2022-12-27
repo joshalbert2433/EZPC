@@ -9,7 +9,7 @@ function DiscardModal(props) {
     return (
         <>
             <input type="checkbox" id={id} className="modal-toggle" />
-            <form className="modal block pt-10" onSubmit={handlerDelete}>
+            <form className="modal block pt-10">
                 <div className="modal-box mx-auto relative">
                     {/* <h2 className="text-2xl font-semibold"></h2> */}
                     <label
@@ -28,7 +28,7 @@ function DiscardModal(props) {
                             </p>
                         </div>
                         <div className="modal-action">
-                            <label htmlFor="DeleteProductModal" className="btn">
+                            <label htmlFor={id} className="btn">
                                 Cancel
                             </label>
                             <button
@@ -36,6 +36,7 @@ function DiscardModal(props) {
                                 className="btn btn-error"
                                 onClick={() => {
                                     modalClose.current.click();
+                                    handlerDelete();
                                 }}
                             >
                                 <label htmlFor={id} ref={modalClose}>

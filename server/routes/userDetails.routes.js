@@ -10,6 +10,8 @@ router.patch(
     "/details/setAddressDefault/:userId",
     UserDetailsController.setDefaultAddress
 );
+router.delete("/details/delete/:id", UserDetailsController.deleteUserDetails);
+
 // router.get("/details/:id", UserDetailsController.getByID);
 
 module.exports = router;
