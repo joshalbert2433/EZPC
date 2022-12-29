@@ -12,7 +12,7 @@ function NavBar() {
     //     setDarkMode(checked);
     // };
     const { state, dispatch: ctxDispatch } = useContext(User);
-    const { userInfo } = state;
+    const { userInfo, cart } = state;
 
     useEffect(() => {
         themeChange(false);
@@ -88,7 +88,7 @@ function NavBar() {
                                         />
                                     </svg>
                                     <span className="badge badge-sm indicator-item">
-                                        8
+                                        {cart.cartItems.length}
                                     </span>
                                 </div>
                             </label>
@@ -98,7 +98,7 @@ function NavBar() {
                             >
                                 <div className="card-body">
                                     <span className="font-bold text-lg">
-                                        8 Items
+                                        {cart.cartItems.length} Items
                                     </span>
                                     <span>Subtotal: $999</span>
                                     <div className="card-actions">

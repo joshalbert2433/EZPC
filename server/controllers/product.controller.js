@@ -1,4 +1,5 @@
 const Product = require("../models/product.model");
+const mongoose = require("mongoose");
 
 const display = async (req, res, next) => {
     try {
@@ -83,7 +84,7 @@ const register = async (req, res, next) => {
         });
     } catch (error) {
         res.status(400).json({
-            message: "An error occurred",
+            message: error.message,
             error,
         });
     }
@@ -96,6 +97,46 @@ const getByID = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(404).json({
+            error: "Product Not Found",
+        });
+    }
+};
+
+const getManyById = async (req, res) => {
+    // const arrayId = req.param.id;
+    // console.log("eit");
+    try {
+        // Get the list of item IDs from the query string
+
+        var itemIds = req.query.itemIds.split(",");
+        console.log(
+            "🚀 ~ file: product.controller.js:111 ~ getManyById ~ itemIds",
+            itemIds
+        );
+
+        // Convert the list of item IDs to a list of ObjectIds
+        // var objectIds = itemIds.map(function (itemId) {
+        //     return new mongoose.Types.ObjectId(itemId);
+        // });
+        // console.log(
+        //     "🚀 ~ file: product.controller.js:121 ~ objectIds ~ objectIds",
+        //     objectIds
+        // );
+
+        // Find the items with the specified IDs
+        // const product = Product.find({ _id: { $in: objectIds } }).toArray;
+        const product = await Product.find({ _id: { $in: itemIds } });
+
+        const total = await Product.countDocuments({ _id: { $in: itemIds } });
+        const response = {
+            total: total,
+            data: product,
+        };
+
+        res.status(200).json(response);
+    } catch (error) {
+        res.status(404).json({
+            message: error.message,
             error: "Product Not Found",
         });
     }
@@ -149,4 +190,5 @@ module.exports = {
     updateProduct,
     deleteProduct,
     searchProduct,
+    getManyById,
 };

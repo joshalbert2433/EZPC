@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import NavBar from "./partials/navBar";
 import ProductCard from "../components/productCard";
 import EcommAPI from "../api/Ecomm.api";
+import { User } from "../reducer/userInfo";
 import { Navigation, Thumbs } from "swiper";
 import { useNavigate } from "react-router-dom";
+import { toastSuccess } from "../components/toaster";
 
 import { useLocation } from "react-router-dom";
 
@@ -13,11 +15,14 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
+import { ToastContainer } from "react-toastify";
 
 function Products() {
     const [activeThumb, setActiveThumb] = useState(null);
     const [productData, setProductData] = useState();
     const [similarProductData, setSimilarProductData] = useState();
+    const { state, dispatch: ctxDispatch } = useContext(User);
+    const [quantity, setQuantity] = useState(0);
     // const idParams = useParams();
     const navigate = useNavigate();
 
@@ -64,11 +69,33 @@ function Products() {
         // getProductByCategory(productData.category);
 
         console.log(similarProductData);
-    }, [similarProductData, id]);
+        console.log(quantity);
+    }, [similarProductData, id, quantity]);
 
     // useEffect(() => {
     //     if (activeThumb) console.log(activeThumb.activeIndex);
     // }, [activeThumb]);
+
+    const addCartHandler = () => {
+        ctxDispatch({
+            type: "ADD_CART_ITEM",
+            payload: { _id: productData._id, quantity: quantity },
+        });
+        toastSuccess("Item has been added to you shopping cart");
+    };
+
+    const updateCartHandler = async (item, quantity) => {
+        // TODO: CREATE ERROR HANDLER FOR NO STOCKS IN PRODUCT
+        // const { data } = await axios.get(`/api/products/${item._id}`);
+        // if (data.countInStock < quantity) {
+        //   window.alert('Sorry. Product is out of stock');
+        //   return;
+        // }
+        ctxDispatch({
+            type: "CART_ADD_ITEM",
+            payload: { ...item, quantity },
+        });
+    };
 
     console.log(similarProductData);
     return (
@@ -169,7 +196,7 @@ function Products() {
                                 </div>
                             </div>
                             <h2 className="text-3xl text-secondary font-semibold">
-                                &#8369;200
+                                &#36; {productData.price}
                             </h2>
                             <div>
                                 <h2 className="text-lg font-semibold p-4 bg-base-200 mb-4">
@@ -180,19 +207,48 @@ function Products() {
                                 </p>
                             </div>
                             <div className="flex gap-3">
-                                <button className="btn btn-primary">
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={addCartHandler}
+                                >
                                     Add to cart
                                 </button>
-                                <select className="select select-bordered w-[200px] text-center select-xl">
+                                {/* <button
+                                    onClick={() => {
+                                        ctxDispatch({ type: "CART_CLEAR" });
+                                    }}
+                                >
+                                    clear cart
+                                </button> */}
+                                {/* <button
+                                    onClick={() => {
+                                        updateCartHandler(
+                                            ...productData,
+                                            productData.quantity + 1
+                                        );
+                                    }}
+                                >
+                                    iNCREMENT
+                                </button> */}
+                                <select
+                                    className="select select-bordered w-[180px] text-center select-xl"
+                                    value={quantity}
+                                    onChange={(e) =>
+                                        setQuantity(e.target.value)
+                                    }
+                                >
                                     <option disabled selected>
                                         Select Quantity
                                     </option>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
+                                    <option value={1}>1</option>
+                                    <option value={2}>2</option>
+                                    <option value={3}>3</option>
+                                    <option value={4}>4</option>
+                                    <option value={5}>5</option>
                                 </select>
+                                <p className="flex items-center text-gray-500">
+                                    {productData.stock} pieces available
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -220,6 +276,8 @@ function Products() {
                     </div>
                 ) : null}
             </div>
+
+            <ToastContainer />
         </>
     );
 }
