@@ -12,10 +12,12 @@ function Cart() {
     const { userInfo, cart } = state;
     let total = 0;
 
+    console.log(cart.cartItems);
+
     const getProductManyById = async () => {
         try {
             const itemIds = cart.cartItems.map((item) => item._id);
-            console.log(itemIds);
+            if (itemIds.length === 0) return;
             const response = await EcommAPI.get(
                 `products/getManyById?itemIds=${itemIds.toString()}`
             );
@@ -26,7 +28,7 @@ function Cart() {
     };
 
     useEffect(() => {
-        console.log(cart);
+        // console.log(cart);
         getProductManyById();
         // console.log(userInfo);
 
@@ -45,7 +47,7 @@ function Cart() {
                         Your Shopping Cart
                     </h2>
                     <ul className="flex flex-col divide-y divide-gray-700">
-                        {cartData
+                        {cartData && cart.cartItems.length !== 0
                             ? cartData.data.map((data, index) => {
                                   let item = cart?.cartItems.find(
                                       (item) => item._id === data._id

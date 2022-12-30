@@ -18,11 +18,30 @@ import { getError } from "../../utils/getError";
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [userLocal, setUserLocal] = useLocalStorage("userInfo", "");
+    const [userLocal, setUserInfoLocal] = useLocalStorage("userInfo", "");
+    const [cartItemsLocal, setCartItemsLocal] = useLocalStorage(
+        "cartItems",
+        []
+    );
     const { state, dispatch: ctxDispatch } = useContext(User);
 
     const navigate = useNavigate();
     const userInfo = state;
+
+    const getCartByUserId = async (userId) => {
+        try {
+            const response = await Ecomm.get(`cart/${userId}`);
+            console.log(response.data.cartItems);
+            setCartItemsLocal(response.data.cartItems);
+            ctxDispatch({
+                type: "INITIAL_CART",
+                payload: response.data.cartItems,
+            });
+        } catch (error) {
+            toastError(getError(error));
+            console.log(error);
+        }
+    };
 
     const handlerSubmit = async (e) => {
         e.preventDefault();
@@ -32,7 +51,12 @@ function Login() {
                 password,
             });
             ctxDispatch({ type: "USER_SIGNIN", payload: response.data });
-            setUserLocal(response.data);
+            await setUserInfoLocal(response.data);
+            // console.log(response.data);
+            await getCartByUserId(response.data._id);
+            // setCartItemsLocal()
+            // setCartItemsLocal(response.car)
+
             navigate("/");
         } catch (error) {
             toastError(getError(error));

@@ -15,8 +15,8 @@ function useLocalStorage(key, initialValue) {
             return item ? JSON.parse(item) : initialValue;
         } catch (error) {
             // If error also return initialValue
-            //DISABLE TEMPORARY
-            // console.log(error);
+
+            // console.log(error); // ? DISABLE TEMPORARY
             return initialValue;
         }
     });

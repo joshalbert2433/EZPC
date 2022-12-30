@@ -9,6 +9,7 @@ const ACTION_TYPES = {
     ADD_CART_ITEM: "ADD_CART_ITEM",
     CART_CLEAR: "CART_CLEAR",
     CART_REMOVE_ITEM: "CART_REMOVE_ITEM",
+    INITIAL_CART: "INITIAL_CART",
 };
 
 const INITIAL_STATE = {
@@ -33,9 +34,16 @@ const reducer = (state, action) => {
             return {
                 ...state,
                 userInfo: null,
+                cart: {
+                    cartItems: [],
+                    shippingAddress: {},
+                },
             };
         case ACTION_TYPES.SAVE_ADDRESS: {
             return { ...state, shippingAddress: action.payload };
+        }
+        case ACTION_TYPES.INITIAL_CART: {
+            return { ...state, cart: { cartItems: action.payload } };
         }
         case ACTION_TYPES.ADD_CART_ITEM: {
             console.log(state.cart.cartItems.quantity);

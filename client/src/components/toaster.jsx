@@ -1,9 +1,16 @@
 import React from "react";
 
-import { toast, ToastContainer } from "react-toastify";
+import {
+    toast,
+    ToastContainer,
+    Slide,
+    Zoom,
+    Flip,
+    Bounce,
+} from "react-toastify";
 
 const toastSettings = {
-    position: "top-right",
+    position: "top-center",
     autoClose: 5000,
     hideProgressBar: false,
     closeOnClick: true,
@@ -11,6 +18,8 @@ const toastSettings = {
     draggable: true,
     progress: undefined,
     theme: "colored",
+    transition: Flip,
+    // disableStack: true,
 };
 
 export const toastInfo = (title) => toast.info(title, toastSettings);
@@ -21,7 +30,7 @@ export const toastSuccess = (title) => toast.success(title, toastSettings);
 export function ToasterContainer() {
     return (
         <ToastContainer
-            position="top-right"
+            position="top-center"
             autoClose={5000}
             hideProgressBar={false}
             newestOnTop={true}
@@ -31,6 +40,7 @@ export function ToasterContainer() {
             draggable
             pauseOnHover
             theme="colored"
+            // transition="flip"
         />
     );
 }

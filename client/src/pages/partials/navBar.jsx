@@ -4,27 +4,52 @@ import { DarkModeSwitch } from "react-toggle-dark-mode";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { User } from "../../reducer/userInfo";
+import Ecomm from "../../api/Ecomm.api";
+import { toastError, toastSuccess } from "../../components/toaster";
+import { getError } from "../../utils/getError";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 function NavBar() {
-    // const [isDarkMode, setDarkMode] = useState(false);
-
-    // const toggleDarkMode = (checked) => {
-    //     setDarkMode(checked);
-    // };
     const { state, dispatch: ctxDispatch } = useContext(User);
     const { userInfo, cart } = state;
+    // const [cartItemsLocal, setCartItemsLocal] = useLocalStorage("cartItems");
+    const cartItemsLocal = cart.cartItems;
+    console.log(
+        "🚀 ~ file: navBar.jsx:17 ~ NavBar ~ cartItemsLocal",
+        cartItemsLocal
+    );
+
+    const updateCart = async () => {
+        try {
+            await Ecomm.post("cart/register", {
+                cartItems: cartItemsLocal,
+                user: userInfo._id,
+            });
+        } catch (error) {
+            toastError(getError(error));
+            console.log(error);
+        }
+    };
 
     useEffect(() => {
         themeChange(false);
     });
 
-    const handlerSignout = () => {
+    const handlerSignout = async () => {
+        // debugger;
+        await updateCart();
         ctxDispatch({ type: "USER_SIGNOUT" });
         localStorage.removeItem("userInfo");
+        localStorage.removeItem("cartItems");
         window.location.href = "/";
     };
 
-    console.log(userInfo);
+    // console.log(cartItemsLocal, userInfo?._id);
+    // console.log(
+    //     "🚀 ~ file: navBar.jsx:45 ~ NavBar ~ cartItemsLocal",
+    //     ...(cartItemsLocal || null)
+    // );
+    // console.log(cartItemsLocal);
 
     return (
         <div className="bg-base-100 shadow-lg navbar mb-4">

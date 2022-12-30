@@ -15,7 +15,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 function Products() {
     const [activeThumb, setActiveThumb] = useState(null);
@@ -81,6 +81,7 @@ function Products() {
             type: "ADD_CART_ITEM",
             payload: { _id: productData._id, quantity: quantity },
         });
+        toast.dismiss();
         toastSuccess("Item has been added to you shopping cart");
     };
 

@@ -108,7 +108,7 @@ const getManyById = async (req, res) => {
     try {
         // Get the list of item IDs from the query string
 
-        var itemIds = req.query.itemIds.split(",");
+        var itemIds = req.query.itemIds.split(",") || 0;
         console.log(
             "🚀 ~ file: product.controller.js:111 ~ getManyById ~ itemIds",
             itemIds
