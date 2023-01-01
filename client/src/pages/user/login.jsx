@@ -26,7 +26,6 @@ function Login() {
     const { state, dispatch: ctxDispatch } = useContext(User);
 
     const navigate = useNavigate();
-    const userInfo = state;
 
     const getCartByUserId = async (userId) => {
         try {
@@ -34,7 +33,7 @@ function Login() {
             console.log(response.data.cartItems);
             setCartItemsLocal(response.data.cartItems);
             ctxDispatch({
-                type: "INITIAL_CART",
+                type: "INITIAL_CART_ITEM",
                 payload: response.data.cartItems,
             });
         } catch (error) {

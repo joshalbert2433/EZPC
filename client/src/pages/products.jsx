@@ -22,7 +22,7 @@ function Products() {
     const [productData, setProductData] = useState();
     const [similarProductData, setSimilarProductData] = useState();
     const { state, dispatch: ctxDispatch } = useContext(User);
-    const [quantity, setQuantity] = useState(0);
+    const [quantity, setQuantity] = useState(1);
     // const idParams = useParams();
     const navigate = useNavigate();
 
@@ -238,10 +238,9 @@ function Products() {
                                         setQuantity(e.target.value)
                                     }
                                 >
-                                    <option disabled selected>
-                                        Select Quantity
+                                    <option value={1} selected>
+                                        1
                                     </option>
-                                    <option value={1}>1</option>
                                     <option value={2}>2</option>
                                     <option value={3}>3</option>
                                     <option value={4}>4</option>

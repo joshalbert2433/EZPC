@@ -10,6 +10,7 @@ import OrderShow from "./pages/admin/orderShow";
 import AdminProducts from "./pages/admin/products";
 import AdminLogin from "./pages/admin/login";
 import Address from "./pages/address";
+import Checkout from "./pages/checkout";
 import NavBar from "./pages/partials/navBar";
 
 function App() {
@@ -51,6 +52,11 @@ function App() {
                             exact
                             path="/dashboard/products"
                             element={<AdminProducts />}
+                        ></Route>
+                        <Route
+                            exact
+                            path="/checkout"
+                            element={<Checkout />}
                         ></Route>
                         <Route
                             exact
