@@ -311,9 +311,7 @@ function AdminProducts() {
 										<th className="w-[10%]">
 											Inventory Count
 										</th>
-										<th className="w-[10%]">
-											Quantity Sold
-										</th>
+
 										<th className="w-[10%]">Action</th>
 									</tr>
 								</thead>
@@ -340,7 +338,7 @@ function AdminProducts() {
 													{data.description}
 												</td>
 												<td>{data.stock}</td>
-												<td>Blue</td>
+
 												<td>
 													<div className="flex gap-4">
 														<label
@@ -912,15 +910,12 @@ function AdminProducts() {
 						<button
 							className="btn btn-error"
 							onClick={() => {
-								modalDiscardClose.current.click();
+								deleteProductByID(state._id);
 							}}
 						>
 							<label
 								htmlFor="DeleteProductModal"
 								ref={modalDiscardClose}
-								onClick={() => {
-									deleteProductByID(state._id);
-								}}
 							>
 								Delete
 							</label>

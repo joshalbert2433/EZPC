@@ -2,7 +2,9 @@ import { Minus, Plus } from "phosphor-react";
 import React, { useContext, useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 import EcommAPI from "../api/Ecomm.api";
+import { toastError, toastInfo, toastWarning } from "../components/toaster";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { User } from "../reducer/userInfo";
 
@@ -212,6 +214,11 @@ function Cart() {
 							type="button"
 							className="px-6 py-2 border rounded-md btn-primary"
 							onClick={() => {
+								if (cart.cartItems.length === 0) {
+									toast.dismiss();
+									return toastInfo("No items in cart");
+								}
+
 								navigate("/checkout");
 							}}
 						>
@@ -223,6 +230,8 @@ function Cart() {
 					</div>
 				</div>
 			</div>
+
+			<ToastContainer />
 		</>
 	);
 }

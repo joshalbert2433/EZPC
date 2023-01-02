@@ -32,16 +32,11 @@ app.use("/api/cart", CartRoutes);
 
 //ERROR HANDLER
 app.use((err, req, res, next) => {
-    res.status(500).send({ message: err.message });
+	res.status(500).send({ message: err.message });
 });
 
-//TEST
-// app.post("/upload", upload.single("image"), (req, res) => {
-//     console.log(req.file);
-// });
-
 app.get("/", (req, res) => {
-    res.send("hello world");
+	res.send("hello world");
 });
 
 app.listen(PORT, () => console.log(`listening in port ${PORT}`));

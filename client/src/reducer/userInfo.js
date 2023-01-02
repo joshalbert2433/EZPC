@@ -40,7 +40,6 @@ const reducer = (state, action) => {
 				},
 			};
 		case ACTION_TYPES.SAVE_SHIPPING_ADDRESS: {
-			console.log("shipping bluucral");
 			return { ...state, shippingAddress: action.payload };
 		}
 		case ACTION_TYPES.INITIAL_CART_ITEM: {

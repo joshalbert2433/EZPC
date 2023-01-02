@@ -25,8 +25,6 @@ import Pagination from "../components/pagination";
 import DiscardModal from "../components/discardModal";
 import { toast } from "react-toastify";
 
-let tempID = "";
-
 function Address() {
 	const { state: ctxState, dispatch: ctxDispatch } = useContext(User);
 	const { userInfo, cart } = ctxState;
@@ -35,11 +33,14 @@ function Address() {
 	const [formActive, setFormActive] = useState("");
 	const [state, dispatch] = useReducer(addressFormReducer, INITIAL_STATE);
 	const [page, setPage] = useState(1);
+	const [tempId, setTempId] = useState("");
 
 	const addAddressForm = useRef();
 	const editAddressForm = useRef();
 	const editCancelModal = useRef();
 	const modalDiscardClose = useRef();
+
+	let tempID = "";
 
 	// console.log({ ctxDispatch });
 
@@ -59,17 +60,8 @@ function Address() {
 		try {
 			// /details/setAddressDefault/:userId
 			const url = `user/details/setAddressDefault/${id}`;
-			const response = await Ecomm.patch(url);
-			// ctxDispatch({
-			// 	type: "SAVE_SHIPPING_ADDRESS",
-			// 	payload: { ...values },
-			// });
-			// localStorage.setItem(
-			// 	"shippingAddress",
-			// 	JSON.stringify({
-			// 		...response.data.data,
-			// 	})
-			// );
+			await Ecomm.patch(url);
+
 			toast.dismiss();
 			toastSuccess("Default address updated");
 			getAddressByID();
@@ -80,13 +72,14 @@ function Address() {
 	};
 
 	const deleteAddressById = async (id) => {
+		debugger;
 		try {
 			const url = `user/details/delete/${id}`;
 			await Ecomm.delete(url);
 			toastSuccess("Data has been deleted");
 			getAddressByID();
 		} catch (error) {
-			toastError(getError(error));
+			// toastError(getError(error));
 			console.log(error);
 		}
 	};
@@ -272,10 +265,13 @@ function Address() {
 																}`}
 																onClick={() => {
 																	if (
-																		data.isMain
+																		!data.isMain
 																	)
-																		tempID =
-																			data._id;
+																		// tempID =
+																		// 	data._id;
+																		setTempId(
+																			data._id
+																		);
 																}}
 															>
 																Delete
@@ -635,13 +631,12 @@ function Address() {
 						<button
 							className="btn btn-error"
 							onClick={() => {
-								modalDiscardClose.current.click();
+								deleteAddressById(tempId);
 							}}
 						>
 							<label
 								htmlFor="DeleteAddressModal"
 								ref={modalDiscardClose}
-								onClick={() => deleteAddressById(tempID)}
 							>
 								Delete
 							</label>

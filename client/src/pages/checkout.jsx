@@ -8,6 +8,9 @@ import {
 
 import * as yup from "yup";
 import { useFormik } from "formik";
+import { toastError } from "../components/toaster";
+import { getError } from "../utils/getError";
+import { combineValues } from "../utils/combineValues";
 
 function Checkout() {
 	const { state: ctxState, dispatch: ctxDispatch } = useContext(User);
@@ -29,18 +32,20 @@ function Checkout() {
 		}
 	};
 
+	const registerOrder = async () => {};
+
 	useEffect(() => {
 		getAddressMain(userInfo._id);
 		//eslint-disable-next-line
 	}, []);
 
-	const changeInputHandler = (e) => {
-		const { name, value } = e.target;
-		dispatch({
-			type: "CHANGE_INPUT",
-			payload: { name: name, value: value },
-		});
-	};
+	// const changeInputHandler = (e) => {
+	// 	const { name, value } = e.target;
+	// 	dispatch({
+	// 		type: "CHANGE_INPUT",
+	// 		payload: { name: name, value: value },
+	// 	});
+	// };
 
 	const sameAddressHandler = (e) => {
 		const { checked, value } = e.target;
@@ -53,7 +58,44 @@ function Checkout() {
 	};
 
 	const saveOrderHandler = async (values, actions) => {
-		console.log(values, actions);
+		console.log(values);
+		try {
+			// * GET THE CART ITEMS
+			const cartItems = JSON.parse(localStorage.getItem("cartItems"));
+			const orderItems = cartItems.map((item) => ({
+				product: item._id,
+				quantity: item.quantity,
+			}));
+
+			// * GET THE TOTAL PRICE OF ORDER
+			const itemIds = cartItems.map((item) => item._id);
+			console.log(itemIds.toString());
+			const response = await Ecomm.get(
+				`products/getManyById?itemIds=${itemIds.toString()}`
+			);
+			const { data: productData } = response.data;
+			const result = combineValues(productData, cartItems);
+			const priceArray = result.map((item) => item.price * item.quantity);
+			const total_price = priceArray.reduce(
+				(partialPrice, price) => partialPrice + price
+			);
+
+			//* REGISTER TO DATABASE
+			await Ecomm.post("/orders/register", {
+				orderItems: orderItems,
+				shipping_address: values,
+				user: userInfo._id,
+				total_price: total_price,
+			});
+
+			//* REMOVE THE CART IN LOCAL STORAGE
+			// localStorage.removeItem("cartItems");
+
+			actions.resetForm();
+		} catch (error) {
+			toastError(getError(error));
+			console.log(error);
+		}
 	};
 
 	const schema = yup.object().shape({
@@ -131,8 +173,14 @@ function Checkout() {
 								className="input input-sm md:input-md input-bordered w-full "
 								value={values.first_name}
 								disabled={sameAddress}
-								onChange={changeInputHandler}
+								onChange={handleChange}
+								onBlur={handleBlur}
 							/>
+							{errors.first_name && touched.first_name && (
+								<span className="text-error">
+									{errors.first_name}
+								</span>
+							)}
 						</div>
 						<div className="form-control w-full">
 							<label className="label">Last Name</label>
@@ -143,8 +191,14 @@ function Checkout() {
 								className="input input-sm md:input-md input-bordered w-full "
 								value={values.last_name}
 								disabled={sameAddress}
-								onChange={changeInputHandler}
+								onChange={handleChange}
+								onBlur={handleBlur}
 							/>
+							{errors.last_name && touched.last_name && (
+								<span className="text-error">
+									{errors.last_name}
+								</span>
+							)}
 						</div>
 						<div className="form-control w-full">
 							<label className="label">Address</label>
@@ -155,8 +209,14 @@ function Checkout() {
 								className="input input-sm md:input-md input-bordered w-full "
 								value={values.address}
 								disabled={sameAddress}
-								onChange={changeInputHandler}
+								onChange={handleChange}
+								onBlur={handleBlur}
 							/>
+							{errors.address && touched.address && (
+								<span className="text-error">
+									{errors.address}
+								</span>
+							)}
 						</div>
 						<div className="form-control w-full">
 							<label className="label">City</label>
@@ -167,8 +227,14 @@ function Checkout() {
 								className="input input-sm md:input-md input-bordered w-full "
 								value={values.city}
 								disabled={sameAddress}
-								onChange={changeInputHandler}
+								onChange={handleChange}
+								onBlur={handleBlur}
 							/>
+							{errors.city && touched.city && (
+								<span className="text-error">
+									{errors.city}
+								</span>
+							)}
 						</div>
 						<div className="form-control w-full">
 							<label className="label">State</label>
@@ -179,8 +245,14 @@ function Checkout() {
 								className="input input-sm md:input-md input-bordered w-full "
 								value={values.state}
 								disabled={sameAddress}
-								onChange={changeInputHandler}
+								onChange={handleChange}
+								onBlur={handleBlur}
 							/>
+							{errors.state && touched.state && (
+								<span className="text-error">
+									{errors.state}
+								</span>
+							)}
 						</div>
 						<div className="form-control w-full">
 							<label className="label">Zip Code</label>
@@ -191,8 +263,14 @@ function Checkout() {
 								className="input input-sm md:input-md input-bordered w-full"
 								value={values.zip_code}
 								disabled={sameAddress}
-								onChange={changeInputHandler}
+								onChange={handleChange}
+								onBlur={handleBlur}
 							/>
+							{errors.zip_code && touched.zip_code && (
+								<span className="text-error">
+									{errors.zip_code}
+								</span>
+							)}
 						</div>
 					</div>
 				</div>
