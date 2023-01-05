@@ -1,85 +1,141 @@
-import React from "react";
+import React, { useEffect } from "react";
+import Ecomm from "../api/Ecomm.api";
+import { useLocation } from "react-router-dom";
 
 function OrderShow() {
+	const { state: orderData } = useLocation();
+	const { shipping_address, billing_address } = orderData.data;
+
+	// const { id } = state;
+
+	const getOrderById = async (orderId) => {
+		try {
+			const response = await Ecomm.get();
+		} catch (error) {}
+	};
+
+	useEffect(() => {});
+	console.log(orderData);
+
 	return (
 		<>
-			<div className="w-[1200px] mx-auto flex gap-12">
-				<div className="w-[30%] bg-base-100 py-8 px-12 rounded-lg shadow-lg">
-					<h2 className="font-bold">Order ID: 1</h2>
-					<div className="mt-4">
-						<p className="font-semibold underline">
-							Customer shipping info:
-						</p>
-						<p>Name: Bob</p>
-						<p>Address: 123 dojo</p>
-						<p>City: Imus</p>
-						<p>State: Cavite</p>
-						<p>Zip Code: 4103</p>
-					</div>
-					<div className="mt-4">
-						<p className="font-semibold underline">
-							Customer billing info:
-						</p>
-						<p>Name: Bob</p>
-						<p>Address: 123 dojo</p>
-						<p>City: Imus</p>
-						<p>State: Cavite</p>
-						<p>Zip Code: 4103</p>
-					</div>
-				</div>
-				<div className="w-[70%]">
-					<div className="overflow-x-auto p-2 md:p-0 shadow-lg">
-						<div className="overflow-x-auto ">
-							<table className="table w-full">
-								<thead>
-									<tr className="text-gray-200 [&>*]:bg-neutral ">
-										<th>ID</th>
-										<th>Item</th>
-										<th>Price</th>
-										<th>Quantity</th>
-										<th>Total</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<th>1</th>
-										<td>Cy Ganderton</td>
-										<td>Quality Control Specialist</td>
-										<td>Blue</td>
-										<td>Blue</td>
-									</tr>
-
-									<tr>
-										<th>2</th>
-										<td>Hart Hagerty</td>
-										<td>Desktop Support Technician</td>
-										<td>Desktop Support Technician</td>
-										<td>Purple</td>
-									</tr>
-
-									<tr>
-										<th>3</th>
-										<td>Brice Swyre</td>
-										<td>Tax Accountant</td>
-										<td>Tax Accountant</td>
-										<td>Red</td>
-									</tr>
-								</tbody>
-							</table>
+			{orderData ? (
+				<div className="xl:w-[1200px] mx-auto flex flex-col gap-4">
+					<div className="flex flex-col max-w-full p-6 space-y-4 sm:p-4 sm:px-6 bg-base-100 shadow-lg">
+						<h2 className="text-xl font-semibold">
+							Order ID: {orderData.data.orderId}
+						</h2>
+						<div className="flex">
+							<div className="w-1/2">
+								<h3 className="font-semibold">
+									Customer Shipping Info:
+								</h3>
+								<p>
+									Name: {shipping_address.first_name}{" "}
+									{shipping_address.last_name}
+								</p>
+								<p>Address: {shipping_address.address}</p>
+								<p>City: {shipping_address.city}</p>
+								<p>State: {shipping_address.state}</p>
+								<p>Zip Code: {shipping_address.zip_code}</p>
+							</div>
+							<div className="w-1/2">
+								<h3 className="font-semibold">
+									Customer Billing Info:
+								</h3>
+								<p>
+									Name: {billing_address.first_name}{" "}
+									{billing_address.last_name}
+								</p>
+								<p>Address: {billing_address.address}</p>
+								<p>City: {billing_address.city}</p>
+								<p>State: {billing_address.state}</p>
+								<p>Zip Code: {billing_address.zip_code}</p>
+							</div>
 						</div>
 					</div>
-					<div className="flex py-8 justify-between ">
-						<div className="bg-base-100 py-4 px-8 rounded-lg shadow-lg shadow-lg">
-							<p>Sub total: &#36;29 </p>
-							<p>Shipping fee: &#36;1 </p>
-							<p>Total price: &#36;30</p>
+
+					<div className="flex flex-col max-w-full p-6 space-y-4 sm:p-4 sm:px-6 bg-base-100 shadow-lg">
+						<h2 className="text-xl font-semibold">
+							{orderData.data.status}
+						</h2>
+						<ul className="flex flex-col divide-y divide-gray-700">
+							{orderData && orderData.length !== 0
+								? orderData.data.orderItems.map(
+										(data, index) => {
+											return (
+												<li
+													className="flex flex-col py-6 sm:flex-row sm:justify-between"
+													key={data._id}
+												>
+													<div className="flex w-full space-x-2 sm:space-x-4">
+														<img
+															className="flex-shrink-0 border object-cover w-20 h-20 dark:border-transparent rounded outline-none sm:w-32 sm:h-32 dark:bg-gray-500"
+															src={
+																data.product
+																	.image[
+																	data.product
+																		.image_main
+																]
+															}
+															alt="Polaroid camera"
+														/>
+														<div className="flex flex-col justify-between w-full pb-4">
+															<div className="flex justify-between w-full pb-2 space-x-2">
+																<div className="space-y-1">
+																	<h3 className="text-lg font-semibold leading-snug sm:pr-8 line-clamp-2">
+																		{
+																			data
+																				.product
+																				.name
+																		}
+																	</h3>
+																</div>
+																<div className="text-right">
+																	<p className="text-lg font-semibold text-secondary">
+																		{data
+																			.product
+																			.price *
+																			data.quantity}
+																		&#36;
+																	</p>
+																</div>
+															</div>
+															<div className="flex text-sm font-semibold">
+																<p>
+																	X{" "}
+																	{
+																		data.quantity
+																	}
+																</p>
+															</div>
+														</div>
+													</div>
+												</li>
+											);
+										}
+								  )
+								: null}
+						</ul>
+						<div className="space-y-1 text-right">
+							<p>
+								Order Total:{" "}
+								<span className="font-semibold text-secondary text-xl">
+									&#36;{orderData.data.total_price}
+								</span>
+							</p>
 						</div>
-						<p className="bg-success h-fit py-4 px-8 rounded-lg text-black shadow-lg">
-							Status: shipped
-						</p>
+						<div className="flex justify-end space-x-4">
+							<button
+								type="button"
+								className="px-6 py-2 border rounded-md btn-sm btn sm:btn-md btn-primary w-full sm:w-fit"
+							>
+								Shop More
+							</button>
+						</div>
 					</div>
 				</div>
-			</div>
+			) : null}
 		</>
 	);
 }

@@ -72,7 +72,6 @@ function Address() {
 	};
 
 	const deleteAddressById = async (id) => {
-		debugger;
 		try {
 			const url = `user/details/delete/${id}`;
 			await Ecomm.delete(url);
@@ -179,6 +178,8 @@ function Address() {
 		enableReinitialize: true,
 		onSubmit: saveAddressHandler,
 	});
+
+	// console.log(state);
 
 	return (
 		<>
@@ -370,7 +371,7 @@ function Address() {
 							placeholder="Type address here..."
 							className={`textarea textarea-bordered w-full ${
 								errors.address && touched.address
-									? "input-error"
+									? "textarea-error"
 									: ""
 							}`}
 							value={values.address}
@@ -628,19 +629,17 @@ function Address() {
 						<label htmlFor="DeleteAddressModal" className="btn">
 							Cancel
 						</label>
-						<button
+
+						<label
+							htmlFor="DeleteAddressModal"
+							ref={modalDiscardClose}
 							className="btn btn-error"
 							onClick={() => {
 								deleteAddressById(tempId);
 							}}
 						>
-							<label
-								htmlFor="DeleteAddressModal"
-								ref={modalDiscardClose}
-							>
-								Delete
-							</label>
-						</button>
+							Delete
+						</label>
 					</div>
 				</div>
 			</Modal>

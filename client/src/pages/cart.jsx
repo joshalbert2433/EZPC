@@ -91,7 +91,8 @@ function Cart() {
 														</div>
 														<div className="text-right">
 															<p className="text-lg font-semibold text-secondary">
-																{data.price}
+																{data.price *
+																	item?.quantity}
 																&#36;
 															</p>
 														</div>

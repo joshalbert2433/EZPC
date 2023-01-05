@@ -7,6 +7,7 @@ import Login from "./pages/user/login";
 import SignUp from "./pages/user/signUp";
 import Orders from "./pages/admin/orders";
 import OrderShow from "./pages/orderShow";
+import OrdersUser from "./pages/orders";
 import AdminProducts from "./pages/admin/products";
 import AdminLogin from "./pages/admin/login";
 import Address from "./pages/address";
@@ -42,6 +43,11 @@ function App() {
 							exact
 							path="/dashboard/orders"
 							element={<Orders />}
+						></Route>
+						<Route
+							exact
+							path="/orders"
+							element={<OrdersUser />}
 						></Route>
 						<Route
 							exact

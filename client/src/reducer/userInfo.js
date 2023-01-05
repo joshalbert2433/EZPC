@@ -73,14 +73,14 @@ const reducer = (state, action) => {
 			localStorage.setItem("cartItems", JSON.stringify(cartItems));
 			return { ...state, cart: { ...state.cart, cartItems } };
 		}
-		case "CART_REMOVE_ITEM": {
+		case ACTION_TYPES.CART_REMOVE_ITEM: {
 			const cartItems = state.cart.cartItems.filter(
 				(item) => item._id !== action.payload._id
 			);
 			localStorage.setItem("cartItems", JSON.stringify(cartItems));
 			return { ...state, cart: { ...state.cart, cartItems } };
 		}
-		case "CART_CLEAR":
+		case ACTION_TYPES.CART_CLEAR:
 			return { ...state, cart: { ...state.cart, cartItems: [] } };
 		default:
 			return state;

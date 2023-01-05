@@ -8,9 +8,13 @@ import Ecomm from "../../api/Ecomm.api";
 import { toastError, toastSuccess } from "../../components/toaster";
 import { getError } from "../../utils/getError";
 import useLocalStorage from "../../hooks/useLocalStorage";
+import { useRef } from "react";
 
 function NavBar() {
 	const { state, dispatch: ctxDispatch } = useContext(User);
+	const theme = localStorage.getItem("theme");
+	const inputTheme = useRef();
+
 	const { userInfo, cart } = state;
 	// const [cartItemsLocal, setCartItemsLocal] = useLocalStorage("cartItems");
 	const cartItemsLocal = cart.cartItems;
@@ -51,6 +55,8 @@ function NavBar() {
 	// );
 	// console.log(cartItemsLocal);
 
+	console.log(theme, "theme");
+
 	return (
 		<div className="bg-base-100 shadow-lg navbar mb-4">
 			<div className="w-[1200px] mx-auto gap-4 flex [&>*]:items-center [&>*]:inline-flex ">
@@ -62,16 +68,28 @@ function NavBar() {
 						<span className="text-primary">EZ</span>PC
 					</Link>
 				</div>
+
+				{userInfo ? (
+					<div className="gap-4 [&>*]:font-medium ">
+						<Link to="/" className="hover:text-primary">
+							Products
+						</Link>
+						<Link to="/orders" className="hover:text-primary">
+							Orders
+						</Link>
+						<Link to="/address" className="hover:text-primary">
+							Address
+						</Link>
+					</div>
+				) : null}
+
+				{/* <DarkModeSwitch /> */}
 				<div>
 					<label className="swap swap-rotate">
-						<input
-							type="checkbox"
-							// data-toggle-theme="dark,light"
-							// data-act-class="ACTIVECLASS"
-						/>
+						<input type="checkbox" defaultValue={true} />
 
 						<svg
-							className="swap-on fill-current w-7 h-7"
+							className={`swap-on fill-current w-7 h-7`}
 							xmlns="http://www.w3.org/2000/svg"
 							viewBox="0 0 24 24"
 							data-set-theme="light"
@@ -80,7 +98,7 @@ function NavBar() {
 						</svg>
 
 						<svg
-							className="swap-off fill-current w-7 h-7"
+							className={`swap-off fill-current w-7 h-7`}
 							xmlns="http://www.w3.org/2000/svg"
 							viewBox="0 0 24 24"
 							data-set-theme="dark"
@@ -97,7 +115,7 @@ function NavBar() {
 								tabIndex={0}
 								className="btn btn-ghost btn-circle"
 							>
-								<div className="indicator">
+								<Link to="/cart" className="indicator">
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										className="h-6 w-6"
@@ -117,27 +135,8 @@ function NavBar() {
 											{cart.cartItems.length}
 										</span>
 									) : null}
-								</div>
+								</Link>
 							</label>
-							<div
-								tabIndex={0}
-								className="mt-3 card card-compact dropdown-content w-52 bg-base-100 shadow"
-							>
-								<div className="card-body">
-									<span className="font-bold text-lg">
-										{cart.cartItems.length} Items
-									</span>
-
-									<div className="card-actions">
-										<Link
-											to={{ pathname: "/cart" }}
-											className="btn btn-secondary btn-block"
-										>
-											View cart
-										</Link>
-									</div>
-								</div>
-							</div>
 						</div>
 						<div className="dropdown dropdown-end">
 							<label
@@ -152,9 +151,6 @@ function NavBar() {
 								tabIndex={0}
 								className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
 							>
-								<li>
-									<Link to="address">Address</Link>
-								</li>
 								<li onClick={handlerSignout}>
 									<p>Logout</p>
 								</li>

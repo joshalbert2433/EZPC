@@ -65,12 +65,8 @@ const getByID = async (req, res) => {
 	}
 };
 
-// const getAddressIsMain = async (req, res) => {
-//     const userDetails = await UserDetails.find()
-// }
-
 const register = async (req, res, next) => {
-	let userDetails = new UserDetails({
+	let data = {
 		first_name: req.body.first_name,
 		last_name: req.body.last_name,
 		address: req.body.address,
@@ -79,7 +75,13 @@ const register = async (req, res, next) => {
 		zip_code: req.body.zip_code,
 		isMain: req.body.isMain,
 		user: req.body.user,
-	});
+	};
+
+	// * AUTOMATICALLY SET ADDRESS TO DEFAULT IF ADD DATA FOR FIRST TIME
+	const total = await UserDetails.countDocuments({});
+	data = total === 0 ? { ...data, isMain: true } : data;
+
+	let userDetails = new UserDetails(data);
 
 	try {
 		await userDetails.save();

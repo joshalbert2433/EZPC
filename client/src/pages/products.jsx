@@ -214,23 +214,7 @@ function Products() {
 								>
 									Add to cart
 								</button>
-								{/* <button
-                                    onClick={() => {
-                                        ctxDispatch({ type: "CART_CLEAR" });
-                                    }}
-                                >
-                                    clear cart
-                                </button> */}
-								{/* <button
-                                    onClick={() => {
-                                        updateCartHandler(
-                                            ...productData,
-                                            productData.quantity + 1
-                                        );
-                                    }}
-                                >
-                                    iNCREMENT
-                                </button> */}
+
 								<select
 									className="select select-bordered w-[180px] text-center select-xl"
 									value={quantity}
@@ -238,7 +222,7 @@ function Products() {
 										setQuantity(e.target.value)
 									}
 								>
-									<option value={1} selected>
+									<option value={1} defaultValue>
 										1
 									</option>
 									<option value={2}>2</option>

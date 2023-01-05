@@ -907,19 +907,17 @@ function AdminProducts() {
 						<label htmlFor="DeleteProductModal" className="btn">
 							Cancel
 						</label>
-						<button
+
+						<label
+							htmlFor="DeleteProductModal"
 							className="btn btn-error"
+							ref={modalDiscardClose}
 							onClick={() => {
 								deleteProductByID(state._id);
 							}}
 						>
-							<label
-								htmlFor="DeleteProductModal"
-								ref={modalDiscardClose}
-							>
-								Delete
-							</label>
-						</button>
+							Delete
+						</label>
 					</div>
 				</div>
 			</Modal>

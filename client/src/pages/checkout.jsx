@@ -8,7 +8,7 @@ import {
 
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { toastError } from "../components/toaster";
+import { toastError, toastInfo } from "../components/toaster";
 import { getError } from "../utils/getError";
 import { combineValues } from "../utils/combineValues";
 
@@ -39,6 +39,7 @@ function Checkout() {
 		//eslint-disable-next-line
 	}, []);
 
+	// if (!addressData) =
 	// const changeInputHandler = (e) => {
 	// 	const { name, value } = e.target;
 	// 	dispatch({
@@ -50,12 +51,16 @@ function Checkout() {
 	const sameAddressHandler = (e) => {
 		const { checked, value } = e.target;
 
+		// if (!addressData) toastInfo("No de")
+
 		if (checked) {
 			setSameAddress(true);
 		} else {
 			setSameAddress(false);
 		}
 	};
+
+	// console.log(addressData, "address Data");
 
 	const saveOrderHandler = async (values, actions) => {
 		console.log(values);
@@ -83,13 +88,15 @@ function Checkout() {
 			//* REGISTER TO DATABASE
 			await Ecomm.post("/orders/register", {
 				orderItems: orderItems,
-				shipping_address: values,
+				shipping_address: addressData,
+				billing_address: values,
 				user: userInfo._id,
 				total_price: total_price,
 			});
 
-			//* REMOVE THE CART IN LOCAL STORAGE
-			// localStorage.removeItem("cartItems");
+			//* REMOVE THE CART IN LOCAL STORAGE AND USER CONTEXT
+			ctxDispatch({ type: "CART_CLEAR" });
+			localStorage.removeItem("cartItems");
 
 			actions.resetForm();
 		} catch (error) {
@@ -138,9 +145,6 @@ function Checkout() {
 		enableReinitialize: true,
 		onSubmit: saveOrderHandler,
 	});
-
-	// console.log(addressData, "addressData");
-	console.log(errors);
 
 	return (
 		<div className="xl:w-[1200px] mx-auto">
