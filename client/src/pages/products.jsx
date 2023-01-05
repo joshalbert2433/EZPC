@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
-import NavBar from "./partials/navBar";
 import ProductCard from "../components/productCard";
 import EcommAPI from "../api/Ecomm.api";
-import { User } from "../reducer/userInfo";
+import { User } from "../services/reducers/userInfo";
 import { Navigation, Thumbs } from "swiper";
 import { useNavigate } from "react-router-dom";
 import { toastSuccess } from "../components/toaster";

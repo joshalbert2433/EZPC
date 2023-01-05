@@ -1,23 +1,51 @@
 import { Minus, Plus } from "phosphor-react";
 import React, { useContext, useEffect } from "react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import Ecomm from "../api/Ecomm.api";
 import EcommAPI from "../api/Ecomm.api";
 import { toastError, toastInfo, toastWarning } from "../components/toaster";
 import useLocalStorage from "../hooks/useLocalStorage";
-import { User } from "../reducer/userInfo";
+import { User } from "../services/reducers/userInfo";
+import { getError } from "../services/utils/getError";
 
 function Cart() {
 	// const [cartItems, setCartItems] = useLocalStorage()
 	const { state, dispatch: ctxDispatch } = useContext(User);
 	const [cartData, setCartData] = useState();
+	const [addressData, setAddressData] = useState();
 	const { userInfo, cart } = state;
 	const [cartQuantity, setCartQuantity] = useState(0);
 	const navigate = useNavigate();
 	let total = 0;
 
-	console.log(cart.cartItems);
+	const search = useLocation().search;
+	const redirectInUrl = new URLSearchParams(search).get("redirect");
+	const redirect = redirectInUrl ? redirectInUrl : "/address";
+
+	const getAddressByID = async () => {
+		try {
+			const url = `user/details/${userInfo._id}`;
+			const response = await Ecomm.get(url);
+			// setAddressData(response.data);
+			console.log(response.data.data.length);
+
+			setAddressData(response.data.data);
+
+			// if (response.data.data.length === 0) {
+			// 	toastInfo(
+			// 		"No default address found. Will redirect to address page"
+			// 	);
+			// 	return false;
+			// } else {
+			// 	return true;
+			// }
+		} catch (error) {
+			toastError(getError(error));
+			console.log(error);
+		}
+	};
 
 	const getProductManyById = async () => {
 		try {
@@ -33,10 +61,9 @@ function Cart() {
 	};
 
 	useEffect(() => {
-		// console.log(cart);
+		getAddressByID(userInfo._id);
 		getProductManyById();
-		// console.log(userInfo);
-
+		// getAddressMain(userInfo._id);
 		//eslint-disable-next-line
 	}, []);
 
@@ -51,9 +78,35 @@ function Cart() {
 		});
 	};
 
+	console.log(addressData);
+
 	return (
 		<>
 			<div className="xl:w-[1200px] mx-auto">
+				{addressData?.length === 0 && (
+					<div className="alert alert-info rounded-none shadow-lg">
+						<div>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								className="stroke-current flex-shrink-0 w-6 h-6"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth="2"
+									d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+								></path>
+							</svg>
+							<span>
+								No default address found. Will be redirect on
+								address page upon checkout
+							</span>
+						</div>
+					</div>
+				)}
+
 				<div className="flex flex-col max-w-full p-6 space-y-4 sm:p-10 bg-base-100 shadow-lg">
 					<h2 className="text-xl font-semibold">
 						Your Shopping Cart
@@ -210,17 +263,24 @@ function Cart() {
 								to shop
 							</span>
 						</button>
+
 						<button
 							to="checkout"
 							type="button"
 							className="px-6 py-2 border rounded-md btn-primary"
-							onClick={() => {
+							onClick={async () => {
 								if (cart.cartItems.length === 0) {
 									toast.dismiss();
 									return toastInfo("No items in cart");
 								}
+								// const isDefaultAddress = await getAddressByID(
+								// 	userInfo._id
+								// );
 
-								navigate("/checkout");
+								// * REDIRECT TO ADDRESS PAGE IF NO DEFAULT ADDRESS DATA FOUND
+								addressData.length !== 0
+									? navigate("/checkout")
+									: navigate("/address");
 							}}
 						>
 							<span className="sr-only sm:not-sr-only">

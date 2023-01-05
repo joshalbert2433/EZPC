@@ -3,10 +3,10 @@ import { themeChange } from "theme-change";
 import { DarkModeSwitch } from "react-toggle-dark-mode";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
-import { User } from "../../reducer/userInfo";
+import { User } from "../../services/reducers/userInfo";
 import Ecomm from "../../api/Ecomm.api";
 import { toastError, toastSuccess } from "../../components/toaster";
-import { getError } from "../../utils/getError";
+import { getError } from "../../services/utils/getError";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import { useRef } from "react";
 
@@ -59,8 +59,8 @@ function NavBar() {
 
 	return (
 		<div className="bg-base-100 shadow-lg navbar mb-4">
-			<div className="w-[1200px] mx-auto gap-4 flex [&>*]:items-center [&>*]:inline-flex ">
-				<div className="flex-1">
+			<div className="w-[1200px] mx-auto gap-4 flex [&>*]:items-center [&>*]:inline-flex">
+				<div className="">
 					<Link
 						to={{ pathname: "/" }}
 						className="btn btn-ghost normal-case text-4xl"
@@ -70,7 +70,7 @@ function NavBar() {
 				</div>
 
 				{userInfo ? (
-					<div className="gap-4 [&>*]:font-medium ">
+					<div className="gap-8 [&>*]:font-medium flex-1 ml-12">
 						<Link to="/" className="hover:text-primary">
 							Products
 						</Link>

@@ -78,7 +78,9 @@ const register = async (req, res, next) => {
 	};
 
 	// * AUTOMATICALLY SET ADDRESS TO DEFAULT IF ADD DATA FOR FIRST TIME
-	const total = await UserDetails.countDocuments({});
+	const total = await UserDetails.countDocuments({})
+		.where("user")
+		.equals(req.body.user);
 	data = total === 0 ? { ...data, isMain: true } : data;
 
 	let userDetails = new UserDetails(data);

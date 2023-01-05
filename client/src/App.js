@@ -13,6 +13,7 @@ import AdminLogin from "./pages/admin/login";
 import Address from "./pages/address";
 import Checkout from "./pages/checkout";
 import NavBar from "./pages/partials/navBar";
+import ProtectedRoutes from "./routes/protectedRoutes";
 
 function App() {
 	return (
@@ -21,13 +22,13 @@ function App() {
 				<NavBar />
 				<main>
 					<Routes>
+						{/* USER ROUTES */}
 						<Route exact path="/" element={<Index />}></Route>
 						<Route
 							exact
 							path="/:product"
 							element={<Products />}
 						></Route>
-						<Route exact path="/cart" element={<Cart />}></Route>
 						<Route exact path="/login" element={<Login />}></Route>
 						<Route
 							exact
@@ -36,23 +37,55 @@ function App() {
 						></Route>
 						<Route
 							exact
-							path="/address"
-							element={<Address />}
+							path="/cart"
+							element={
+								<ProtectedRoutes>
+									<Cart />
+								</ProtectedRoutes>
+							}
 						></Route>
 						<Route
 							exact
-							path="/dashboard/orders"
-							element={<Orders />}
+							path="/address"
+							element={
+								<ProtectedRoutes>
+									<Address />
+								</ProtectedRoutes>
+							}
+						></Route>
+						<Route
+							exact
+							path="/checkout"
+							element={
+								<ProtectedRoutes>
+									<Checkout />
+								</ProtectedRoutes>
+							}
 						></Route>
 						<Route
 							exact
 							path="/orders"
-							element={<OrdersUser />}
+							element={
+								<ProtectedRoutes>
+									<OrdersUser />
+								</ProtectedRoutes>
+							}
 						></Route>
 						<Route
 							exact
 							path="/orders/show"
-							element={<OrderShow />}
+							element={
+								<ProtectedRoutes>
+									<OrderShow />
+								</ProtectedRoutes>
+							}
+						></Route>
+
+						{/* ADMIN ROUTES */}
+						<Route
+							exact
+							path="/dashboard/orders"
+							element={<Orders />}
 						></Route>
 						<Route
 							exact
@@ -61,14 +94,10 @@ function App() {
 						></Route>
 						<Route
 							exact
-							path="/checkout"
-							element={<Checkout />}
-						></Route>
-						<Route
-							exact
 							path="admin/login"
 							element={<AdminLogin />}
 						></Route>
+
 						<Route element={<p>Not Found</p>}></Route>
 					</Routes>
 				</main>

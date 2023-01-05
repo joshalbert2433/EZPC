@@ -7,22 +7,21 @@ import React, {
 } from "react";
 import { Plus, XCircle } from "react-feather";
 import Modal from "../components/modal";
-import { User } from "../reducer/userInfo";
+import { User } from "../services/reducers/userInfo";
 import Ecomm from "../api/Ecomm.api";
-import { getError } from "../utils/getError";
+import { getError } from "../services/utils/getError";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import {
 	addressFormReducer,
 	INITIAL_STATE,
-} from "../reducer/addressFormReducer";
+} from "../services/reducers/addressFormReducer";
 import {
 	toastError,
 	toastSuccess,
 	ToasterContainer,
 } from "../components/toaster";
 import Pagination from "../components/pagination";
-import DiscardModal from "../components/discardModal";
 import { toast } from "react-toastify";
 
 function Address() {
@@ -179,11 +178,11 @@ function Address() {
 		onSubmit: saveAddressHandler,
 	});
 
-	// console.log(state);
+	// console.log(addressData);
 
 	return (
 		<>
-			<div className="w-[1200px] mx-auto ">
+			<div className="w-[1200px] mx-auto">
 				<div className="flex justify-between p-4 items-center bg-base-100 rounded-lg">
 					<h1 className="text-xl font-semibold">My Addresses</h1>
 					<label
@@ -197,7 +196,7 @@ function Address() {
 					</label>
 				</div>
 
-				{addressData && addressData.data ? (
+				{addressData?.data?.length !== 0 ? (
 					<div className="overflow-x-auto p-2 md:p-0 my-4">
 						<div className="overflow-x-auto">
 							<table className="table table-fixed w-full ">
@@ -212,7 +211,7 @@ function Address() {
 									</tr>
 								</thead>
 								<tbody>
-									{addressData.data.map((data) => {
+									{addressData?.data?.map((data) => {
 										return (
 											<tr key={data._id}>
 												<td>
@@ -304,7 +303,26 @@ function Address() {
 							</table>
 						</div>
 					</div>
-				) : null}
+				) : (
+					<div className="alert alert-info rounded-none shadow-lg mt-4 z-10 ">
+						<div>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								fill="none"
+								viewBox="0 0 24 24"
+								className="stroke-current flex-shrink-0 w-6 h-6"
+							>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth="2"
+									d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+								></path>
+							</svg>
+							<span>Please add address to display here</span>
+						</div>
+					</div>
+				)}
 
 				{addressData && addressData.data && addressData.total > 5 ? (
 					<div className="flex justify-center py-5">

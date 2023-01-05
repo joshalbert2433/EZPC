@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./assets/css/style.css";
-import { UserProvider } from "./reducer/userInfo";
+import { UserProvider } from "./services/reducers/userInfo";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

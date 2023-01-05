@@ -1,5 +1,4 @@
 import React, { useReducer, useState, useEffect, useRef } from "react";
-import NavBar from "../partials/navBar";
 import Modal from "../../components/modal";
 import EcommAPI from "../../api/Ecomm.api";
 import { Menu, Trash2, XCircle } from "react-feather";
@@ -16,8 +15,8 @@ import "react-toastify/dist/ReactToastify.css";
 import {
 	addProductsFormReducer,
 	INITIAL_STATE,
-} from "../../reducer/productsFormReducer";
-import DiscardModal from "../../components/discardModal";
+} from "../../services/reducers/productsFormReducer";
+
 import Pagination from "../../components/pagination";
 import { toast } from "react-toastify";
 

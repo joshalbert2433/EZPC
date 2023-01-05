@@ -1,16 +1,17 @@
 import React, { useContext, useEffect, useReducer, useState } from "react";
 import Ecomm from "../api/Ecomm.api";
-import { User } from "../reducer/userInfo";
+import { User } from "../services/reducers/userInfo";
 import {
 	INITIAL_STATE,
 	checkoutFormReducer,
-} from "../reducer/checkoutFormReducer";
+} from "../services/reducers/checkoutFormReducer";
 
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { toastError, toastInfo } from "../components/toaster";
-import { getError } from "../utils/getError";
-import { combineValues } from "../utils/combineValues";
+import { toastError, toastInfo, ToasterContainer } from "../components/toaster";
+import { getError } from "../services/utils/getError";
+import { combineValues } from "../services/utils/combineValues";
+import { useNavigate } from "react-router-dom";
 
 function Checkout() {
 	const { state: ctxState, dispatch: ctxDispatch } = useContext(User);
@@ -19,6 +20,7 @@ function Checkout() {
 	const [sameAddress, setSameAddress] = useState(false);
 	const { userInfo, cart } = ctxState;
 	const { shippingAddress } = cart;
+	const navigate = useNavigate();
 
 	const getAddressMain = async (userId) => {
 		try {
@@ -32,9 +34,9 @@ function Checkout() {
 		}
 	};
 
-	const registerOrder = async () => {};
-
 	useEffect(() => {
+		// getAddressByID(userInfo._id);
+
 		getAddressMain(userInfo._id);
 		//eslint-disable-next-line
 	}, []);
@@ -50,8 +52,6 @@ function Checkout() {
 
 	const sameAddressHandler = (e) => {
 		const { checked, value } = e.target;
-
-		// if (!addressData) toastInfo("No de")
 
 		if (checked) {
 			setSameAddress(true);
@@ -132,14 +132,15 @@ function Checkout() {
 	} = useFormik({
 		initialValues: {
 			first_name:
-				(sameAddress ? addressData.first_name : state.first_name) || "",
+				(sameAddress ? addressData?.first_name : state.first_name) ||
+				"",
 			last_name:
-				(sameAddress ? addressData.last_name : state.last_name) || "",
-			address: (sameAddress ? addressData.address : state.address) || "",
-			city: (sameAddress ? addressData.city : state.city) || "",
-			state: (sameAddress ? addressData.state : state.state) || "",
+				(sameAddress ? addressData?.last_name : state.last_name) || "",
+			address: (sameAddress ? addressData?.address : state.address) || "",
+			city: (sameAddress ? addressData?.city : state.city) || "",
+			state: (sameAddress ? addressData?.state : state.state) || "",
 			zip_code:
-				(sameAddress ? addressData.zip_code : state.zip_code) || "",
+				(sameAddress ? addressData?.zip_code : state.zip_code) || "",
 		},
 		validationSchema: schema,
 		enableReinitialize: true,
@@ -147,184 +148,193 @@ function Checkout() {
 	});
 
 	return (
-		<div className="xl:w-[1200px] mx-auto">
-			<form
-				className="flex gap-6"
-				onSubmit={handleSubmit}
-				autoComplete="off"
-			>
-				<div className="bg-base-100 w-2/3">
-					<div className="bg-base-100 p-4 rounded-md">
-						<h2 className="text-2xl font-semibold">
-							Billing Information
-						</h2>
-						<div className="form-control rounded-md py-1 px-3 w-fit">
-							<label className="label cursor-pointer">
+		<>
+			<div className="xl:w-[1200px] mx-auto">
+				<form
+					className="flex gap-6"
+					onSubmit={handleSubmit}
+					autoComplete="off"
+				>
+					<div className="bg-base-100 w-2/3">
+						<div className="bg-base-100 p-4 rounded-md">
+							<h2 className="text-2xl font-semibold">
+								Billing Information
+							</h2>
+							<div className="form-control rounded-md py-1 px-3 w-fit">
+								<label className="label cursor-pointer">
+									<input
+										type="checkbox"
+										className="checkbox"
+										onChange={sameAddressHandler}
+									/>
+									<p className="ml-2">
+										Same as shipping address
+									</p>
+								</label>
+							</div>
+							<div className="form-control w-full">
+								<label className="label">First Name</label>
 								<input
-									type="checkbox"
-									className="checkbox"
-									onChange={sameAddressHandler}
+									type="text"
+									placeholder="Josh"
+									name="first_name"
+									className="input input-sm md:input-md input-bordered w-full "
+									value={values.first_name}
+									disabled={sameAddress}
+									onChange={handleChange}
+									onBlur={handleBlur}
 								/>
-								<p className="ml-2">Same as shipping address</p>
-							</label>
-						</div>
-						<div className="form-control w-full">
-							<label className="label">First Name</label>
-							<input
-								type="text"
-								placeholder="Josh"
-								name="first_name"
-								className="input input-sm md:input-md input-bordered w-full "
-								value={values.first_name}
-								disabled={sameAddress}
-								onChange={handleChange}
-								onBlur={handleBlur}
-							/>
-							{errors.first_name && touched.first_name && (
-								<span className="text-error">
-									{errors.first_name}
-								</span>
-							)}
-						</div>
-						<div className="form-control w-full">
-							<label className="label">Last Name</label>
-							<input
-								type="text"
-								placeholder="Alberts"
-								name="last_name"
-								className="input input-sm md:input-md input-bordered w-full "
-								value={values.last_name}
-								disabled={sameAddress}
-								onChange={handleChange}
-								onBlur={handleBlur}
-							/>
-							{errors.last_name && touched.last_name && (
-								<span className="text-error">
-									{errors.last_name}
-								</span>
-							)}
-						</div>
-						<div className="form-control w-full">
-							<label className="label">Address</label>
-							<input
-								type="text"
-								placeholder="Malayo, Malapit, Di makita Street"
-								name="address"
-								className="input input-sm md:input-md input-bordered w-full "
-								value={values.address}
-								disabled={sameAddress}
-								onChange={handleChange}
-								onBlur={handleBlur}
-							/>
-							{errors.address && touched.address && (
-								<span className="text-error">
-									{errors.address}
-								</span>
-							)}
-						</div>
-						<div className="form-control w-full">
-							<label className="label">City</label>
-							<input
-								type="text"
-								placeholder="Imus"
-								name="city"
-								className="input input-sm md:input-md input-bordered w-full "
-								value={values.city}
-								disabled={sameAddress}
-								onChange={handleChange}
-								onBlur={handleBlur}
-							/>
-							{errors.city && touched.city && (
-								<span className="text-error">
-									{errors.city}
-								</span>
-							)}
-						</div>
-						<div className="form-control w-full">
-							<label className="label">State</label>
-							<input
-								type="text"
-								placeholder="Cavite"
-								name="state"
-								className="input input-sm md:input-md input-bordered w-full "
-								value={values.state}
-								disabled={sameAddress}
-								onChange={handleChange}
-								onBlur={handleBlur}
-							/>
-							{errors.state && touched.state && (
-								<span className="text-error">
-									{errors.state}
-								</span>
-							)}
-						</div>
-						<div className="form-control w-full">
-							<label className="label">Zip Code</label>
-							<input
-								type="text"
-								placeholder="4103"
-								name="zip_code"
-								className="input input-sm md:input-md input-bordered w-full"
-								value={values.zip_code}
-								disabled={sameAddress}
-								onChange={handleChange}
-								onBlur={handleBlur}
-							/>
-							{errors.zip_code && touched.zip_code && (
-								<span className="text-error">
-									{errors.zip_code}
-								</span>
-							)}
+								{errors.first_name && touched.first_name && (
+									<span className="text-error">
+										{errors.first_name}
+									</span>
+								)}
+							</div>
+							<div className="form-control w-full">
+								<label className="label">Last Name</label>
+								<input
+									type="text"
+									placeholder="Alberts"
+									name="last_name"
+									className="input input-sm md:input-md input-bordered w-full "
+									value={values.last_name}
+									disabled={sameAddress}
+									onChange={handleChange}
+									onBlur={handleBlur}
+								/>
+								{errors.last_name && touched.last_name && (
+									<span className="text-error">
+										{errors.last_name}
+									</span>
+								)}
+							</div>
+							<div className="form-control w-full">
+								<label className="label">Address</label>
+								<input
+									type="text"
+									placeholder="Malayo, Malapit, Di makita Street"
+									name="address"
+									className="input input-sm md:input-md input-bordered w-full "
+									value={values.address}
+									disabled={sameAddress}
+									onChange={handleChange}
+									onBlur={handleBlur}
+								/>
+								{errors.address && touched.address && (
+									<span className="text-error">
+										{errors.address}
+									</span>
+								)}
+							</div>
+							<div className="form-control w-full">
+								<label className="label">City</label>
+								<input
+									type="text"
+									placeholder="Imus"
+									name="city"
+									className="input input-sm md:input-md input-bordered w-full "
+									value={values.city}
+									disabled={sameAddress}
+									onChange={handleChange}
+									onBlur={handleBlur}
+								/>
+								{errors.city && touched.city && (
+									<span className="text-error">
+										{errors.city}
+									</span>
+								)}
+							</div>
+							<div className="form-control w-full">
+								<label className="label">State</label>
+								<input
+									type="text"
+									placeholder="Cavite"
+									name="state"
+									className="input input-sm md:input-md input-bordered w-full "
+									value={values.state}
+									disabled={sameAddress}
+									onChange={handleChange}
+									onBlur={handleBlur}
+								/>
+								{errors.state && touched.state && (
+									<span className="text-error">
+										{errors.state}
+									</span>
+								)}
+							</div>
+							<div className="form-control w-full">
+								<label className="label">Zip Code</label>
+								<input
+									type="text"
+									placeholder="4103"
+									name="zip_code"
+									className="input input-sm md:input-md input-bordered w-full"
+									value={values.zip_code}
+									disabled={sameAddress}
+									onChange={handleChange}
+									onBlur={handleBlur}
+								/>
+								{errors.zip_code && touched.zip_code && (
+									<span className="text-error">
+										{errors.zip_code}
+									</span>
+								)}
+							</div>
 						</div>
 					</div>
-				</div>
 
-				<div className="w-1/3">
-					<div className="bg-base-100 p-4 h-fit">
-						<div className="bg-base-100 rounded-md h-fit">
-							<div className="form-control w-full">
-								<label className="label">Card: </label>
-								<input
-									type="text"
-									placeholder="Josh"
-									className="input input-sm md:input-md input-bordered w-full "
-								/>
-							</div>
-							<div className="form-control w-full">
-								<label className="label">Security Code: </label>
-								<input
-									type="text"
-									placeholder="Josh"
-									className="input input-sm md:input-md input-bordered w-full "
-								/>
-							</div>
-							<div className="form-control w-full">
-								<label className="label">Expiration: </label>
-								<div className="flex place-items-center">
+					<div className="w-1/3">
+						<div className="bg-base-100 p-4 h-fit">
+							<div className="bg-base-100 rounded-md h-fit">
+								<div className="form-control w-full">
+									<label className="label">Card: </label>
 									<input
 										type="text"
-										placeholder="mm"
-										className="input input-sm md:input-md input-bordered w-full "
-									/>
-									<p className="mx-4">/</p>
-									<input
-										type="text"
-										placeholder="year"
+										placeholder="Josh"
 										className="input input-sm md:input-md input-bordered w-full "
 									/>
 								</div>
+								<div className="form-control w-full">
+									<label className="label">
+										Security Code:{" "}
+									</label>
+									<input
+										type="text"
+										placeholder="Josh"
+										className="input input-sm md:input-md input-bordered w-full "
+									/>
+								</div>
+								<div className="form-control w-full">
+									<label className="label">
+										Expiration:{" "}
+									</label>
+									<div className="flex place-items-center">
+										<input
+											type="text"
+											placeholder="mm"
+											className="input input-sm md:input-md input-bordered w-full "
+										/>
+										<p className="mx-4">/</p>
+										<input
+											type="text"
+											placeholder="year"
+											className="input input-sm md:input-md input-bordered w-full "
+										/>
+									</div>
+								</div>
 							</div>
 						</div>
+						<button
+							className="btn btn-secondary w-full mt-4 text-lg"
+							type="submit"
+						>
+							Pay Now
+						</button>
 					</div>
-					<button
-						className="btn btn-secondary w-full mt-4 text-lg"
-						type="submit"
-					>
-						Pay Now
-					</button>
-				</div>
-			</form>
-		</div>
+				</form>
+			</div>
+			<ToasterContainer />
+		</>
 	);
 }
 

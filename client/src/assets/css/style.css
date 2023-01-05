@@ -3,15 +3,15 @@
 @tailwind utilities;
 
 * {
-    /* outline: 1px solid lightblue; */
+	/* outline: 1px solid lightblue; */
 }
 
 @layer base {
-    body {
-        @apply bg-base-300 min-h-screen;
-    }
+	body {
+		@apply bg-base-300 min-h-screen;
+	}
 
-    border_style {
-        border: 2px solid @apply primary;
-    }
+	border_style {
+		border: 2px solid @apply primary;
+	}
 }
