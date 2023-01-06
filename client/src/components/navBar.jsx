@@ -3,17 +3,19 @@ import { themeChange } from "theme-change";
 import { DarkModeSwitch } from "react-toggle-dark-mode";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
-import { User } from "../../services/reducers/userInfo";
-import Ecomm from "../../api/Ecomm.api";
-import { toastError, toastSuccess } from "../../components/toaster";
-import { getError } from "../../services/utils/getError";
-import useLocalStorage from "../../hooks/useLocalStorage";
+import { User } from "../services/reducers/userInfo";
+import Ecomm from "../api/Ecomm.api";
+import { toastError, toastSuccess } from "./toaster";
+import { getError } from "../services/utils/getError";
+import useLocalStorage from "../hooks/useLocalStorage";
+import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
 
 function NavBar() {
 	const { state, dispatch: ctxDispatch } = useContext(User);
 	const theme = localStorage.getItem("theme");
 	const inputTheme = useRef();
+	const navigate = useNavigate;
 
 	const { userInfo, cart } = state;
 	// const [cartItemsLocal, setCartItemsLocal] = useLocalStorage("cartItems");
@@ -25,10 +27,16 @@ function NavBar() {
 
 	const updateCart = async () => {
 		try {
-			await Ecomm.post("cart/register", {
-				cartItems: cartItemsLocal,
-				user: userInfo._id,
-			});
+			await Ecomm.post(
+				"cart/register",
+				{
+					cartItems: cartItemsLocal,
+					user: userInfo._id,
+				},
+				{
+					headers: { Authorization: `Bearer ${userInfo.token}` },
+				}
+			);
 		} catch (error) {
 			toastError(getError(error));
 			console.log(error);
@@ -46,21 +54,13 @@ function NavBar() {
 		localStorage.removeItem("userInfo");
 		localStorage.removeItem("cartItems");
 		window.location.href = "/";
+		// navigate("/");
 	};
 
-	// console.log(cartItemsLocal, userInfo?._id);
-	// console.log(
-	//     "🚀 ~ file: navBar.jsx:45 ~ NavBar ~ cartItemsLocal",
-	//     ...(cartItemsLocal || null)
-	// );
-	// console.log(cartItemsLocal);
-
-	console.log(theme, "theme");
-
 	return (
-		<div className="bg-base-100 shadow-lg navbar mb-4">
+		<div className="bg-base-100 shadow-lg navbar mb-4 sticky top-0 z-10">
 			<div className="w-[1200px] mx-auto gap-4 flex [&>*]:items-center [&>*]:inline-flex">
-				<div className="">
+				<div className="flex-1">
 					<Link
 						to={{ pathname: "/" }}
 						className="btn btn-ghost normal-case text-4xl"
@@ -69,22 +69,24 @@ function NavBar() {
 					</Link>
 				</div>
 
-				{userInfo ? (
-					<div className="gap-8 [&>*]:font-medium flex-1 ml-12">
-						<Link to="/" className="hover:text-primary">
-							Products
-						</Link>
-						<Link to="/orders" className="hover:text-primary">
-							Orders
-						</Link>
-						<Link to="/address" className="hover:text-primary">
-							Address
-						</Link>
-					</div>
-				) : null}
+				<div className="gap-8 [&>*]:font-medium ">
+					<Link to="/" className="hover:text-primary">
+						Products
+					</Link>
+					{userInfo ? (
+						<>
+							<Link to="/orders" className="hover:text-primary">
+								Orders
+							</Link>
+							<Link to="/address" className="hover:text-primary">
+								Address
+							</Link>
+						</>
+					) : null}
+				</div>
 
 				{/* <DarkModeSwitch /> */}
-				<div>
+				<div className="ml-12">
 					<label className="swap swap-rotate">
 						<input type="checkbox" defaultValue={true} />
 
@@ -111,11 +113,12 @@ function NavBar() {
 				{userInfo ? (
 					<div className="flex-none">
 						<div className="dropdown dropdown-end">
-							<label
+							<Link
+								to="/cart"
 								tabIndex={0}
 								className="btn btn-ghost btn-circle"
 							>
-								<Link to="/cart" className="indicator">
+								<div className="indicator">
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
 										className="h-6 w-6"
@@ -135,8 +138,8 @@ function NavBar() {
 											{cart.cartItems.length}
 										</span>
 									) : null}
-								</Link>
-							</label>
+								</div>
+							</Link>
 						</div>
 						<div className="dropdown dropdown-end">
 							<label

@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import Ecomm from "../api/Ecomm.api";
 import EcommAPI from "../api/Ecomm.api";
+import { AlertInfo } from "../components/alert";
 import { toastError, toastInfo, toastWarning } from "../components/toaster";
 import useLocalStorage from "../hooks/useLocalStorage";
 import { User } from "../services/reducers/userInfo";
@@ -27,20 +28,13 @@ function Cart() {
 	const getAddressByID = async () => {
 		try {
 			const url = `user/details/${userInfo._id}`;
-			const response = await Ecomm.get(url);
+			const response = await Ecomm.get(url, {
+				headers: { Authorization: `Bearer ${userInfo.token}` },
+			});
 			// setAddressData(response.data);
 			console.log(response.data.data.length);
 
 			setAddressData(response.data.data);
-
-			// if (response.data.data.length === 0) {
-			// 	toastInfo(
-			// 		"No default address found. Will redirect to address page"
-			// 	);
-			// 	return false;
-			// } else {
-			// 	return true;
-			// }
 		} catch (error) {
 			toastError(getError(error));
 			console.log(error);
@@ -52,7 +46,10 @@ function Cart() {
 			const itemIds = cart.cartItems.map((item) => item._id);
 			if (itemIds.length === 0) return;
 			const response = await EcommAPI.get(
-				`products/getManyById?itemIds=${itemIds.toString()}`
+				`products/getManyById?itemIds=${itemIds.toString()}`,
+				{
+					headers: { Authorization: `Bearer ${userInfo.token}` },
+				}
 			);
 			setCartData(response.data);
 		} catch (error) {
@@ -63,7 +60,7 @@ function Cart() {
 	useEffect(() => {
 		getAddressByID(userInfo._id);
 		getProductManyById();
-		// getAddressMain(userInfo._id);
+
 		//eslint-disable-next-line
 	}, []);
 
@@ -83,28 +80,15 @@ function Cart() {
 	return (
 		<>
 			<div className="xl:w-[1200px] mx-auto">
-				{addressData?.length === 0 && (
-					<div className="alert alert-info rounded-none shadow-lg">
-						<div>
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								fill="none"
-								viewBox="0 0 24 24"
-								className="stroke-current flex-shrink-0 w-6 h-6"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth="2"
-									d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-								></path>
-							</svg>
-							<span>
-								No default address found. Will be redirect on
-								address page upon checkout
-							</span>
-						</div>
-					</div>
+				{cart.cartItems.length === 0 && (
+					<AlertInfo title="No cart item(s)" />
+				)}
+
+				{addressData?.length === 0 && cart.cartItems.length !== 0 && (
+					<AlertInfo
+						title="No default address found. Will be redirect on
+						address page upon checkout"
+					/>
 				)}
 
 				<div className="flex flex-col max-w-full p-6 space-y-4 sm:p-10 bg-base-100 shadow-lg">
@@ -273,9 +257,6 @@ function Cart() {
 									toast.dismiss();
 									return toastInfo("No items in cart");
 								}
-								// const isDefaultAddress = await getAddressByID(
-								// 	userInfo._id
-								// );
 
 								// * REDIRECT TO ADDRESS PAGE IF NO DEFAULT ADDRESS DATA FOUND
 								addressData.length !== 0

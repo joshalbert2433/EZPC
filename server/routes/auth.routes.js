@@ -2,10 +2,12 @@ const express = require("express");
 const router = express.Router();
 
 const AuthController = require("../controllers/auth.controller");
-const isEmailUnique = require("../middleware/auth.middleware");
+const checkForUniqueEmail = require("../utils/checkUniqueEmail");
 
-router.post("/register", AuthController.register);
+router.post("/register", checkForUniqueEmail, AuthController.register);
 router.post("/sign-in", AuthController.signIn);
+
+// ! FOR TESTING
 router.get("/", AuthController.display);
 
 module.exports = router;

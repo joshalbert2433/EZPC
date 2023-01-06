@@ -12,15 +12,18 @@ import AdminProducts from "./pages/admin/products";
 import AdminLogin from "./pages/admin/login";
 import Address from "./pages/address";
 import Checkout from "./pages/checkout";
-import NavBar from "./pages/partials/navBar";
+import NavBar from "./components/navBar";
+import Footer from "./components/footer";
 import ProtectedRoutes from "./routes/protectedRoutes";
+import Wrapper from "./layouts/wrapper";
+import Main from "./components/main";
 
 function App() {
 	return (
-		<>
+		<Wrapper>
 			<Router>
 				<NavBar />
-				<main>
+				<Main>
 					<Routes>
 						{/* USER ROUTES */}
 						<Route exact path="/" element={<Index />}></Route>
@@ -100,11 +103,11 @@ function App() {
 
 						<Route element={<p>Not Found</p>}></Route>
 					</Routes>
-				</main>
+				</Main>
 			</Router>
 
-			{/* ADD FOOTER HERE */}
-		</>
+			<Footer />
+		</Wrapper>
 	);
 }
 

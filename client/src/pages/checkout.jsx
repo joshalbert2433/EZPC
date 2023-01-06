@@ -1,31 +1,32 @@
 import React, { useContext, useEffect, useReducer, useState } from "react";
 import Ecomm from "../api/Ecomm.api";
 import { User } from "../services/reducers/userInfo";
+import * as yup from "yup";
+import { useFormik } from "formik";
+import { toastError, ToasterContainer } from "../components/toaster";
+import { getError } from "../services/utils/getError";
+import { combineValues } from "../services/utils/combineValues";
+import { useNavigate } from "react-router-dom";
 import {
 	INITIAL_STATE,
 	checkoutFormReducer,
 } from "../services/reducers/checkoutFormReducer";
-
-import * as yup from "yup";
-import { useFormik } from "formik";
-import { toastError, toastInfo, ToasterContainer } from "../components/toaster";
-import { getError } from "../services/utils/getError";
-import { combineValues } from "../services/utils/combineValues";
-import { useNavigate } from "react-router-dom";
 
 function Checkout() {
 	const { state: ctxState, dispatch: ctxDispatch } = useContext(User);
 	const [state, dispatch] = useReducer(checkoutFormReducer, INITIAL_STATE);
 	const [addressData, setAddressData] = useState();
 	const [sameAddress, setSameAddress] = useState(false);
-	const { userInfo, cart } = ctxState;
-	const { shippingAddress } = cart;
+	const { userInfo } = ctxState;
 	const navigate = useNavigate();
 
 	const getAddressMain = async (userId) => {
 		try {
 			const response = await Ecomm.get(
-				`user/details/${userId}?isMain=true`
+				`user/details/${userId}?isMain=true`,
+				{
+					headers: { Authorization: `Bearer ${userInfo.token}` },
+				}
 			);
 			setAddressData(response.data);
 			// dispatch({ type: "ASSIGN_DATA", payload: response.data });
@@ -41,15 +42,6 @@ function Checkout() {
 		//eslint-disable-next-line
 	}, []);
 
-	// if (!addressData) =
-	// const changeInputHandler = (e) => {
-	// 	const { name, value } = e.target;
-	// 	dispatch({
-	// 		type: "CHANGE_INPUT",
-	// 		payload: { name: name, value: value },
-	// 	});
-	// };
-
 	const sameAddressHandler = (e) => {
 		const { checked, value } = e.target;
 
@@ -59,8 +51,6 @@ function Checkout() {
 			setSameAddress(false);
 		}
 	};
-
-	// console.log(addressData, "address Data");
 
 	const saveOrderHandler = async (values, actions) => {
 		console.log(values);
@@ -76,7 +66,10 @@ function Checkout() {
 			const itemIds = cartItems.map((item) => item._id);
 			console.log(itemIds.toString());
 			const response = await Ecomm.get(
-				`products/getManyById?itemIds=${itemIds.toString()}`
+				`products/getManyById?itemIds=${itemIds.toString()}`,
+				{
+					headers: { Authorization: `Bearer ${userInfo.token}` },
+				}
 			);
 			const { data: productData } = response.data;
 			const result = combineValues(productData, cartItems);
@@ -86,19 +79,26 @@ function Checkout() {
 			);
 
 			//* REGISTER TO DATABASE
-			await Ecomm.post("/orders/register", {
-				orderItems: orderItems,
-				shipping_address: addressData,
-				billing_address: values,
-				user: userInfo._id,
-				total_price: total_price,
-			});
+			await Ecomm.post(
+				"/orders/register",
+				{
+					orderItems: orderItems,
+					shipping_address: addressData,
+					billing_address: values,
+					user: userInfo._id,
+					total_price: total_price,
+				},
+				{
+					headers: { Authorization: `Bearer ${userInfo.token}` },
+				}
+			);
 
 			//* REMOVE THE CART IN LOCAL STORAGE AND USER CONTEXT
 			ctxDispatch({ type: "CART_CLEAR" });
 			localStorage.removeItem("cartItems");
 
 			actions.resetForm();
+			navigate("/orders");
 		} catch (error) {
 			toastError(getError(error));
 			console.log(error);
@@ -327,6 +327,7 @@ function Checkout() {
 						<button
 							className="btn btn-secondary w-full mt-4 text-lg"
 							type="submit"
+							// onClick={navigate('')}
 						>
 							Pay Now
 						</button>

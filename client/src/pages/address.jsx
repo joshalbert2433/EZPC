@@ -28,7 +28,7 @@ function Address() {
 	const { state: ctxState, dispatch: ctxDispatch } = useContext(User);
 	const { userInfo, cart } = ctxState;
 	// const {shippingAddress} = cart
-	const [addressData, setAddressData] = useState();
+	const [addressData, setAddressData] = useState([]);
 	const [formActive, setFormActive] = useState("");
 	const [state, dispatch] = useReducer(addressFormReducer, INITIAL_STATE);
 	const [page, setPage] = useState(1);
@@ -46,7 +46,9 @@ function Address() {
 	const getAddressByID = async () => {
 		try {
 			const url = `user/details/${userInfo._id}?page=${page}`;
-			const response = await Ecomm.get(url);
+			const response = await Ecomm.get(url, {
+				headers: { Authorization: `Bearer ${userInfo.token}` },
+			});
 			setAddressData(response.data);
 			// console.log(addressData.data);
 		} catch (error) {
@@ -59,7 +61,9 @@ function Address() {
 		try {
 			// /details/setAddressDefault/:userId
 			const url = `user/details/setAddressDefault/${id}`;
-			await Ecomm.patch(url);
+			await Ecomm.patch(url, {
+				headers: { Authorization: `Bearer ${userInfo.token}` },
+			});
 
 			toast.dismiss();
 			toastSuccess("Default address updated");
@@ -73,7 +77,9 @@ function Address() {
 	const deleteAddressById = async (id) => {
 		try {
 			const url = `user/details/delete/${id}`;
-			await Ecomm.delete(url);
+			await Ecomm.delete(url, {
+				headers: { Authorization: `Bearer ${userInfo.token}` },
+			});
 			toastSuccess("Data has been deleted");
 			getAddressByID();
 		} catch (error) {
@@ -107,10 +113,16 @@ function Address() {
 		console.log(formActive);
 		if (formActive === "POST") {
 			try {
-				await Ecomm.post("user/details/register", {
-					...values,
-					user: userInfo._id,
-				});
+				await Ecomm.post(
+					"user/details/register",
+					{
+						...values,
+						user: userInfo._id,
+					},
+					{
+						headers: { Authorization: `Bearer ${userInfo.token}` },
+					}
+				);
 				ctxDispatch({
 					type: "SAVE_SHIPPING_ADDRESS",
 					payload: { ...values },
@@ -124,10 +136,16 @@ function Address() {
 			}
 		} else if (formActive === "PUT") {
 			try {
-				await Ecomm.patch(`user/details/${state._id}`, {
-					...values,
-					user: userInfo._id,
-				});
+				await Ecomm.patch(
+					`user/details/${state._id}`,
+					{
+						...values,
+						user: userInfo._id,
+					},
+					{
+						headers: { Authorization: `Bearer ${userInfo.token}` },
+					}
+				);
 
 				toastSuccess("Address Successfully Updated");
 				getAddressByID();
@@ -199,7 +217,7 @@ function Address() {
 				{addressData?.data?.length !== 0 ? (
 					<div className="overflow-x-auto p-2 md:p-0 my-4">
 						<div className="overflow-x-auto">
-							<table className="table table-fixed w-full ">
+							<table className="table table-fixed w-full">
 								<thead>
 									<tr className="text-gray-200 [&>*]:bg-neutral ">
 										<th className="w-[8%]"></th>

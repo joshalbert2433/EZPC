@@ -94,7 +94,8 @@ function AdminProducts() {
 
 	const handlerSearch = (e) => {
 		const { value } = e.target;
-		// MIGHT HAVE ERROR HERE
+
+		//  ! INCASE OF PAGINATION MALFUNCTION THIS IS THE CULPRIT
 		if (productData.total <= productData.limit) {
 			setPage(1);
 		}
@@ -104,10 +105,19 @@ function AdminProducts() {
 	const handleOnChange = (e) => {
 		const { value, name } = e.target;
 
-		dispatch({
-			type: "CHANGE_INPUT",
-			payload: { name: name, value: value },
-		});
+		// * FOR PRICE AND STOCK ACCEPT NUMBER VALUE ONLY
+		if (name === "price" || name === "stock") {
+			const numberOnly = e.target.value.replace(/\D/g, "");
+			dispatch({
+				type: "CHANGE_INPUT",
+				payload: { name: name, value: numberOnly },
+			});
+		} else {
+			dispatch({
+				type: "CHANGE_INPUT",
+				payload: { name: name, value: value },
+			});
+		}
 	};
 
 	const handlerCategory = (e) => {

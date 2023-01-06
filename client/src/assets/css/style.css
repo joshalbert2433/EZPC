@@ -8,7 +8,7 @@
 
 @layer base {
 	body {
-		@apply bg-base-300 min-h-screen;
+		@apply bg-base-300 min-h-screen relative;
 	}
 
 	border_style {

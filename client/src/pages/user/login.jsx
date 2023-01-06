@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import NavBar from "../partials/navBar";
 import LoginBG from "../../assets/images/login_bg.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { User } from "../../services/reducers/userInfo";
@@ -14,6 +13,7 @@ import {
 	toastSuccess,
 } from "../../components/toaster";
 import { getError } from "../../services/utils/getError";
+import { toast } from "react-toastify";
 
 function Login() {
 	const [email, setEmail] = useState("");
@@ -23,13 +23,16 @@ function Login() {
 		"cartItems",
 		[]
 	);
-	const { state, dispatch: ctxDispatch } = useContext(User);
+	const { state: ctxState, dispatch: ctxDispatch } = useContext(User);
+	const { userInfo } = ctxState;
 
 	const navigate = useNavigate();
 
 	const getCartByUserId = async (userId) => {
 		try {
-			const response = await Ecomm.get(`cart/${userId}`);
+			const response = await Ecomm.get(`cart/${userId}`, {
+				headers: { Authorization: `Bearer ${userInfo.token}` },
+			});
 			console.log(response.data.cartItems);
 			setCartItemsLocal(response.data.cartItems);
 			ctxDispatch({
@@ -58,6 +61,8 @@ function Login() {
 
 			navigate("/");
 		} catch (error) {
+			toast.dismiss();
+
 			toastError(getError(error));
 		}
 	};

@@ -2,16 +2,19 @@ import React, { useEffect, useContext, useState } from "react";
 import Ecomm from "../api/Ecomm.api";
 import { User } from "../services/reducers/userInfo";
 import { Link, useNavigate } from "react-router-dom";
+import { AlertInfo } from "../components/alert";
 
 function Orders() {
 	const { state: ctxState, dispatch: ctxDispatch } = useContext(User);
 	const [orderData, setOrderData] = useState();
 	const { userInfo } = ctxState;
 	const navigate = useNavigate();
-
+	// console.log(userInfo.token);
 	const getByUserId = async (userId) => {
 		try {
-			const response = await Ecomm.get(`orders/${userId}`);
+			const response = await Ecomm.get(`orders/${userId}`, {
+				headers: { Authorization: `Bearer ${userInfo.token}` },
+			});
 			setOrderData(response.data);
 		} catch (error) {
 			console.log(error);
@@ -107,24 +110,7 @@ function Orders() {
 				  })
 				: null}
 			{orderData?.data.length === 0 && (
-				<div className="alert alert-info rounded-none shadow-lg">
-					<div>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							fill="none"
-							viewBox="0 0 24 24"
-							className="stroke-current flex-shrink-0 w-6 h-6"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth="2"
-								d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-							></path>
-						</svg>
-						<span>No Orders Found</span>
-					</div>
-				</div>
+				<AlertInfo title="No order(s) found" />
 			)}
 		</div>
 	);

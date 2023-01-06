@@ -5,7 +5,6 @@ import { User } from "../services/reducers/userInfo";
 import { Navigation, Thumbs } from "swiper";
 import { useNavigate } from "react-router-dom";
 import { toastSuccess } from "../components/toaster";
-
 import { useLocation } from "react-router-dom";
 
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -20,8 +19,9 @@ function Products() {
 	const [activeThumb, setActiveThumb] = useState(null);
 	const [productData, setProductData] = useState();
 	const [similarProductData, setSimilarProductData] = useState();
-	const { state, dispatch: ctxDispatch } = useContext(User);
+	const { state: ctxState, dispatch: ctxDispatch } = useContext(User);
 	const [quantity, setQuantity] = useState(1);
+	const { userInfo } = ctxState;
 	// const idParams = useParams();
 	const navigate = useNavigate();
 
@@ -76,6 +76,7 @@ function Products() {
 	// }, [activeThumb]);
 
 	const addCartHandler = () => {
+		if (!userInfo) return navigate("/login");
 		ctxDispatch({
 			type: "ADD_CART_ITEM",
 			payload: { _id: productData._id, quantity: quantity },
