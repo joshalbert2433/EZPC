@@ -6,7 +6,7 @@ import { Navigation, Thumbs } from "swiper";
 import { useNavigate } from "react-router-dom";
 import { toastSuccess } from "../components/toaster";
 import { useLocation } from "react-router-dom";
-
+import Slider from "react-slick";
 import { Swiper, SwiperSlide } from "swiper/react";
 // import Swiper and modules styles
 import "swiper/css";
@@ -66,14 +66,12 @@ function Products() {
 
 	useEffect(() => {
 		// getProductByCategory(productData.category);
-
-		console.log(similarProductData);
-		console.log(quantity);
-	}, [similarProductData, id, quantity]);
+	}, [similarProductData, id, quantity, activeThumb]);
 
 	// useEffect(() => {
 	//     if (activeThumb) console.log(activeThumb.activeIndex);
 	// }, [activeThumb]);
+	console.log(activeThumb);
 
 	const addCartHandler = () => {
 		if (!userInfo) return navigate("/login");
@@ -98,7 +96,7 @@ function Products() {
 		});
 	};
 
-	console.log(similarProductData);
+	console.log(productData);
 	return (
 		<>
 			<div className="w-[1200px] mx-auto">
@@ -111,7 +109,12 @@ function Products() {
 								navigation={productData.image.length > 1}
 								modules={[Navigation, Thumbs]}
 								grabCursor={true}
-								thumbs={{ swiper: activeThumb }}
+								thumbs={{
+									swiper:
+										activeThumb && !activeThumb.destroyed
+											? activeThumb
+											: null,
+								}}
 							>
 								{productData.image.map((item, index) => (
 									<SwiperSlide
@@ -128,32 +131,32 @@ function Products() {
 									</SwiperSlide>
 								))}
 							</Swiper>
-							{productData.image.length > 2 ? (
-								<Swiper
-									onSwiper={setActiveThumb}
-									// loop={true}
-									spaceBetween={10}
-									slidesPerView={
-										productData.image.length <= 3
-											? productData.image.length
-											: 4
-									}
-									modules={[Navigation, Thumbs]}
-									className="mt-4 "
-								>
-									{productData.image.map((item, index) => (
+
+							<Swiper
+								onSwiper={setActiveThumb}
+								// loop={true}
+								spaceBetween={10}
+								slidesPerView={
+									productData.image.length <= 3
+										? productData.image.length
+										: 4
+								}
+								modules={[Navigation, Thumbs]}
+								className="mt-4 "
+							>
+								{productData.image.length > 2 &&
+									productData.image.map((item, index) => (
 										<SwiperSlide key={index} className="">
 											<div className="h-[100px]">
 												<img
 													src={item}
 													alt="product images"
-													className="h-full w-full mx-auto hover:border-2 hover:border-primary"
+													className="h-full w-full mx-auto hover:border-2 hover:border-primary border-2"
 												/>
 											</div>
 										</SwiperSlide>
 									))}
-								</Swiper>
-							) : null}
+							</Swiper>
 						</div>
 						<div className="w-[60%] p-4 space-y-3 pb-6">
 							<h1 className="text-xl font-semibold">

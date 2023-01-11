@@ -37,6 +37,7 @@ function Address() {
 	const addAddressForm = useRef();
 	const editAddressForm = useRef();
 	const editCancelModal = useRef();
+	const addCancelModal = useRef();
 	const modalDiscardClose = useRef();
 
 	let tempID = "";
@@ -135,6 +136,7 @@ function Address() {
 				toastSuccess("Address Successfully Added");
 				actions.resetForm();
 				getAddressByID();
+				addCancelModal.current.click();
 			} catch (error) {
 				toastError(getError(error));
 			}
@@ -482,6 +484,7 @@ function Address() {
 							htmlFor="AddAddressModal"
 							className="btn"
 							onClick={() => resetForm()}
+							ref={addCancelModal}
 						>
 							Cancel
 						</label>

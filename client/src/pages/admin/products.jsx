@@ -200,7 +200,12 @@ function AdminProducts() {
 		if (state.category.length === 0) {
 			form_errors.push("Must select category");
 		}
-
+		if (state.price.length === 0) {
+			form_errors.push("Price is required");
+		}
+		if (state.stock.length === 0) {
+			form_errors.push("Stock is required");
+		}
 		if (state.image.length === 0) {
 			form_errors.push("Must select at least one image");
 		} else if (state.image.length !== 0 && state.image_main.length === 0) {
