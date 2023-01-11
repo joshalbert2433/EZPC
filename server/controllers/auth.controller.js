@@ -38,7 +38,6 @@ const display = async (req, res, next) => {
 const signIn = async (req, res, next) => {
 	try {
 		const user = await User.findOne({ email: req.body.email });
-
 		// * SEND USER INFO WITH TOKEN IF AUTHENTICATED
 		if (user) {
 			if (bcrypt.compareSync(req.body.password, user.password)) {

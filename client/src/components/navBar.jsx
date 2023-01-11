@@ -85,7 +85,6 @@ function NavBar() {
 					) : null}
 				</div>
 
-				{/* <DarkModeSwitch /> */}
 				<div className="ml-12">
 					<label className="swap swap-rotate">
 						<input type="checkbox" defaultValue={true} />
@@ -152,9 +151,18 @@ function NavBar() {
 							</label>
 							<ul
 								tabIndex={0}
-								className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+								className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52 gap-2 "
 							>
-								<li onClick={handlerSignout}>
+								<li className="w-full">
+									<div className="hover:bg-base-200 bg-base-200 cursor-default flex-col gap-0  ">
+										<p>Hello </p>
+										<p>{userInfo.email}</p>
+									</div>
+								</li>
+								<li
+									onClick={handlerSignout}
+									className="text-center self-center "
+								>
 									<p>Logout</p>
 								</li>
 							</ul>

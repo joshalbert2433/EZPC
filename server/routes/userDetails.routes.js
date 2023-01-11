@@ -3,7 +3,11 @@ const router = express.Router();
 const UserDetailsController = require("../controllers/userDetails.controller");
 const isAuth = require("../utils/isAuth");
 
-router.get("/details", isAuth, UserDetailsController.display);
+router.get(
+	"/details",
+	// isAuth,
+	UserDetailsController.display
+);
 router.post("/details/register", isAuth, UserDetailsController.register);
 router.get("/details/:userId", isAuth, UserDetailsController.getByUserID);
 router.patch(
@@ -13,7 +17,7 @@ router.patch(
 );
 router.patch(
 	"/details/setAddressDefault/:userId",
-	isAuth,
+	// isAuth,
 	UserDetailsController.setDefaultAddress
 );
 router.delete(

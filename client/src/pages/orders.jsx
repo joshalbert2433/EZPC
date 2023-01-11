@@ -25,7 +25,7 @@ function Orders() {
 		getByUserId(userInfo._id);
 	}, []);
 
-	console.log(orderData);
+	console.log("OrderData", orderData);
 
 	console.log(userInfo);
 	return (

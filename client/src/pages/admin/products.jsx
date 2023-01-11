@@ -19,6 +19,8 @@ import {
 
 import Pagination from "../../components/pagination";
 import { toast } from "react-toastify";
+import { useContext } from "react";
+import { User } from "../../services/reducers/userInfo";
 
 const categories = [
 	"Processor",
@@ -34,6 +36,8 @@ function AdminProducts() {
 	const [state, dispatch] = useReducer(addProductsFormReducer, INITIAL_STATE);
 	const [productData, setProductData] = useState();
 	const [editProductData, setEditProductData] = useState();
+	const { state: ctxState, dispach: ctxDispach } = useContext(User);
+	const { userInfo } = ctxState;
 	const addProductForm = useRef();
 	const editProductForm = useRef();
 	const addProductButton = useRef();
@@ -72,7 +76,9 @@ function AdminProducts() {
 
 	const deleteProductByID = async (id) => {
 		try {
-			await EcommAPI.delete(`products/delete/${id}`);
+			await EcommAPI.delete(`products/delete/${id}`, {
+				headers: { Authorization: `Bearer ${userInfo.token}` },
+			});
 
 			toastSuccess("Product Successfully Deleted");
 			getAllProducts();
@@ -219,15 +225,21 @@ function AdminProducts() {
 
 		try {
 			addProductButton.current.setAttribute("disabled", "disabled");
-			await EcommAPI.post("products/register", {
-				name: state.name,
-				description: state.description,
-				image: state.image,
-				category: state.category,
-				image_main: state.image_main,
-				stock: state.stock,
-				price: state.price,
-			});
+			await EcommAPI.post(
+				"products/register",
+				{
+					name: state.name,
+					description: state.description,
+					image: state.image,
+					category: state.category,
+					image_main: state.image_main,
+					stock: state.stock,
+					price: state.price,
+				},
+				{
+					headers: { Authorization: `Bearer ${userInfo.token}` },
+				}
+			);
 		} catch (error) {
 			console.log(error);
 		}
@@ -245,15 +257,21 @@ function AdminProducts() {
 		if (isValidated) return;
 
 		try {
-			await EcommAPI.patch(`products/${state._id}`, {
-				name: state.name,
-				description: state.description,
-				image: state.image,
-				category: state.category,
-				image_main: state.image_main,
-				stock: state.stock,
-				price: state.price,
-			});
+			await EcommAPI.patch(
+				`products/${state._id}`,
+				{
+					name: state.name,
+					description: state.description,
+					image: state.image,
+					category: state.category,
+					image_main: state.image_main,
+					stock: state.stock,
+					price: state.price,
+				},
+				{
+					headers: { Authorization: `Bearer ${userInfo.token}` },
+				}
+			);
 		} catch (error) {
 			console.log(error);
 		}

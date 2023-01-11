@@ -131,13 +131,20 @@ const updateUserDetails = async (req, res, next) => {
 	}
 };
 
+// * DEFAULT ADDRESS SET BY SETTING ALL NOT MAIN INTO FALSE AND THEN SET THE BOOLEAN OF EQUAL ID OF PARAMS INTO TRUE
 const setDefaultAddress = async (req, res, next) => {
+	let id = req.params.userId;
+	let userId = req.query.userId;
 	try {
-		await UserDetails.updateMany({}, { $set: { isMain: false } });
+		await UserDetails.updateMany({}, { $set: { isMain: false } })
+			.where("user")
+			.equals(userId);
 		const address = await UserDetails.findOneAndUpdate(
-			{ _id: req.params.userId },
+			{ _id: id },
 			{ $set: { isMain: true } }
-		);
+		)
+			.where("user")
+			.equals(userId);
 		res.status(200).json({ message: "Default address set", data: address });
 	} catch (error) {
 		res.status(400).json({

@@ -97,7 +97,7 @@ function App() {
 						></Route>
 						<Route
 							exact
-							path="admin/login"
+							path="admin"
 							element={<AdminLogin />}
 						></Route>
 

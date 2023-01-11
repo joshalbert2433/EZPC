@@ -60,10 +60,14 @@ function Address() {
 	const setDefaultAddress = async (id) => {
 		try {
 			// /details/setAddressDefault/:userId
-			const url = `user/details/setAddressDefault/${id}`;
-			await Ecomm.patch(url, {
-				headers: { Authorization: `Bearer ${userInfo.token}` },
-			});
+			const url = `user/details/setAddressDefault/${id}?userId=${userInfo._id}`;
+			await Ecomm.patch(
+				url,
+				{},
+				{
+					headers: { Authorization: `Bearer ${userInfo.token}` },
+				}
+			);
 
 			toast.dismiss();
 			toastSuccess("Default address updated");
