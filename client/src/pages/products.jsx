@@ -71,7 +71,7 @@ function Products() {
 	// useEffect(() => {
 	//     if (activeThumb) console.log(activeThumb.activeIndex);
 	// }, [activeThumb]);
-	console.log(activeThumb);
+	// console.log(activeThumb);
 
 	const addCartHandler = () => {
 		if (!userInfo) return navigate("/login");
@@ -96,7 +96,7 @@ function Products() {
 		});
 	};
 
-	console.log(productData);
+	// console.log(productData);
 	return (
 		<>
 			<div className="w-[1200px] mx-auto">

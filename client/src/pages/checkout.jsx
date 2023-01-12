@@ -176,9 +176,13 @@ function Checkout() {
 								<label className="label">First Name</label>
 								<input
 									type="text"
-									placeholder="Josh"
+									placeholder="Type first name here.."
 									name="first_name"
-									className="input input-sm md:input-md input-bordered w-full "
+									className={`input input-sm md:input-md input-bordered w-full ${
+										errors.first_name &&
+										touched.first_name &&
+										"input-error"
+									}`}
 									value={values.first_name}
 									disabled={sameAddress}
 									onChange={handleChange}
@@ -194,9 +198,13 @@ function Checkout() {
 								<label className="label">Last Name</label>
 								<input
 									type="text"
-									placeholder="Alberts"
+									placeholder="Type last name here.."
 									name="last_name"
-									className="input input-sm md:input-md input-bordered w-full "
+									className={`input input-sm md:input-md input-bordered w-full ${
+										errors.last_name &&
+										touched.last_name &&
+										"input-error"
+									}`}
 									value={values.last_name}
 									disabled={sameAddress}
 									onChange={handleChange}
@@ -212,9 +220,13 @@ function Checkout() {
 								<label className="label">Address</label>
 								<input
 									type="text"
-									placeholder="Malayo, Malapit, Di makita Street"
+									placeholder="Type address here.."
 									name="address"
-									className="input input-sm md:input-md input-bordered w-full "
+									className={`input input-sm md:input-md input-bordered w-full ${
+										errors.address &&
+										touched.address &&
+										"input-error"
+									}`}
 									value={values.address}
 									disabled={sameAddress}
 									onChange={handleChange}
@@ -230,9 +242,13 @@ function Checkout() {
 								<label className="label">City</label>
 								<input
 									type="text"
-									placeholder="Imus"
+									placeholder="Type city here.."
 									name="city"
-									className="input input-sm md:input-md input-bordered w-full "
+									className={`input input-sm md:input-md input-bordered w-full ${
+										errors.city &&
+										touched.city &&
+										"input-error"
+									}`}
 									value={values.city}
 									disabled={sameAddress}
 									onChange={handleChange}
@@ -248,9 +264,13 @@ function Checkout() {
 								<label className="label">State</label>
 								<input
 									type="text"
-									placeholder="Cavite"
+									placeholder="Type state here.."
 									name="state"
-									className="input input-sm md:input-md input-bordered w-full "
+									className={`input input-sm md:input-md input-bordered w-full ${
+										errors.state &&
+										touched.state &&
+										"input-error"
+									}`}
 									value={values.state}
 									disabled={sameAddress}
 									onChange={handleChange}
@@ -266,9 +286,13 @@ function Checkout() {
 								<label className="label">Zip Code</label>
 								<input
 									type="text"
-									placeholder="4103"
+									placeholder="type zip code here.."
 									name="zip_code"
-									className="input input-sm md:input-md input-bordered w-full"
+									className={`input input-sm md:input-md input-bordered w-full ${
+										errors.zip_code &&
+										touched.zip_code &&
+										"input-error"
+									}`}
 									value={values.zip_code}
 									disabled={sameAddress}
 									onChange={handleChange}
@@ -291,7 +315,7 @@ function Checkout() {
 									<input
 										type="text"
 										placeholder="Josh"
-										className="input input-sm md:input-md input-bordered w-full "
+										className="input input-sm md:input-md input-bordered w-full"
 									/>
 								</div>
 								<div className="form-control w-full">

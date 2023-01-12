@@ -8,6 +8,6 @@ router.get("/", isAuth, OrderController.display);
 router.get("/:userId", isAuth, OrderController.getByUserId);
 router.get("/show/:orderId", isAuth, OrderController.getOrderByProductId);
 router.post("/register", isAuth, OrderController.register);
-router.patch("/:id", OrderController.update);
+router.patch("/:id", isAuth, OrderController.update);
 
 module.exports = router;

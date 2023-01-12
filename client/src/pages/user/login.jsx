@@ -18,7 +18,7 @@ import { toast } from "react-toastify";
 function Login() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [userLocal, setUserInfoLocal] = useLocalStorage("userInfo", "");
+	const [userLocal, setUserInfoLocal] = useLocalStorage("userInfo");
 	const [cartItemsLocal, setCartItemsLocal] = useLocalStorage(
 		"cartItems",
 		[]
@@ -28,19 +28,20 @@ function Login() {
 
 	const navigate = useNavigate();
 
-	const getCartByUserId = async (userId) => {
+	const getCartByUserId = async (userId, token) => {
 		try {
 			const response = await Ecomm.get(`cart/${userId}`, {
-				headers: { Authorization: `Bearer ${userInfo.token}` },
+				headers: { Authorization: `Bearer ${token}` },
 			});
-			console.log(response.data.cartItems);
-			setCartItemsLocal(response.data.cartItems);
-			ctxDispatch({
-				type: "INITIAL_CART_ITEM",
-				payload: response.data.cartItems,
-			});
+			if (response) {
+				console.log(response.data.cartItems);
+				setCartItemsLocal(response.data.cartItems);
+				ctxDispatch({
+					type: "INITIAL_CART_ITEM",
+					payload: response.data.cartItems,
+				});
+			}
 		} catch (error) {
-			toastError(getError(error));
 			console.log(error);
 		}
 	};
@@ -53,9 +54,11 @@ function Login() {
 				password,
 			});
 			ctxDispatch({ type: "USER_SIGNIN", payload: response.data });
-			await setUserInfoLocal(response.data);
-			// console.log(response.data);
-			await getCartByUserId(response.data._id);
+			setUserInfoLocal(response.data);
+
+			console.log(response.data.token, "data");
+
+			await getCartByUserId(response.data._id, response.data.token);
 			// setCartItemsLocal()
 			// setCartItemsLocal(response.car)
 

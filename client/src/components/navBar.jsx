@@ -28,6 +28,7 @@ function NavBar() {
 
 	const updateCart = async () => {
 		try {
+			console.log(userInfo);
 			await Ecomm.post(
 				"cart/register",
 				{
@@ -51,11 +52,19 @@ function NavBar() {
 
 	const handlerSignout = async () => {
 		// debugger;
-		await updateCart();
-		ctxDispatch({ type: "USER_SIGNOUT" });
-		localStorage.removeItem("userInfo");
-		localStorage.removeItem("cartItems");
-		window.location.href = "/";
+		try {
+			await updateCart();
+			ctxDispatch({ type: "USER_SIGNOUT" });
+
+			localStorage.removeItem("userInfo");
+			localStorage.removeItem("cartItems");
+		} catch (error) {
+			console.log(error);
+			toastError(getError(error));
+		}
+
+		// window.location.href = "/login";
+
 		// navigate("/");
 	};
 
