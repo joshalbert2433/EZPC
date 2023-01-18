@@ -17,6 +17,9 @@ import Footer from "./components/footer";
 import ProtectedRoutes from "./routes/protectedRoutes";
 import Wrapper from "./layouts/wrapper";
 import Main from "./components/main";
+import AdminRoutes from "./routes/adminrRoutes";
+import PageNotFound from "./pages/pageNotFound";
+import CheckoutSuccess from "./pages/checkoutSuccess";
 
 function App() {
 	return (
@@ -25,6 +28,12 @@ function App() {
 				<NavBar />
 				<Main>
 					<Routes>
+						<Route path="*" element={<PageNotFound />} />
+						<Route
+							path="/pageNotFound"
+							element={<PageNotFound />}
+						/>
+
 						{/* USER ROUTES */}
 						<Route exact path="/" element={<Index />}></Route>
 						<Route
@@ -67,6 +76,15 @@ function App() {
 						></Route>
 						<Route
 							exact
+							path="/checkoutSuccess"
+							element={
+								<ProtectedRoutes>
+									<CheckoutSuccess />
+								</ProtectedRoutes>
+							}
+						></Route>
+						<Route
+							exact
 							path="/orders"
 							element={
 								<ProtectedRoutes>
@@ -88,20 +106,30 @@ function App() {
 						<Route
 							exact
 							path="/dashboard/orders"
-							element={<Orders />}
+							element={
+								<AdminRoutes>
+									<Orders />
+								</AdminRoutes>
+							}
 						></Route>
 						<Route
 							exact
 							path="/dashboard/products"
-							element={<AdminProducts />}
+							element={
+								<AdminRoutes>
+									<AdminProducts />
+								</AdminRoutes>
+							}
 						></Route>
 						<Route
 							exact
 							path="admin"
-							element={<AdminLogin />}
+							element={
+								<AdminRoutes>
+									<AdminLogin />
+								</AdminRoutes>
+							}
 						></Route>
-
-						<Route element={<p>Not Found</p>}></Route>
 					</Routes>
 				</Main>
 			</Router>

@@ -132,7 +132,7 @@ function Index() {
 													onClick={handlerCategory}
 												/>
 												<span className="text-base">
-													{category} (20)
+													{category}
 												</span>
 											</label>
 										</div>

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Ecomm from "../api/Ecomm.api";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function OrderShow() {
 	const { state: orderData } = useLocation();
@@ -25,8 +25,8 @@ function OrderShow() {
 						<h2 className="text-xl font-semibold">
 							Order ID: {orderData.data.orderId}
 						</h2>
-						<div className="flex">
-							<div className="w-1/2">
+						<div className="flex flex-col gap-6 md:gap-0 md:flex-row">
+							<div className="w-full md:w-1/2">
 								<h3 className="font-semibold">
 									Customer Shipping Info:
 								</h3>
@@ -39,7 +39,7 @@ function OrderShow() {
 								<p>State: {shipping_address.state}</p>
 								<p>Zip Code: {shipping_address.zip_code}</p>
 							</div>
-							<div className="w-1/2">
+							<div className="w-full md:w-1/2">
 								<h3 className="font-semibold">
 									Customer Billing Info:
 								</h3>
@@ -126,12 +126,12 @@ function OrderShow() {
 							</p>
 						</div>
 						<div className="flex justify-end space-x-4">
-							<button
-								type="button"
+							<Link
+								to="/"
 								className="px-6 py-2 border rounded-md btn-sm btn sm:btn-md btn-primary w-full sm:w-fit"
 							>
 								Shop More
-							</button>
+							</Link>
 						</div>
 					</div>
 				</div>

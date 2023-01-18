@@ -7,13 +7,15 @@ import Ecomm from "../api/Ecomm.api";
 import { toastError, toastSuccess } from "./toaster";
 import { getError } from "../services/utils/getError";
 import useLocalStorage from "../hooks/useLocalStorage";
+import { ChevronDown } from "react-feather";
+import { User as userIcon } from "react-feather";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import { themeChange } from "theme-change";
 
 function NavBar() {
 	const { state, dispatch: ctxDispatch } = useContext(User);
-	const themeLocal = localStorage.getItem("theme");
+	const themeLocal = localStorage.getItem("theme") || "light";
 	const [theme, setTheme] = useState(themeLocal);
 	const inputTheme = useRef();
 	const navigate = useNavigate;
@@ -97,6 +99,30 @@ function NavBar() {
 					) : null}
 				</div>
 
+				{userInfo && userInfo.isAdmin && (
+					<div className="flex-none ml-4">
+						<div className="dropdown dropdown-end">
+							<label tabIndex={0} className="flex">
+								Admin <ChevronDown />
+							</label>
+							<ul
+								tabIndex={0}
+								className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-32 gap-2 border border-neutral"
+							>
+								<li>
+									<Link to="/dashboard/orders">Orders</Link>
+								</li>
+								<li>
+									<Link to="/dashboard/products">
+										Products
+									</Link>
+								</li>
+							</ul>
+						</div>
+					</div>
+				)}
+
+				{/* THEME CHANGE */}
 				<div className="ml-12">
 					<label className="swap swap-rotate ">
 						<input
@@ -168,12 +194,15 @@ function NavBar() {
 								className="btn btn-ghost btn-circle avatar"
 							>
 								<div className="w-10 rounded-full">
-									<img src="https://placeimg.com/80/80/people" />
+									<img
+										src="https://placeimg.com/80/80/people"
+										alt=""
+									/>
 								</div>
 							</label>
 							<ul
 								tabIndex={0}
-								className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52 gap-2 "
+								className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52 gap-2 border border-neutral"
 							>
 								<li className="w-full">
 									<div className="hover:bg-base-200 bg-base-200 cursor-default flex-col gap-0  ">
@@ -191,7 +220,9 @@ function NavBar() {
 						</div>
 					</div>
 				) : (
-					<Link to="login">Login</Link>
+					<Link to="login" className="btn btn-primary">
+						Login
+					</Link>
 				)}
 			</div>
 		</div>

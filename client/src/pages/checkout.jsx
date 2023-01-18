@@ -98,7 +98,7 @@ function Checkout() {
 			localStorage.removeItem("cartItems");
 
 			actions.resetForm();
-			navigate("/orders");
+			navigate("/checkoutSuccess");
 		} catch (error) {
 			toastError(getError(error));
 			console.log(error);

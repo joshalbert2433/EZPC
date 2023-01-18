@@ -21,6 +21,7 @@ import Pagination from "../../components/pagination";
 import { toast } from "react-toastify";
 import { useContext } from "react";
 import { User } from "../../services/reducers/userInfo";
+import { getError } from "../../services/utils/getError";
 
 const categories = [
 	"Processor",
@@ -32,6 +33,8 @@ const categories = [
 	"Power Supply",
 ];
 
+const errorLog = [];
+
 function AdminProducts() {
 	const [state, dispatch] = useReducer(addProductsFormReducer, INITIAL_STATE);
 	const [productData, setProductData] = useState();
@@ -42,7 +45,7 @@ function AdminProducts() {
 	const editProductForm = useRef();
 	const addProductButton = useRef();
 	const modalDiscardClose = useRef();
-	const maxNumber = 5;
+	const maxNumber = 4;
 
 	const [sort, setSort] = useState({ sort: "rating", order: "desc" });
 	const [filterCategory, setFilterCategory] = useState([]);
@@ -83,6 +86,7 @@ function AdminProducts() {
 			toastSuccess("Product Successfully Deleted");
 			getAllProducts();
 		} catch (error) {
+			toastError(getError(error));
 			console.log(error);
 		}
 	};
@@ -245,13 +249,15 @@ function AdminProducts() {
 					headers: { Authorization: `Bearer ${userInfo.token}` },
 				}
 			);
+
+			toastSuccess("Product Successfully Added");
+			addProductButton.current.removeAttribute("disabled");
+			getAllProducts();
+			handlerReset();
 		} catch (error) {
+			toastError(getError(error));
 			console.log(error);
 		}
-		toastSuccess("Product Successfully Added");
-		addProductButton.current.removeAttribute("disabled");
-		getAllProducts();
-		handlerReset();
 	};
 
 	const handlerEditProduct = async (e) => {
@@ -277,21 +283,26 @@ function AdminProducts() {
 					headers: { Authorization: `Bearer ${userInfo.token}` },
 				}
 			);
+
+			toastSuccess("Product Successfully Updated");
+			getProductById(state._id);
+			getAllProducts();
 		} catch (error) {
+			toastError(getError(error));
 			console.log(error);
 		}
-		toastSuccess("Product Successfully Updated");
-		getProductById(state._id);
-		getAllProducts();
 	};
 
 	const handlerImageError = (error) => {
 		toastError(`Image upload limit is ${maxNumber}`);
 	};
 
+	// const error = Error("test");
+
 	return (
 		<>
 			<div className="w-[1200px] mx-auto">
+				{/* {console.log(error)} */}
 				<div className="flex justify-between">
 					<div className="form-control">
 						<div className="input-group">
@@ -377,6 +388,8 @@ function AdminProducts() {
 															htmlFor="EditProductModal"
 															className="link link-info"
 															onClick={() => {
+																// editProductForm.current.reset();
+
 																getProductById(
 																	data._id
 																);
@@ -668,13 +681,7 @@ function AdminProducts() {
 				</form>
 			</Modal>
 
-			{/* EDIT PRODUCT MODAL */}
-			{/* <EditModal
-                title="Edit Product"
-                id="EditProductModal"
-                data={editProductData}
-                categories={categories}
-            /> */}
+			{/* EDIT PRODUCTS MODAL */}
 			<Modal
 				title="Edit Product"
 				id="EditProductModal"

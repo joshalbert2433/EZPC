@@ -4,6 +4,7 @@ import { User } from "../../services/reducers/userInfo";
 import { toastSuccess, ToasterContainer } from "../../components/toaster";
 import { toast } from "react-toastify";
 import Pagination from "../../components/pagination";
+import { getError } from "../../services/utils/getError";
 
 const OrderStatusOptions = [
 	{ value: "Order in process", text: "Order in process" },
@@ -35,13 +36,20 @@ function Orders() {
 	};
 
 	const updateOrderById = async (orderId, status) => {
+		toast.dismiss();
 		try {
-			await Ecomm.patch(`orders/${orderId}`, {
-				status: status,
-			});
-			toast.dismiss();
+			await Ecomm.patch(
+				`orders/${orderId}`,
+				{
+					status: status,
+				},
+				{
+					headers: { Authorization: `Bearer ${userInfo.token}` },
+				}
+			);
 			toastSuccess("Order Status has been updated");
 		} catch (error) {
+			toast.error(getError(error));
 			console.log(error);
 		}
 	};

@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { User } from "../../services/reducers/userInfo";
 import Ecomm from "../../api/Ecomm.api";
 import useLocalStorage from "../../hooks/useLocalStorage";
+import { HelpCircle } from "react-feather";
 import "react-toastify/dist/ReactToastify.css";
 
 import {
@@ -52,6 +53,30 @@ function Login() {
 			const response = await Ecomm.post("auth/sign-in", {
 				email,
 				password,
+			});
+			ctxDispatch({ type: "USER_SIGNIN", payload: response.data });
+			setUserInfoLocal(response.data);
+
+			console.log(response.data.token, "data");
+
+			await getCartByUserId(response.data._id, response.data.token);
+			// setCartItemsLocal()
+			// setCartItemsLocal(response.car)
+
+			navigate("/");
+		} catch (error) {
+			toast.dismiss();
+
+			toastError(getError(error));
+		}
+	};
+
+	const adminLoginHandler = async (e) => {
+		e.preventDefault();
+		try {
+			const response = await Ecomm.post("auth/sign-in", {
+				email: "test@email.com",
+				password: "test@email.com",
 			});
 			ctxDispatch({ type: "USER_SIGNIN", payload: response.data });
 			setUserInfoLocal(response.data);
@@ -123,9 +148,17 @@ function Login() {
 					</form>
 					<div className="divider w-[80%] mx-auto">OR</div>
 					<div className="w-[80%]">
-						<button className="btn btn-secondary w-full">
-							Guest Login
-						</button>
+						<div
+							className="tooltip tooltip-bottom w-full"
+							data-tip="Admin login is visible for demo only!"
+						>
+							<button
+								className="btn btn-secondary w-full "
+								onClick={adminLoginHandler}
+							>
+								Admin Login
+							</button>
+						</div>
 					</div>
 					<div className="flex items-center gap-2">
 						<p className="py-8">Don't have account?</p>

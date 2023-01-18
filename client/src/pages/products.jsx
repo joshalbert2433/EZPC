@@ -39,13 +39,15 @@ function Products() {
 			setProductData(response.data);
 		} catch (error) {
 			console.log(error);
+
+			navigate("/pageNotFound");
 		}
 	};
 
 	const getProductByCategory = async (category) => {
 		try {
 			const response = await EcommAPI.get(
-				`products?category=${category}`
+				`products?category=${category}&limit=10`
 			);
 
 			setSimilarProductData(response.data);
@@ -96,7 +98,7 @@ function Products() {
 		});
 	};
 
-	// console.log(productData);
+	console.log(similarProductData);
 	return (
 		<>
 			<div className="w-[1200px] mx-auto">
@@ -144,14 +146,19 @@ function Products() {
 								modules={[Navigation, Thumbs]}
 								className="mt-4 "
 							>
-								{productData.image.length > 2 &&
+								{productData.image.length > 1 &&
 									productData.image.map((item, index) => (
 										<SwiperSlide key={index} className="">
 											<div className="h-[100px]">
 												<img
 													src={item}
 													alt="product images"
-													className="h-full w-full mx-auto hover:border-2 hover:border-primary border-2"
+													className={
+														productData.image
+															.length > 1
+															? "h-full w-[120px] mx-auto hover:border-2 hover:border-primary border-2"
+															: "h-full w-full mx-auto hover:border-2 hover:border-primary border-2"
+													}
 												/>
 											</div>
 										</SwiperSlide>
@@ -159,7 +166,7 @@ function Products() {
 							</Swiper>
 						</div>
 						<div className="w-[60%] p-4 space-y-3 pb-6">
-							<h1 className="text-xl font-semibold">
+							<h1 className="text-xl font-semibold h-14">
 								{productData.name}
 							</h1>
 							<div className="flex items-center gap-2">
@@ -246,18 +253,22 @@ function Products() {
 						<p className="text-xl font-semibold mb-3">Similar</p>
 						<div className=" flex gap-y-4 flex-wrap justify-between">
 							{similarProductData
-								? similarProductData.data.map((data) => {
-										return (
-											<ProductCard
-												key={data._id}
-												data={data}
-												onClick={() => {
-													setActiveThumb(null);
-													getProductById(data._id);
-												}}
-											/>
-										);
-								  })
+								? similarProductData.data
+										.slice(0, 7)
+										.map((data) => {
+											return (
+												<ProductCard
+													key={data._id}
+													data={data}
+													onClick={() => {
+														setActiveThumb(null);
+														getProductById(
+															data._id
+														);
+													}}
+												/>
+											);
+										})
 								: null}
 						</div>
 					</div>
