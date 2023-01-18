@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import EcommAPI from "../api/Ecomm.api";
-import { MagnifyingGlass } from "phosphor-react";
 import ProductCard from "../components/productCard";
 import Pagination from "../components/pagination";
-import { useNavigate, Link } from "react-router-dom";
 import useDebounce from "../hooks/useDebounce";
 import ProductCardSkeleton from "../components/productCardSkeleton";
 
@@ -22,10 +20,8 @@ function Index() {
 	const [sort, setSort] = useState("");
 	const [filterCategory, setFilterCategory] = useState([]);
 	const [page, setPage] = useState(1);
-	const [limit, setLimit] = useState(20);
+	const [limit] = useState(20);
 	const [search, setSearch] = useState("");
-
-	const navigate = useNavigate();
 
 	const debouncedSearch = useDebounce(search, 200);
 
@@ -34,7 +30,6 @@ function Index() {
 			const url = `products?page=${page}&sort=${sort}&category=${filterCategory.toString()}&search=${debouncedSearch}&limit=${limit}`;
 			console.log(url);
 			const response = await EcommAPI.get(url);
-			// if (response.data.total )
 			setProductData(response.data);
 		} catch (error) {
 			console.log(error);
@@ -43,13 +38,13 @@ function Index() {
 
 	useEffect(() => {
 		getAllProducts();
-		// console.log(productData);
 		//eslint-disable-next-line
 	}, []);
 
 	useEffect(() => {
 		getAllProducts();
-		console.log(filterCategory.toString());
+		// console.log(filterCategory.toString());
+
 		//eslint-disable-next-line
 	}, [sort, filterCategory, page, debouncedSearch, filterCategory]);
 

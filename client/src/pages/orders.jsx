@@ -1,15 +1,14 @@
 import React, { useEffect, useContext, useState } from "react";
 import Ecomm from "../api/Ecomm.api";
 import { User } from "../services/reducers/userInfo";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { AlertInfo } from "../components/alert";
 
 function Orders() {
 	const { state: ctxState, dispatch: ctxDispatch } = useContext(User);
 	const [orderData, setOrderData] = useState();
 	const { userInfo } = ctxState;
-	const navigate = useNavigate();
-	// console.log(userInfo.token);
+
 	const getByUserId = async (userId) => {
 		try {
 			const response = await Ecomm.get(`orders/${userId}`, {
@@ -23,11 +22,10 @@ function Orders() {
 
 	useEffect(() => {
 		getByUserId(userInfo._id);
+
+		//eslint-disable-next-line
 	}, []);
 
-	console.log("OrderData", orderData);
-
-	console.log(userInfo);
 	return (
 		<div className="xl:w-[1200px] mx-auto flex flex-col-reverse gap-4">
 			{orderData && orderData.data.length !== 0
@@ -97,10 +95,6 @@ function Orders() {
 										state={{ data }}
 										type="button"
 										className="px-6 py-2 border rounded-md btn-sm btn sm:btn-md btn-primary w-full sm:w-fit"
-										// onClick={navigate(
-										// 	`/orders/show?id=${data.orderId}`
-										// )}
-										// to={`/product?name=${data.name}&&id=${data._id}&&category=${data.category[0]}`}
 									>
 										View More Details
 									</Link>

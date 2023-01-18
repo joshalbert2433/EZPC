@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 
 module.exports = isAuth = (req, res, next) => {
 	const authorization = req.headers.authorization;
-	// console.log(req.user);
 
 	if (authorization) {
 		const token = authorization.slice(7, authorization.length); // Bearer XXXXXX

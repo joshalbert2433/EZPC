@@ -1,13 +1,6 @@
 import React from "react";
 
-import {
-	toast,
-	ToastContainer,
-	Slide,
-	Zoom,
-	Flip,
-	Bounce,
-} from "react-toastify";
+import { toast, ToastContainer, Flip } from "react-toastify";
 
 const toastSettings = {
 	position: "bottom-left",
@@ -19,7 +12,6 @@ const toastSettings = {
 	progress: undefined,
 	theme: "colored",
 	transition: Flip,
-	// disableStack: true,
 };
 
 export const toastInfo = (title) => toast.info(title, toastSettings);
@@ -40,7 +32,6 @@ export function ToasterContainer() {
 			draggable
 			pauseOnHover
 			theme="colored"
-			// transition="flip"
 		/>
 	);
 }

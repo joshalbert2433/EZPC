@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { DarkModeSwitch } from "react-toggle-dark-mode";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { User } from "../services/reducers/userInfo";
 import Ecomm from "../api/Ecomm.api";
-import { toastError, toastSuccess } from "./toaster";
+import { toastError } from "../components/toaster";
 import { getError } from "../services/utils/getError";
-import useLocalStorage from "../hooks/useLocalStorage";
 import { ChevronDown } from "react-feather";
-import { User as userIcon } from "react-feather";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import { themeChange } from "theme-change";
@@ -17,11 +14,9 @@ function NavBar() {
 	const { state, dispatch: ctxDispatch } = useContext(User);
 	const themeLocal = localStorage.getItem("theme") || "light";
 	const [theme, setTheme] = useState(themeLocal);
-	const inputTheme = useRef();
-	const navigate = useNavigate;
 
 	const { userInfo, cart } = state;
-	// const [cartItemsLocal, setCartItemsLocal] = useLocalStorage("cartItems");
+
 	const cartItemsLocal = cart.cartItems;
 	console.log(
 		"🚀 ~ file: navBar.jsx:17 ~ NavBar ~ cartItemsLocal",
@@ -53,7 +48,6 @@ function NavBar() {
 	}, []);
 
 	const handlerSignout = async () => {
-		// debugger;
 		try {
 			await updateCart();
 			ctxDispatch({ type: "USER_SIGNOUT" });
@@ -70,7 +64,6 @@ function NavBar() {
 		// navigate("/");
 	};
 
-	// console.log(theme);
 	return (
 		<div className="bg-base-100 shadow-lg navbar mb-4 sticky top-0 z-10">
 			<div className="w-[1200px] mx-auto gap-4 flex [&>*]:items-center [&>*]:inline-flex">

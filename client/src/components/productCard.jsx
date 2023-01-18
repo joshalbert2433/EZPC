@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 function ProductCard(props) {
 	const { data, onClick } = props;
-	// console.log(data.name);
 
 	return (
 		<>
@@ -11,7 +10,6 @@ function ProductCard(props) {
 				<Link
 					to={`/product?name=${data.name}&&id=${data._id}&&category=${data.category[0]}`}
 					onClick={onClick}
-					// className="-z-50"
 				>
 					<div
 						className="card rounded-none bg-base-100 w-[160px] hover:border-secondary border-transparent border-2 max-h-[255px] shadow-lg"

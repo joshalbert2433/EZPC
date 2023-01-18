@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { User } from "../../services/reducers/userInfo";
 import Ecomm from "../../api/Ecomm.api";
 import useLocalStorage from "../../hooks/useLocalStorage";
-import { HelpCircle } from "react-feather";
 import "react-toastify/dist/ReactToastify.css";
 
 import {
@@ -60,8 +59,6 @@ function Login() {
 			console.log(response.data.token, "data");
 
 			await getCartByUserId(response.data._id, response.data.token);
-			// setCartItemsLocal()
-			// setCartItemsLocal(response.car)
 
 			navigate("/");
 		} catch (error) {
@@ -84,8 +81,6 @@ function Login() {
 			console.log(response.data.token, "data");
 
 			await getCartByUserId(response.data._id, response.data.token);
-			// setCartItemsLocal()
-			// setCartItemsLocal(response.car)
 
 			navigate("/");
 		} catch (error) {

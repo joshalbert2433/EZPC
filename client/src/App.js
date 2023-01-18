@@ -12,12 +12,12 @@ import AdminProducts from "./pages/admin/products";
 import AdminLogin from "./pages/admin/login";
 import Address from "./pages/address";
 import Checkout from "./pages/checkout";
-import NavBar from "./components/navBar";
-import Footer from "./components/footer";
+import NavBar from "./layouts/navBar";
+import Footer from "./layouts/footer";
 import ProtectedRoutes from "./routes/protectedRoutes";
 import Wrapper from "./layouts/wrapper";
-import Main from "./components/main";
-import AdminRoutes from "./routes/adminrRoutes";
+import Main from "./layouts/main";
+import AdminRoutes from "./routes/adminRoutes";
 import PageNotFound from "./pages/pageNotFound";
 import CheckoutSuccess from "./pages/checkoutSuccess";
 

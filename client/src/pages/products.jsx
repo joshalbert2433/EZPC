@@ -6,9 +6,9 @@ import { Navigation, Thumbs } from "swiper";
 import { useNavigate } from "react-router-dom";
 import { toastSuccess } from "../components/toaster";
 import { useLocation } from "react-router-dom";
-import Slider from "react-slick";
 import { Swiper, SwiperSlide } from "swiper/react";
-// import Swiper and modules styles
+
+// IMPORT SWIPER AND MODULE STYLES
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -22,7 +22,7 @@ function Products() {
 	const { state: ctxState, dispatch: ctxDispatch } = useContext(User);
 	const [quantity, setQuantity] = useState(1);
 	const { userInfo } = ctxState;
-	// const idParams = useParams();
+
 	const navigate = useNavigate();
 
 	// GET THE QUERY PARAMETERS
@@ -58,7 +58,6 @@ function Products() {
 
 	useEffect(() => {
 		getProductById(urlId);
-		// getProductByCategory("Motherboard");
 		getProductByCategory(urlCategory);
 
 		setId(urlId);
@@ -70,11 +69,6 @@ function Products() {
 		// getProductByCategory(productData.category);
 	}, [similarProductData, id, quantity, activeThumb]);
 
-	// useEffect(() => {
-	//     if (activeThumb) console.log(activeThumb.activeIndex);
-	// }, [activeThumb]);
-	// console.log(activeThumb);
-
 	const addCartHandler = () => {
 		if (!userInfo) return navigate("/login");
 		ctxDispatch({
@@ -85,20 +79,6 @@ function Products() {
 		toastSuccess("Item has been added to your shopping cart");
 	};
 
-	const updateCartHandler = async (item, quantity) => {
-		// TODO: CREATE ERROR HANDLER FOR NO STOCKS IN PRODUCT
-		// const { data } = await axios.get(`/api/products/${item._id}`);
-		// if (data.countInStock < quantity) {
-		//   window.alert('Sorry. Product is out of stock');
-		//   return;
-		// }
-		ctxDispatch({
-			type: "CART_ADD_ITEM",
-			payload: { ...item, quantity },
-		});
-	};
-
-	console.log(similarProductData);
 	return (
 		<>
 			<div className="w-[1200px] mx-auto">
@@ -121,15 +101,9 @@ function Products() {
 								{productData.image.map((item, index) => (
 									<SwiperSlide
 										key={index}
-										// className="relative overflow-hidden pt-[100%]"
 										className="flex justify-center h-[400px]"
 									>
-										<img
-											src={item}
-											alt="product images"
-											// className="absolute top-0 left-0"
-											// className="h-[200px]"
-										/>
+										<img src={item} alt="product images" />
 									</SwiperSlide>
 								))}
 							</Swiper>

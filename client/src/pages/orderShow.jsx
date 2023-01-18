@@ -1,21 +1,9 @@
-import React, { useEffect } from "react";
-import Ecomm from "../api/Ecomm.api";
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
 function OrderShow() {
 	const { state: orderData } = useLocation();
 	const { shipping_address, billing_address } = orderData.data;
-
-	// const { id } = state;
-
-	const getOrderById = async (orderId) => {
-		try {
-			const response = await Ecomm.get();
-		} catch (error) {}
-	};
-
-	useEffect(() => {});
-	console.log(orderData);
 
 	return (
 		<>

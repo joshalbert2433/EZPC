@@ -14,7 +14,7 @@ import {
 
 function Checkout() {
 	const { state: ctxState, dispatch: ctxDispatch } = useContext(User);
-	const [state, dispatch] = useReducer(checkoutFormReducer, INITIAL_STATE);
+	const [state] = useReducer(checkoutFormReducer, INITIAL_STATE);
 	const [addressData, setAddressData] = useState();
 	const [sameAddress, setSameAddress] = useState(false);
 	const { userInfo } = ctxState;
@@ -29,21 +29,19 @@ function Checkout() {
 				}
 			);
 			setAddressData(response.data);
-			// dispatch({ type: "ASSIGN_DATA", payload: response.data });
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
 	useEffect(() => {
-		// getAddressByID(userInfo._id);
-
 		getAddressMain(userInfo._id);
+
 		//eslint-disable-next-line
 	}, []);
 
 	const sameAddressHandler = (e) => {
-		const { checked, value } = e.target;
+		const { checked } = e.target;
 
 		if (checked) {
 			setSameAddress(true);
@@ -53,7 +51,6 @@ function Checkout() {
 	};
 
 	const saveOrderHandler = async (values, actions) => {
-		console.log(values);
 		try {
 			// * GET THE CART ITEMS
 			const cartItems = JSON.parse(localStorage.getItem("cartItems"));
@@ -351,7 +348,6 @@ function Checkout() {
 						<button
 							className="btn btn-secondary w-full mt-4 text-lg"
 							type="submit"
-							// onClick={navigate('')}
 						>
 							Pay Now
 						</button>

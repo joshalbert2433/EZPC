@@ -26,8 +26,7 @@ import { toast } from "react-toastify";
 
 function Address() {
 	const { state: ctxState, dispatch: ctxDispatch } = useContext(User);
-	const { userInfo, cart } = ctxState;
-	// const {shippingAddress} = cart
+	const { userInfo } = ctxState;
 	const [addressData, setAddressData] = useState([]);
 	const [formActive, setFormActive] = useState("");
 	const [state, dispatch] = useReducer(addressFormReducer, INITIAL_STATE);
@@ -42,8 +41,6 @@ function Address() {
 
 	let tempID = "";
 
-	// console.log({ ctxDispatch });
-
 	const getAddressByID = async () => {
 		try {
 			const url = `user/details/${userInfo._id}?page=${page}`;
@@ -51,7 +48,6 @@ function Address() {
 				headers: { Authorization: `Bearer ${userInfo.token}` },
 			});
 			setAddressData(response.data);
-			// console.log(addressData.data);
 		} catch (error) {
 			toastError(getError(error));
 			console.log(error);
@@ -60,7 +56,6 @@ function Address() {
 
 	const setDefaultAddress = async (id) => {
 		try {
-			// /details/setAddressDefault/:userId
 			const url = `user/details/setAddressDefault/${id}?userId=${userInfo._id}`;
 			await Ecomm.patch(
 				url,
@@ -88,30 +83,24 @@ function Address() {
 			toastSuccess("Data has been deleted");
 			getAddressByID();
 		} catch (error) {
-			// toastError(getError(error));
 			console.log(error);
 		}
 	};
 
 	useEffect(() => {
 		getAddressByID();
-		// console.log(addressData);
 
 		//eslint-disable-next-line
 	}, []);
 
 	useEffect(() => {
 		getAddressByID();
+
 		//eslint-disable-next-line
 	}, [page]);
 
 	const setDefaultHandler = (id) => {
 		setDefaultAddress(id);
-	};
-
-	const handlerDelete = (e) => {
-		e.preventDefault();
-		deleteAddressById(tempID);
 	};
 
 	const saveAddressHandler = async (values, actions) => {
@@ -202,8 +191,6 @@ function Address() {
 		onSubmit: saveAddressHandler,
 	});
 
-	// console.log(addressData);
-
 	return (
 		<>
 			<div className="w-[1200px] mx-auto">
@@ -291,8 +278,6 @@ function Address() {
 																	if (
 																		!data.isMain
 																	)
-																		// tempID =
-																		// 	data._id;
 																		setTempId(
 																			data._id
 																		);

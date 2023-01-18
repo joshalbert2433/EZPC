@@ -1,29 +1,22 @@
 import { Minus, Plus } from "phosphor-react";
 import React, { useContext, useEffect } from "react";
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import Ecomm from "../api/Ecomm.api";
 import EcommAPI from "../api/Ecomm.api";
 import { AlertInfo } from "../components/alert";
-import { toastError, toastInfo, toastWarning } from "../components/toaster";
-import useLocalStorage from "../hooks/useLocalStorage";
+import { toastError, toastInfo } from "../components/toaster";
 import { User } from "../services/reducers/userInfo";
 import { getError } from "../services/utils/getError";
 
 function Cart() {
-	// const [cartItems, setCartItems] = useLocalStorage()
 	const { state, dispatch: ctxDispatch } = useContext(User);
 	const [cartData, setCartData] = useState();
 	const [addressData, setAddressData] = useState();
 	const { userInfo, cart } = state;
-	const [cartQuantity, setCartQuantity] = useState(0);
 	const navigate = useNavigate();
 	let total = 0;
-
-	const search = useLocation().search;
-	const redirectInUrl = new URLSearchParams(search).get("redirect");
-	const redirect = redirectInUrl ? redirectInUrl : "/address";
 
 	const getAddressByID = async () => {
 		try {
@@ -31,8 +24,6 @@ function Cart() {
 			const response = await Ecomm.get(url, {
 				headers: { Authorization: `Bearer ${userInfo.token}` },
 			});
-			// setAddressData(response.data);
-			console.log(response.data.data.length);
 
 			setAddressData(response.data.data);
 		} catch (error) {
@@ -66,6 +57,8 @@ function Cart() {
 
 	useEffect(() => {
 		getProductManyById();
+
+		//eslint-disable-next-line
 	}, [cart]);
 
 	const updateCartHandler = (item, qty) => {
@@ -74,8 +67,6 @@ function Cart() {
 			payload: { ...item, quantity: qty },
 		});
 	};
-
-	console.log(addressData);
 
 	return (
 		<>
