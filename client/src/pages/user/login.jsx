@@ -20,6 +20,7 @@ function Login() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [userLocal, setUserInfoLocal] = useLocalStorage("userInfo");
+	const [loading, setLoading] = useState(false);
 	const [cartItemsLocal, setCartItemsLocal] = useLocalStorage(
 		"cartItems",
 		[]
@@ -78,7 +79,7 @@ function Login() {
 			setUserInfoLocal(response.data);
 
 			await getCartByUserId(response.data._id, response.data.token);
-
+			setLoading(false);
 			navigate("/");
 		} catch (error) {
 			toast.dismiss();
@@ -149,9 +150,17 @@ function Login() {
 						>
 							<button
 								className="btn btn-secondary w-full "
-								onClick={adminLoginHandler}
+								onClick={(e) => {
+									setLoading(true);
+									adminLoginHandler(e);
+								}}
+								// disabled={loading}
 							>
-								Admin Login
+								{loading ? (
+									<div className="w-8 h-8 border-4 border-dashed rounded-full animate-spin "></div>
+								) : (
+									"Admin Login"
+								)}
 							</button>
 						</div>
 					</div>

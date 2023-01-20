@@ -194,10 +194,7 @@ function Index() {
 									);
 							  })
 							: [...Array(limit)].map((item, index) => (
-									<ProductCardSkeleton
-										index={index}
-										key={index}
-									/>
+									<ProductCardSkeleton key={index} />
 							  ))}
 					</div>
 

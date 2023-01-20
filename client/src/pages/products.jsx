@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { toastSuccess } from "../components/toaster";
 import { useLocation } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
+import ProductCardSkeleton from "../components/productCardSkeleton";
 
 // IMPORT SWIPER AND MODULE STYLES
 import "swiper/css";
@@ -224,7 +225,9 @@ function Products() {
 							</div>
 						</div>
 					</div>
-				) : null}
+				) : (
+					<p>Loading...</p>
+				)}
 
 				{productData ? (
 					<div className="mt-5">
@@ -247,7 +250,11 @@ function Products() {
 												/>
 											);
 										})
-								: null}
+								: [...Array(7)].map((item, index) => {
+										return (
+											<ProductCardSkeleton key={index} />
+										);
+								  })}
 						</div>
 					</div>
 				) : null}

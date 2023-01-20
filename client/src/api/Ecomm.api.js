@@ -1,7 +1,7 @@
 import Axios from "axios";
 
 const Ecomm = Axios.create({
-	baseURL: process.env.REACT_APP_API_URL,
+	baseURL: "https://ezpc-backend-joshalbert.onrender.com/api/",
 	headers: {},
 });
 
