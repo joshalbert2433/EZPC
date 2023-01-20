@@ -1,5 +1,4 @@
 import React from "react";
-import { X } from "react-feather";
 
 function Modal(props) {
 	const { title, children, id } = props;

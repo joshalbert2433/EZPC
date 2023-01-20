@@ -14,6 +14,7 @@ import {
 } from "../../components/toaster";
 import { getError } from "../../services/utils/getError";
 import { toast } from "react-toastify";
+import { Helmet } from "react-helmet-async";
 
 function SignUp() {
 	const [state] = useReducer(signUpFormReducer, INITIAL_STATE);
@@ -72,6 +73,9 @@ function SignUp() {
 
 	return (
 		<>
+			<Helmet>
+				<title>EZPC | Sign Up</title>
+			</Helmet>
 			<div className="w-[400px] mx-auto bg-base-100 py-5 px-12 rounded">
 				<form action="#" method="POST" className="space-y-4">
 					<h1 className="text-3xl font-semibold py-4 w-fit mx-auto">

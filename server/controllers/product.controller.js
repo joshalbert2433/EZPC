@@ -23,9 +23,6 @@ const display = async (req, res, next) => {
 			? (category = [...categoryOptions])
 			: (category = req.query.category.split(","));
 
-		// req.query.sort ? (sort = req.query.sort.split(",")) : (sort = [sort]);
-
-		// console.log(sort);
 		const sortOrder =
 			sort === "lowest"
 				? { price: 1 }
@@ -63,9 +60,6 @@ const display = async (req, res, next) => {
 		};
 
 		res.status(200).json(response);
-		// let data = await Product.find();
-		// console.log(data);
-		// return data;
 	} catch (error) {
 		console.error(error);
 	}
@@ -109,28 +103,11 @@ const getByID = async (req, res) => {
 };
 
 const getManyById = async (req, res) => {
-	// const arrayId = req.param.id;
-	// console.log("eit");
 	try {
 		// Get the list of item IDs from the query string
 
 		var itemIds = req.query.itemIds.split(",") || 0;
-		console.log(
-			"🚀 ~ file: product.controller.js:111 ~ getManyById ~ itemIds",
-			itemIds
-		);
 
-		// Convert the list of item IDs to a list of ObjectIds
-		// var objectIds = itemIds.map(function (itemId) {
-		//     return new mongoose.Types.ObjectId(itemId);
-		// });
-		// console.log(
-		//     "🚀 ~ file: product.controller.js:121 ~ objectIds ~ objectIds",
-		//     objectIds
-		// );
-
-		// Find the items with the specified IDs
-		// const product = Product.find({ _id: { $in: objectIds } }).toArray;
 		const product = await Product.find({ _id: { $in: itemIds } });
 
 		const total = await Product.countDocuments({ _id: { $in: itemIds } });

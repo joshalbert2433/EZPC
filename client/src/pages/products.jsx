@@ -14,6 +14,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { toast, ToastContainer } from "react-toastify";
+import { Helmet } from "react-helmet-async";
 
 function Products() {
 	const [activeThumb, setActiveThumb] = useState(null);
@@ -81,6 +82,9 @@ function Products() {
 
 	return (
 		<>
+			<Helmet>
+				<title>{`EZPC | ${productData?.name}`}</title>
+			</Helmet>
 			<div className="w-[1200px] mx-auto">
 				{productData ? (
 					<div className="bg-base-100  flex">

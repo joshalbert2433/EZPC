@@ -6,8 +6,6 @@ import Ecomm from "../api/Ecomm.api";
 import { toastError } from "../components/toaster";
 import { getError } from "../services/utils/getError";
 import { ChevronDown } from "react-feather";
-import { useNavigate } from "react-router-dom";
-import { useRef } from "react";
 import { themeChange } from "theme-change";
 
 function NavBar() {
@@ -18,14 +16,9 @@ function NavBar() {
 	const { userInfo, cart } = state;
 
 	const cartItemsLocal = cart.cartItems;
-	console.log(
-		"🚀 ~ file: navBar.jsx:17 ~ NavBar ~ cartItemsLocal",
-		cartItemsLocal
-	);
 
 	const updateCart = async () => {
 		try {
-			console.log(userInfo);
 			await Ecomm.post(
 				"cart/register",
 				{
@@ -47,6 +40,10 @@ function NavBar() {
 		// 👆 false parameter is required for react project
 	}, []);
 
+	useEffect(() => {
+		// console.log(theme);
+	}, [theme]);
+
 	const handlerSignout = async () => {
 		try {
 			await updateCart();
@@ -59,7 +56,7 @@ function NavBar() {
 			toastError(getError(error));
 		}
 
-		// window.location.href = "/login";
+		window.location.href = "/login";
 
 		// navigate("/");
 	};
@@ -115,14 +112,13 @@ function NavBar() {
 					</div>
 				)}
 
-				{/* THEME CHANGE */}
+				{/*THEME CHANGE */}
 				<div className="ml-12">
 					<label className="swap swap-rotate ">
 						<input
 							type="checkbox"
-							data-toggle-theme="dark,light"
+							data-toggle-theme="dark,light" // NOT WORKING ON STRICTTMODE
 							data-act-class="ACTIVECLASS"
-							onClick={() => console.log("hello")}
 						/>
 
 						<svg

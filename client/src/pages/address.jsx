@@ -23,6 +23,7 @@ import {
 } from "../components/toaster";
 import Pagination from "../components/pagination";
 import { toast } from "react-toastify";
+import { Helmet } from "react-helmet-async";
 
 function Address() {
 	const { state: ctxState, dispatch: ctxDispatch } = useContext(User);
@@ -104,7 +105,6 @@ function Address() {
 	};
 
 	const saveAddressHandler = async (values, actions) => {
-		console.log(formActive);
 		if (formActive === "POST") {
 			try {
 				await Ecomm.post(
@@ -193,6 +193,9 @@ function Address() {
 
 	return (
 		<>
+			<Helmet>
+				<title>EZPC | Address</title>
+			</Helmet>
 			<div className="w-[1200px] mx-auto">
 				<div className="flex justify-between p-4 items-center bg-base-100 rounded-lg">
 					<h1 className="text-xl font-semibold">My Addresses</h1>

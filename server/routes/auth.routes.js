@@ -7,7 +7,4 @@ const checkForUniqueEmail = require("../utils/checkUniqueEmail");
 router.post("/register", checkForUniqueEmail, AuthController.register);
 router.post("/sign-in", AuthController.signIn);
 
-// ! FOR TESTING
-// router.get("/", AuthController.display);
-
 module.exports = router;

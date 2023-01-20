@@ -14,6 +14,7 @@ import {
 } from "../../components/toaster";
 import { getError } from "../../services/utils/getError";
 import { toast } from "react-toastify";
+import { Helmet } from "react-helmet-async";
 
 function Login() {
 	const [email, setEmail] = useState("");
@@ -34,7 +35,6 @@ function Login() {
 				headers: { Authorization: `Bearer ${token}` },
 			});
 			if (response) {
-				console.log(response.data.cartItems);
 				setCartItemsLocal(response.data.cartItems);
 				ctxDispatch({
 					type: "INITIAL_CART_ITEM",
@@ -42,7 +42,8 @@ function Login() {
 				});
 			}
 		} catch (error) {
-			console.log(error);
+			console.log("No cart item found");
+			// console.log(error);
 		}
 	};
 
@@ -55,8 +56,6 @@ function Login() {
 			});
 			ctxDispatch({ type: "USER_SIGNIN", payload: response.data });
 			setUserInfoLocal(response.data);
-
-			console.log(response.data.token, "data");
 
 			await getCartByUserId(response.data._id, response.data.token);
 
@@ -78,8 +77,6 @@ function Login() {
 			ctxDispatch({ type: "USER_SIGNIN", payload: response.data });
 			setUserInfoLocal(response.data);
 
-			console.log(response.data.token, "data");
-
 			await getCartByUserId(response.data._id, response.data.token);
 
 			navigate("/");
@@ -92,6 +89,9 @@ function Login() {
 
 	return (
 		<>
+			<Helmet>
+				<title>EZPC | Login</title>
+			</Helmet>
 			<div className="w-[900px] mx-auto flex bg-base-100 rounded overflow-hidden">
 				<div className=" w-1/2 min-h-[400px]">
 					<img

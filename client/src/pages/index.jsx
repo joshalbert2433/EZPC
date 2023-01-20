@@ -4,6 +4,7 @@ import ProductCard from "../components/productCard";
 import Pagination from "../components/pagination";
 import useDebounce from "../hooks/useDebounce";
 import ProductCardSkeleton from "../components/productCardSkeleton";
+import { Helmet } from "react-helmet-async";
 
 const categoryOptions = [
 	"Processor",
@@ -28,7 +29,6 @@ function Index() {
 	const getAllProducts = async () => {
 		try {
 			const url = `products?page=${page}&sort=${sort}&category=${filterCategory.toString()}&search=${debouncedSearch}&limit=${limit}`;
-			console.log(url);
 			const response = await EcommAPI.get(url);
 			setProductData(response.data);
 		} catch (error) {
@@ -51,7 +51,7 @@ function Index() {
 	const handlerPageIncrement = (e) => {
 		e.preventDefault();
 		const totalPages = Math.ceil(productData.total / productData.limit);
-		console.log(page, productData.page + 1);
+
 		if (page < totalPages) setPage((prev) => prev + 1);
 	};
 
@@ -83,6 +83,9 @@ function Index() {
 
 	return (
 		<>
+			<Helmet>
+				<title>EZPC | Products</title>
+			</Helmet>
 			<div className="flex justify-around w-[1200px] mx-auto ">
 				<div className="w-[300px] border-gray-900 rounded px-4 py-4 bg-base-100 h-fit shadow-lg">
 					<div className="form-control pb-4 flex content-center">

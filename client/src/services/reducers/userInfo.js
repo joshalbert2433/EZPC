@@ -46,7 +46,6 @@ const reducer = (state, action) => {
 			return { ...state, cart: { cartItems: action.payload } };
 		}
 		case ACTION_TYPES.ADD_CART_ITEM: {
-			console.log(state.cart.cartItems.quantity);
 			const newItem = {
 				...action.payload,
 			};

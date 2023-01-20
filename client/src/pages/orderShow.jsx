@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet-async";
 import { Link, useLocation } from "react-router-dom";
 
 function OrderShow() {
@@ -7,6 +8,9 @@ function OrderShow() {
 
 	return (
 		<>
+			<Helmet>
+				<title>{`EZPC | Order ID: ${orderData?.data?.orderId}`}</title>
+			</Helmet>
 			{orderData ? (
 				<div className="xl:w-[1200px] mx-auto flex flex-col gap-4">
 					<div className="flex flex-col max-w-full p-6 space-y-4 sm:p-4 sm:px-6 bg-base-100 shadow-lg">

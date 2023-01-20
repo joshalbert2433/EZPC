@@ -22,6 +22,7 @@ import { toast } from "react-toastify";
 import { useContext } from "react";
 import { User } from "../../services/reducers/userInfo";
 import { getError } from "../../services/utils/getError";
+import { Helmet } from "react-helmet-async";
 
 const categories = [
 	"Processor",
@@ -32,8 +33,6 @@ const categories = [
 	"Storage",
 	"Power Supply",
 ];
-
-const errorLog = [];
 
 function AdminProducts() {
 	const [state, dispatch] = useReducer(addProductsFormReducer, INITIAL_STATE);
@@ -59,7 +58,7 @@ function AdminProducts() {
 			}&genre=${filterCategory.toString()}&search=${search}`;
 
 			const response = await EcommAPI.get(url);
-			// if (response.data.total )
+
 			setProductData(response.data);
 		} catch (error) {
 			console.log(error);
@@ -132,7 +131,7 @@ function AdminProducts() {
 
 	const handlerCategory = (e) => {
 		const { value, checked } = e.target;
-		console.log(value, checked);
+
 		if (checked) {
 			dispatch({
 				type: "ADD_CATEGORY",
@@ -182,13 +181,6 @@ function AdminProducts() {
 		dispatch({
 			type: "RESET",
 		});
-	};
-
-	const handlerDelete = (e) => {
-		e.preventDefault();
-		getAllProducts();
-		deleteProductByID(state._id);
-		handlerReset();
 	};
 
 	const formValidation = () => {
@@ -297,12 +289,12 @@ function AdminProducts() {
 		toastError(`Image upload limit is ${maxNumber}`);
 	};
 
-	// const error = Error("test");
-
 	return (
 		<>
+			<Helmet>
+				<title>EZPC | Admin</title>
+			</Helmet>
 			<div className="w-[1200px] mx-auto">
-				{/* {console.log(error)} */}
 				<div className="flex justify-between">
 					<div className="form-control">
 						<div className="input-group">

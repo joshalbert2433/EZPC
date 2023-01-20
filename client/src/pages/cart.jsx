@@ -1,6 +1,7 @@
 import { Minus, Plus } from "phosphor-react";
 import React, { useContext, useEffect } from "react";
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import Ecomm from "../api/Ecomm.api";
@@ -70,6 +71,9 @@ function Cart() {
 
 	return (
 		<>
+			<Helmet>
+				<title>EZPC | Cart</title>
+			</Helmet>
 			<div className="xl:w-[1200px] mx-auto">
 				{cart.cartItems.length === 0 && (
 					<AlertInfo title="No cart item(s)" />

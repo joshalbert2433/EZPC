@@ -11,6 +11,7 @@ import {
 	INITIAL_STATE,
 	checkoutFormReducer,
 } from "../services/reducers/checkoutFormReducer";
+import { Helmet } from "react-helmet-async";
 
 function Checkout() {
 	const { state: ctxState, dispatch: ctxDispatch } = useContext(User);
@@ -61,7 +62,7 @@ function Checkout() {
 
 			// * GET THE TOTAL PRICE OF ORDER
 			const itemIds = cartItems.map((item) => item._id);
-			console.log(itemIds.toString());
+
 			const response = await Ecomm.get(
 				`products/getManyById?itemIds=${itemIds.toString()}`,
 				{
@@ -146,6 +147,9 @@ function Checkout() {
 
 	return (
 		<>
+			<Helmet>
+				<title>EZPC | Checkout</title>
+			</Helmet>
 			<div className="xl:w-[1200px] mx-auto">
 				<form
 					className="flex gap-6"
@@ -305,7 +309,8 @@ function Checkout() {
 					</div>
 
 					<div className="w-1/3">
-						<div className="bg-base-100 p-4 h-fit">
+						{/* ? ADD STRIPE API PAYMENT */}
+						{/* <div className="bg-base-100 p-4 h-fit">
 							<div className="bg-base-100 rounded-md h-fit">
 								<div className="form-control w-full">
 									<label className="label">Card: </label>
@@ -344,12 +349,12 @@ function Checkout() {
 									</div>
 								</div>
 							</div>
-						</div>
+						</div> */}
 						<button
 							className="btn btn-secondary w-full mt-4 text-lg"
 							type="submit"
 						>
-							Pay Now
+							Place Order
 						</button>
 					</div>
 				</form>

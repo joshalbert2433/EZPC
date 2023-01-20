@@ -1,4 +1,3 @@
-const { response } = require("express");
 const Order = require("../models/order.model");
 const User = require("../models/user.model");
 
@@ -52,15 +51,11 @@ const display = async (req, res, next) => {
 const getOrderByProductId = async (req, res, next) => {
 	try {
 		const orderId = req.params.orderId;
-		// const productId = req.query.productId || "";
+
 		const order = await Order.find()
 			.populate("orderItems.product")
 			.where("orderId")
 			.equals(orderId);
-
-		// const total = await Order.countDocuments({
-		// 	name: { $regex: search, $options: "i" },
-		// });
 
 		const response = {
 			// total,

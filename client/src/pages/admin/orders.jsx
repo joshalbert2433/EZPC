@@ -5,6 +5,7 @@ import { toastSuccess, ToasterContainer } from "../../components/toaster";
 import { toast } from "react-toastify";
 import Pagination from "../../components/pagination";
 import { getError } from "../../services/utils/getError";
+import { Helmet } from "react-helmet-async";
 
 const OrderStatusOptions = [
 	{ value: "Order in process", text: "Order in process" },
@@ -72,6 +73,9 @@ function Orders() {
 
 	return (
 		<>
+			<Helmet>
+				<title>EZPC | Admin</title>
+			</Helmet>
 			<div className="w-[1200px] mx-auto">
 				<div className="flex justify-between">
 					{/* <div className="form-control">
