@@ -32,10 +32,9 @@ app.use("/api/orders", OrderRoutes);
 app.use("/api/cart", CartRoutes);
 
 //STATIC CONTENT
-const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname, "/client/build")));
+app.use(express.static(path.join(__dirname, "../client/build")));
 app.get("*", (req, res) => {
-	res.sendFile(pat.join(__dirname, "/client/build/index.html"));
+	res.sendFile(path.join(__dirname, "../client/build/index.html"));
 });
 
 //ERROR HANDLER
