@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const path = require("path");
 
 // CONFIG
 require("dotenv").config();
@@ -29,6 +30,13 @@ app.use("/api/auth", AuthRoutes);
 app.use("/api/products", ProductRoutes);
 app.use("/api/orders", OrderRoutes);
 app.use("/api/cart", CartRoutes);
+
+//STATIC CONTENT
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, "/client/build")));
+app.get("*", (req, res) => {
+	res.sendFile(pat.join(__dirname, "/client/build/index.html"));
+});
 
 //ERROR HANDLER
 app.use((err, req, res, next) => {

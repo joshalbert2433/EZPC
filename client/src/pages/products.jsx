@@ -24,6 +24,7 @@ function Products() {
 	const { state: ctxState, dispatch: ctxDispatch } = useContext(User);
 	const [quantity, setQuantity] = useState(1);
 	const { userInfo } = ctxState;
+	const [productLoad, setProductLoad] = useState(false);
 
 	const navigate = useNavigate();
 
@@ -37,7 +38,9 @@ function Products() {
 
 	const getProductById = async (id) => {
 		try {
+			setProductLoad(true);
 			const response = await EcommAPI.get(`products/${id}`);
+			if (response) setProductLoad(false);
 			setProductData(response.data);
 		} catch (error) {
 			console.log(error);
@@ -84,10 +87,10 @@ function Products() {
 	return (
 		<>
 			<Helmet>
-				<title>{`EZPC | ${productData?.name}`}</title>
+				<title>{`EZPC | ${productData ? productData.name : ""}`}</title>
 			</Helmet>
 			<div className="w-[1200px] mx-auto">
-				{productData ? (
+				{productData && !productLoad ? (
 					<div className="bg-base-100  flex">
 						<div className="w-[40%] p-4">
 							<Swiper
@@ -226,7 +229,8 @@ function Products() {
 						</div>
 					</div>
 				) : (
-					<p>Loading...</p>
+					// <p>Loading...</p>
+					<div className="h-[632px]">Loading...</div>
 				)}
 
 				{productData ? (

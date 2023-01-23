@@ -92,7 +92,7 @@ function NavBar() {
 				{userInfo && userInfo.isAdmin && (
 					<div className="flex-none ml-4">
 						<div className="dropdown dropdown-end">
-							<label tabIndex={0} className="flex">
+							<label tabIndex={0} className="flex font-medium">
 								Admin <ChevronDown />
 							</label>
 							<ul

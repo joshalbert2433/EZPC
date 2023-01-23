@@ -23,13 +23,16 @@ function Index() {
 	const [page, setPage] = useState(1);
 	const [limit] = useState(20);
 	const [search, setSearch] = useState("");
+	const [productLoad, setProductLoad] = useState(false);
 
 	const debouncedSearch = useDebounce(search, 200);
 
 	const getAllProducts = async () => {
 		try {
+			setProductLoad(true);
 			const url = `products?page=${page}&sort=${sort}&category=${filterCategory.toString()}&search=${debouncedSearch}&limit=${limit}`;
 			const response = await EcommAPI.get(url);
+			if (response) setProductLoad(false);
 			setProductData(response.data);
 		} catch (error) {
 			console.log(error);
@@ -184,7 +187,7 @@ function Index() {
 
 					{/* DISPLAY PRODUCTS */}
 					<div className="flex gap-3 flex-wrap">
-						{productData
+						{productData && !productLoad
 							? productData.data.map((data) => {
 									return (
 										<ProductCard
