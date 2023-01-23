@@ -32,9 +32,15 @@ app.use("/api/orders", OrderRoutes);
 app.use("/api/cart", CartRoutes);
 
 //STATIC CONTENT
+<<<<<<< HEAD
 app.use(express.static(path.join(__dirname, "../client/build")));
 app.get("*", (req, res) => {
 	res.sendFile(path.join(__dirname, "../client/build/index.html"));
+=======
+app.use(express.static(path.resolve(__dirname, "/client/build")));
+app.get("*", (req, res) => {
+	res.sendFile(path.resolve(__dirname, "/client/build/index.html"));
+>>>>>>> 1f239d48b8acfd41311de9a7af2f03208f73a7a8
 });
 
 //ERROR HANDLER
