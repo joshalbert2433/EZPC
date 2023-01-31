@@ -25,7 +25,7 @@ function SignUp() {
 				email: values.email,
 				password: values.password,
 			});
-			toastSuccess("Address Successfully Added");
+			toastSuccess("New user has been created");
 			actions.resetForm();
 		} catch (error) {
 			toast.dismiss();

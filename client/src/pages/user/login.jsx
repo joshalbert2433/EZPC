@@ -21,6 +21,7 @@ function Login() {
 	const [password, setPassword] = useState("");
 	const [userLocal, setUserInfoLocal] = useLocalStorage("userInfo");
 	const [loading, setLoading] = useState(false);
+	const [userLoading, setUserLoading] = useState(false);
 	const [cartItemsLocal, setCartItemsLocal] = useLocalStorage(
 		"cartItems",
 		[]
@@ -59,10 +60,12 @@ function Login() {
 			setUserInfoLocal(response.data);
 
 			await getCartByUserId(response.data._id, response.data.token);
+			setUserLoading(false);
 
 			navigate("/");
 		} catch (error) {
 			toast.dismiss();
+			setUserLoading(false);
 
 			toastError(getError(error));
 		}
@@ -109,7 +112,10 @@ function Login() {
 						action="#"
 						method="POST"
 						className="space-y-6 w-[80%]"
-						onSubmit={handlerSubmit}
+						onSubmit={(e) => {
+							setUserLoading(true);
+							handlerSubmit(e);
+						}}
 					>
 						<div>
 							<label htmlFor="email" className="label">
@@ -136,11 +142,16 @@ function Login() {
 							/>
 						</div>
 
-						<input
+						<button
+							className="btn btn-primary w-full "
 							type="submit"
-							value="Login"
-							className="btn btn-primary w-full"
-						/>
+						>
+							{userLoading ? (
+								<div className="w-8 h-8 border-4 border-dashed rounded-full animate-spin "></div>
+							) : (
+								"Login"
+							)}
+						</button>
 					</form>
 					<div className="divider w-[80%] mx-auto">OR</div>
 					<div className="w-[80%]">
