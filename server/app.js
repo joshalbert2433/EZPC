@@ -32,11 +32,11 @@ app.use("/api/orders", OrderRoutes);
 app.use("/api/cart", CartRoutes);
 
 //STATIC CONTENT
-console.log(path.join(__dirname, "../../client/build"));
-app.use(express.static(path.join(__dirname, "../client/build")));
-app.get("*", (req, res) => {
-	res.sendFile(path.join(__dirname, "../../client/build/index.html"));
-});
+// console.log(path.join(__dirname, "../../client/build"));
+// app.use(express.static(path.join(__dirname, "../client/build")));
+// app.get("*", (req, res) => {
+// 	res.sendFile(path.join(__dirname, "../../client/build/index.html"));
+// });
 
 //ERROR HANDLER
 app.use((err, req, res, next) => {
