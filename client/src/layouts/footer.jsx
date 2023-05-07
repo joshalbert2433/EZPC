@@ -8,7 +8,6 @@ function Footer() {
 				<p>
 					&#169; {new Date().getFullYear()} Joshua Albert Villanueva
 				</p>
-
 				<p className="text-sm text-center">
 					The products and services displayed on this website are for
 					demonstration purposes only

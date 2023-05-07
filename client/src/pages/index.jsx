@@ -24,7 +24,6 @@ function Index() {
 	const [limit] = useState(20);
 	const [search, setSearch] = useState("");
 	const [productLoad, setProductLoad] = useState(false);
-
 	const debouncedSearch = useDebounce(search, 200);
 
 	const getAllProducts = async () => {
