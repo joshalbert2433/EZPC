@@ -123,7 +123,6 @@ const updateUserDetails = async (req, res, next) => {
 
 		res.status(200).json({ message: "Successfully Updated", userDetails });
 	} catch (error) {
-		// console.log(error);
 		res.status(404).json({
 			message: "Product Not Found",
 			error,

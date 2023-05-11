@@ -45,7 +45,6 @@ function Index() {
 
 	useEffect(() => {
 		getAllProducts();
-		// console.log(filterCategory.toString());
 
 		//eslint-disable-next-line
 	}, [sort, filterCategory, page, debouncedSearch, filterCategory]);

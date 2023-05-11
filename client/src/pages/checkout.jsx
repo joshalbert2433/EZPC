@@ -309,47 +309,6 @@ function Checkout() {
 					</div>
 
 					<div className="w-1/3">
-						{/* ? ADD STRIPE API PAYMENT */}
-						{/* <div className="bg-base-100 p-4 h-fit">
-							<div className="bg-base-100 rounded-md h-fit">
-								<div className="form-control w-full">
-									<label className="label">Card: </label>
-									<input
-										type="text"
-										placeholder="Josh"
-										className="input input-sm md:input-md input-bordered w-full"
-									/>
-								</div>
-								<div className="form-control w-full">
-									<label className="label">
-										Security Code:{" "}
-									</label>
-									<input
-										type="text"
-										placeholder="Josh"
-										className="input input-sm md:input-md input-bordered w-full "
-									/>
-								</div>
-								<div className="form-control w-full">
-									<label className="label">
-										Expiration:{" "}
-									</label>
-									<div className="flex place-items-center">
-										<input
-											type="text"
-											placeholder="mm"
-											className="input input-sm md:input-md input-bordered w-full "
-										/>
-										<p className="mx-4">/</p>
-										<input
-											type="text"
-											placeholder="year"
-											className="input input-sm md:input-md input-bordered w-full "
-										/>
-									</div>
-								</div>
-							</div>
-						</div> */}
 						<button
 							className="btn btn-secondary w-full mt-4 text-lg"
 							type="submit"

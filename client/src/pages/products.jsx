@@ -70,10 +70,6 @@ function Products() {
 		//eslint-disable-next-line
 	}, []);
 
-	useEffect(() => {
-		// getProductByCategory(productData.category);
-	}, [similarProductData, id, quantity, activeThumb]);
-
 	const addCartHandler = () => {
 		if (!userInfo) return navigate("/login");
 		ctxDispatch({

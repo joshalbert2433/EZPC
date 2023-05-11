@@ -17,7 +17,6 @@ const display = async (req, res, next) => {
 		console.log(status);
 
 		const order = await Order.find({
-			// name: { $regex: search, $options: "i" },
 			status: status,
 		})
 			.where("status")
@@ -28,7 +27,6 @@ const display = async (req, res, next) => {
 
 		const total = await Order.countDocuments({
 			status: { $in: [...status] },
-			// name: { $regex: search, $options: "i" },
 		});
 
 		const response = {
@@ -58,7 +56,6 @@ const getOrderByProductId = async (req, res, next) => {
 			.equals(orderId);
 
 		const response = {
-			// total,
 			data: order,
 		};
 

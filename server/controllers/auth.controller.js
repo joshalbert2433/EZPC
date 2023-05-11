@@ -49,7 +49,7 @@ const signIn = async (req, res, next) => {
 				return;
 			}
 		}
-		res.status(401).send({ message: "Invalid Username or Password" });
+		res.status(401).send({ message: "Invalid Email or Password" });
 	} catch (error) {
 		// console.log(error);
 		res.json({

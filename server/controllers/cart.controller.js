@@ -3,7 +3,6 @@ const Cart = require("../models/cart.model");
 const getByUserId = async (req, res, next) => {
 	try {
 		const cart = await Cart.findOne()
-			// .populate({path: "user", model: "User", })
 			.where("user")
 			.equals(req.params.userId);
 
@@ -18,8 +17,6 @@ const getByUserId = async (req, res, next) => {
 };
 
 const register = async (req, res, next) => {
-	// let cart = new Cart(req.body);
-
 	try {
 		const cart = req.body;
 

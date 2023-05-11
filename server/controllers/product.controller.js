@@ -34,7 +34,6 @@ const display = async (req, res, next) => {
 				? { createdAt: 1 }
 				: { _id: -1 };
 
-		// console.log(sortOrder);
 		const product = await Product.find({
 			name: { $regex: search, $options: "i" },
 		})
@@ -132,7 +131,6 @@ const updateProduct = async (req, res) => {
 		product.save();
 		res.json(product);
 	} catch (error) {
-		// console.log(error);
 		res.status(404).json({
 			error: "Product Not Found",
 		});
